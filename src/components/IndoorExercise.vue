@@ -102,8 +102,8 @@ const filteredExercises = computed(() => {
 }
 
 .add-button {
-  background-color: #FEF7EC; /* 더 연한 색상 */
-  color: #F2AB58;
+  background-color: #EAFAEB; /* 더 연한 색상 */
+  color: #4CAF50;
   padding: 4px 10px;
   border: none;
   border-radius: 4px;
