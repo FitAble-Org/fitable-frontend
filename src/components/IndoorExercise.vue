@@ -11,9 +11,17 @@
           <div class="exercise-name">{{ exercise.name }}</div>
           <div class="exercise-recommendation">추천도: {{ exercise.recommendation }}</div>
         </div>
-        <button class="add-button">추가하기</button>
+        <button class="add-button" @click="showPopup()">추가하기</button>
       </div>
     </div>
+  </div>
+
+
+  <div v-if="isPopupVisible" class="popup-overlay">
+      <div class="popup">
+        <p>운동을 추가했습니다.<br>홈화면에서 운동 후 시간을 기록해 주세요!</p>
+        <button class="confirm-button" @click="closePopup">확인</button>
+      </div>
   </div>
 </template>
 
@@ -27,6 +35,7 @@ const exercises = ref([
 ]);
 
 const selectedTab = ref('준비운동');
+const isPopupVisible = ref(false);
 
 const selectTab = (tab) => {
   selectedTab.value = tab;
@@ -35,6 +44,15 @@ const selectTab = (tab) => {
 const filteredExercises = computed(() => {
   return exercises.value.filter(exercise => exercise.type === selectedTab.value);
 });
+
+function showPopup() {
+  console.log("pop");
+  isPopupVisible.value = true;
+}
+
+function closePopup() {
+  isPopupVisible.value = false;
+}
 </script>
 
 <style scoped>
@@ -112,5 +130,48 @@ const filteredExercises = computed(() => {
   position: absolute;
   top: 20px;
   right: 15px;
+}
+
+/* 팝업 오버레이 스타일 */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* 팝업 스타일 */
+.popup {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.confirm-button {
+  margin-top: 16px;
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 16px;
 }
 </style>

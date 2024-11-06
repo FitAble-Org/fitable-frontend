@@ -8,6 +8,7 @@
         <EventList :events="selectedEvents" type="실내운동" />
         <EventList :events="selectedEvents" type="실외운동" />
       </div>
+      <p v-else class="no-records-message">아직 운동 기록이 없어요!</p>
     </div>
   </template>
   
@@ -45,5 +46,12 @@
     padding: 20px;
     margin-bottom: 20px;
   }
+
+  .no-records-message {
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  margin-top: 20px;
+}
   </style>
   
