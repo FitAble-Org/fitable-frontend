@@ -1,4 +1,4 @@
-<!-- IndoorExerciseView.vue -->
+<!-- IndoorExercise.vue -->
 <template>
     <div class="indoor-exercise-container">
       <header class="header-container">

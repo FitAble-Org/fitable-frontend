@@ -15,10 +15,11 @@
 <script setup>
 import { ref } from 'vue';
 import dayjs from 'dayjs';
-import Header from './components/Header.vue';
-import Calendar from './components/Calendar.vue';
-import EventList from './components/EventList.vue';
-import BottomNav from './components/BottomNav.vue';
+import Header from './src/components/Header.vue';
+import Calendar from './src/components/Calendar.vue';
+import EventList from './src/components/EventList.vue';
+import BottomNav from './src/components/BottomNav.vue';
+
 
 const events = ref([
   { date: "2024-11-28", activities: [{ type: "실외운동", name: "앉았다 일어서기", duration: 10 }, { type: "실내운동", name: "요가", duration: 20 }] },
