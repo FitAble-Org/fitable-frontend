@@ -1,9 +1,6 @@
 <!-- IndoorExercise.vue -->
 <template>
     <div class="indoor-exercise-container">
-      <header class="header-container">
-        <h1>실내 운동</h1>
-      </header>
       <div class="exercise-tabs">
         <button :class="{ active: selectedTab === '준비운동' }" @click="selectTab('준비운동')">준비운동</button>
         <button :class="{ active: selectedTab === '본운동' }" @click="selectTab('본운동')">본운동</button>

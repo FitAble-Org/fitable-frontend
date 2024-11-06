@@ -1,6 +1,7 @@
+// router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../../App.vue';
-import IndoorExercise from '../components/IndoorExercise.vue'; // 정확한 경로를 사용해 가져옵니다.
+import Home from '@/components/Home.vue';
+import IndoorExercise from '@/components/IndoorExercise.vue';
 
 const routes = [
   {

@@ -31,9 +31,9 @@ const navigate = (page) => {
   } else if (page === 'indoor') {
     router.push('/indoor-exercise');
   } else if (page === 'outdoor') {
-    router.push('/outdoor-exercise'); // 실제 구현 시 해당 경로에 컴포넌트 추가 필요
+    console.log('야외운동 페이지로 이동 (아직 구현되지 않음)');
   } else if (page === 'profile') {
-    router.push('/profile'); // 실제 구현 시 해당 경로에 컴포넌트 추가 필요
+    console.log('내 정보 페이지로 이동 (아직 구현되지 않음)');
   }
 };
 </script>
