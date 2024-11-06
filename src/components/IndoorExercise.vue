@@ -11,7 +11,7 @@
           <div class="exercise-name">{{ exercise.name }}</div>
           <div class="exercise-recommendation">추천도: {{ exercise.recommendation }}</div>
         </div>
-        <div class="exercise-id">No. {{ exercise.id }}</div>
+        <button class="add-button">추가하기</button>
       </div>
     </div>
   </div>
@@ -21,9 +21,9 @@
 import { ref, computed } from 'vue';
 
 const exercises = ref([
-  { id: 'F15306', name: '앉았다 일어서기', type: '준비운동', recommendation: '상' },
-  { id: 'F15306', name: '요가', type: '준비운동', recommendation: '중' },
-  { id: 'F15306', name: '윗몸 일으키기', type: '본운동', recommendation: '하' },
+  { name: '앉았다 일어서기', type: '준비운동', recommendation: '중' },
+  { name: '요가', type: '준비운동', recommendation: '중' },
+  { name: '윗몸 일으키기', type: '준비운동', recommendation: '중' },
 ]);
 
 const selectedTab = ref('준비운동');
@@ -52,16 +52,16 @@ const filteredExercises = computed(() => {
   display: flex;
   justify-content: space-around;
   margin: 20px 0;
-  background-color: #ffffff; /* 탭 배경색을 흰색으로 설정 */
+  background-color: #f5f5f5;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .exercise-tabs button {
   flex: 1;
-  padding: 15px;
+  padding: 10px;
   border: none;
-  background-color: #ffffff; /* 선택되지 않은 탭의 배경색을 흰색으로 설정 */
+  background-color: #ffffff;
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
@@ -69,7 +69,7 @@ const filteredExercises = computed(() => {
 }
 
 .exercise-tabs .active {
-  background-color: #4caf50; /* 선택된 탭의 배경색 */
+  background-color: #4caf50;
   color: #ffffff;
 }
 
@@ -85,6 +85,7 @@ const filteredExercises = computed(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .exercise-name {
@@ -95,18 +96,21 @@ const filteredExercises = computed(() => {
 }
 
 .exercise-recommendation {
-  background-color: #fff0d9; /* 연한 주황색 */
-  color: #ff8c00;
-  padding: 2px;
-  border-radius: 4px;
-  font-size: 12px;
-  width: 75px; /* 고정 너비 설정 */
-  text-align: center; /* 텍스트 중앙 정렬 */
+  color: #888;
+  font-size: 14px;
   margin-top: 4px;
 }
 
-.exercise-id {
-  font-size: 14px;
-  color: #888;
+.add-button {
+  background-color: #FEF7EC; /* 더 연한 색상 */
+  color: #F2AB58;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 15px;
 }
 </style>
