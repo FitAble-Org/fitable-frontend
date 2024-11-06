@@ -3,10 +3,19 @@
       <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
       <div ref="map" class="map-container"></div>
       <div v-if="selectedLocation" class="location-info">
-        <h2>{{ selectedLocation.title }}</h2>
-        <p>{{ selectedLocation.address }}</p>
-        <p>{{ selectedLocation.detail }}</p>
+        <h2 class="facility-name">{{ selectedLocation.title }}</h2>
+        <div class="facility-details">
+          <p class="facility-address">
+            <i class="fas fa-map-marker-alt"></i> {{ selectedLocation.address }}
+          </p>
+          <p class="facility-detail">{{ selectedLocation.detail }}</p>
+        </div>
         <button class="navigate-button">길찾기</button>
+        <div class="lecture-info">
+          <p class="lecture-title">탁구 강좌</p>
+          <p class="lecture-time">화, 10 ~ 11시</p>
+          <button class="add-button">추가하기</button>
+        </div>
       </div>
     </div>
   </template>
@@ -48,12 +57,37 @@
   
   onMounted(() => {
     // 지도 초기화
-    map.value = new kakao.maps.Map(map.value, {
-      center: new kakao.maps.LatLng(37.5665, 126.9780), // 지도의 중심 좌표
-      level: 3, // 지도 확대 레벨
-    });
+    const container = map.value;
+    const options = {
+      center: new kakao.maps.LatLng(37.5665, 126.9780),
+      level: 3,
+    };
+    map.value = new kakao.maps.Map(container, options);
   
-    // 마커 생성 및 클릭 이벤트 추가
+    // 현재 위치 표시
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const currentPosition = new kakao.maps.LatLng(lat, lng);
+  
+        // 파란색 동그라미 현재 위치 마커 이미지 설정
+        const imageSrc = 'https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png'; // 파란색 동그라미 마커 이미지
+        const imageSize = new kakao.maps.Size(24, 24); // 이미지 크기
+        const imageOption = { offset: new kakao.maps.Point(12, 12) }; // 마커 중심 조정
+  
+        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+        const marker = new kakao.maps.Marker({
+          position: currentPosition,
+          image: markerImage, // 커스텀 마커 이미지 설정
+        });
+  
+        marker.setMap(map.value);
+        map.value.setCenter(currentPosition);
+      });
+    }
+  
+    // 위치 목록에 대한 마커 생성 및 클릭 이벤트 추가
     locations.forEach((location) => {
       const markerPosition = new kakao.maps.LatLng(location.lat, location.lng);
       const marker = new kakao.maps.Marker({ position: markerPosition });
@@ -72,6 +106,7 @@
     position: relative;
     width: 100%;
     height: 100vh;
+    overflow: hidden;
   }
   
   .back-button {
@@ -86,11 +121,17 @@
     cursor: pointer;
     display: flex;
     align-items: center;
+    z-index: 1000;
   }
   
   .map-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
     width: 100%;
-    height: 70%;
+    height: 100%;
   }
   
   .location-info {
@@ -98,18 +139,29 @@
     padding: 20px;
     position: absolute;
     bottom: 0;
+    left: 0;
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 10px 10px 0 0;
+    z-index: 1000;
   }
   
-  .location-info h2 {
-    margin: 0;
+  .facility-name {
     font-size: 18px;
+    font-weight: bold;
     color: #333;
+    margin: 0 0 10px;
   }
   
-  .location-info p {
+  .facility-details {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  
+  .facility-address, .facility-detail {
     color: #777;
     font-size: 14px;
     margin: 5px 0;
@@ -123,6 +175,40 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+  
+  .lecture-info {
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+    margin-top: 10px;
+    position: relative;
+  }
+  
+  .lecture-title {
+    color: #333;
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
+  .lecture-time {
+    color: #777;
+    font-size: 14px;
+  }
+  
+  .add-button {
+    background-color: #e0f7e9;
+    color: #00c853;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 10px;
+    right: 0;
   }
   </style>
   
