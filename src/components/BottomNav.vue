@@ -1,4 +1,3 @@
-<!-- BottomNav.vue -->
 <template>
   <div class="bottom-nav">
     <button @click="navigate('home')">
@@ -27,11 +26,11 @@ const router = useRouter();
 
 const navigate = (page) => {
   if (page === 'home') {
-    router.push('/');
+    router.push({ name: 'Home' });
   } else if (page === 'indoor') {
-    router.push('/indoor-exercise');
+    router.push({ name: 'IndoorExercise' });
   } else if (page === 'outdoor') {
-    console.log('야외운동 페이지로 이동 (아직 구현되지 않음)');
+    router.push({ name: 'OutdoorExercise' });
   } else if (page === 'profile') {
     console.log('내 정보 페이지로 이동 (아직 구현되지 않음)');
   }
