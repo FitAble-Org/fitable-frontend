@@ -271,11 +271,14 @@ const stopDrag = () => {
   }
 
   .drag-handle {
-  width: 100%;
+  width: 50%;
+  text-align: center;
   height: 5px;
   border-radius: 10px;
   cursor: ns-resize;
   background-color: #e9e9e9;
+  /* margin-bottom: 10px; */
+  margin: auto;
   margin-bottom: 10px;
   }
   </style>
