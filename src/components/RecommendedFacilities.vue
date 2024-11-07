@@ -3,7 +3,7 @@
       <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
       <div ref="map" class="map-container"></div>
       <div v-if="selectedLocation" class="location-info" :style="{ height: `${infoHeight}px` }">
-        <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
+        <div class="drag-handle" @pointerdown="startDrag"></div>
         <h2 class="facility-name">{{ selectedLocation.title }}</h2>
         <div class="facility-details">
           <p class="facility-address">
@@ -34,9 +34,9 @@
         </div>
       </div>
     </div>
-  </template>
+</template>
   
-  <script setup>
+<script setup>
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
   
@@ -51,37 +51,33 @@
 
 
   // 드래그 시작 함수
-const startDrag = (event) => {
-  isDragging = true;
-  event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
-  // 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
-  document.addEventListener('mousemove', onDrag, { passive: false });
-  document.addEventListener('mouseup', stopDrag);
-  document.addEventListener('touchmove', onDrag, { passive: false });
-  document.addEventListener('touchend', stopDrag);
-};
+  const startDrag = (event) => {
+    isDragging = true;
+    event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
+    // 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
+    document.addEventListener('pointermove', onDrag, { passive: false });
+    document.addEventListener('pointerup', stopDrag);
+  };
 
 // 드래그 중 함수
-const onDrag = (event) => {
-  if (isDragging) {
-    // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
-    const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-    if (clientY) {
-      const newHeight = window.innerHeight - clientY;
-      infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
+  const onDrag = (event) => {
+    if (isDragging) {
+      // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
+      const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+      if (clientY) {
+        const newHeight = window.innerHeight - clientY;
+        infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
+      }
     }
-  }
-};
+  };
 
-// 드래그 종료 함수
-const stopDrag = () => {
-  isDragging = false;
-  // 모든 이벤트 제거
-  document.removeEventListener('mousemove', onDrag);
-  document.removeEventListener('mouseup', stopDrag);
-  document.removeEventListener('touchmove', onDrag);
-  document.removeEventListener('touchend', stopDrag);
-};
+  // 드래그 종료 함수
+  const stopDrag = () => {
+    isDragging = false;
+    // 모든 이벤트 제거
+    document.removeEventListener('pointermove', onDrag);
+    document.removeEventListener('pointerup', stopDrag);
+  };
   // 표시할 위치 목록
   const locations = [
     {
@@ -277,7 +273,6 @@ const stopDrag = () => {
   border-radius: 10px;
   cursor: ns-resize;
   background-color: #e9e9e9;
-  /* margin-bottom: 10px; */
   margin: auto;
   margin-bottom: 10px;
   }
