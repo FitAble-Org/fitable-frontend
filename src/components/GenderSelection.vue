@@ -1,35 +1,45 @@
 <template>
-  <div class="gender-selection-container">
-    <h2 class="title">회원가입</h2>
-    <p class="subtitle">성별을 알려주세요</p>
-
-    <div class="gender-options">
-      <button class="gender-button" :class="{ selected: selectedGender === '여성' }" @click="selectGender('여성')">여성</button>
-      <button class="gender-button" :class="{ selected: selectedGender === '남성' }" @click="selectGender('남성')">남성</button>
+  <div class="selection-container">
+    <div class="header">
+      <h2 class="title">회원가입</h2>
+      <p class="subtitle">성별을 알려주세요</p>
     </div>
 
-    <button class="next-button" @click="goToNextStep">다음</button>
+    <div class="option-buttons">
+      <button
+        v-for="gender in genderOptions"
+        :key="gender.label"
+        :class="['option-button', { selected: selectedGender === gender.label }]"
+        @click="selectGender(gender.label)"
+      >
+        {{ gender.label }}
+      </button>
+    </div>
+
+    <button class="next-button" @click="goToNext">다음</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'GenderSelection',
   data() {
     return {
       selectedGender: null,
+      genderOptions: [
+        { label: '여성' },
+        { label: '남성' },
+      ],
     };
   },
   methods: {
     selectGender(gender) {
       this.selectedGender = gender;
     },
-    goToNextStep() {
+    goToNext() {
       if (this.selectedGender) {
-        alert(`선택한 성별: ${this.selectedGender}`);
-        // 다음 단계로 이동하는 로직 추가
+        this.$router.push({ name: 'DisabilityTypeSelection' });
       } else {
-        alert("성별을 선택해주세요.");
+        alert('성별을 선택해주세요.');
       }
     },
   },
@@ -37,13 +47,20 @@ export default {
 </script>
 
 <style scoped>
-.gender-selection-container {
+.selection-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 20px;
   height: 100vh;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  justify-content: space-between; /* 화면 내 균형 배치 */
+}
+
+.header {
+  margin-top: 50px;
 }
 
 .title {
@@ -56,20 +73,19 @@ export default {
 .subtitle {
   font-size: 16px;
   color: #666666;
-  margin-bottom: 40px;
 }
 
-.gender-options {
+.option-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   max-width: 300px;
 }
 
-.gender-button {
+.option-button {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   font-size: 18px;
   color: #333333;
   background-color: #f5f5f5;
@@ -79,7 +95,7 @@ export default {
   text-align: center;
 }
 
-.gender-button.selected {
+.option-button.selected {
   background-color: #4CAF50;
   color: #ffffff;
 }
@@ -87,14 +103,14 @@ export default {
 .next-button {
   width: 80%;
   max-width: 300px;
-  padding: 12px;
+  padding: 15px;
   font-size: 18px;
   color: #ffffff;
   background-color: #4CAF50;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .next-button:hover {

@@ -1,36 +1,47 @@
 <template>
-  <div class="age-selection-container">
-    <h2 class="title">회원가입</h2>
-    <p class="subtitle">나이를 알려주세요</p>
-
-    <div class="age-options">
-      <button class="age-button" :class="{ selected: selectedAge === '10대' }" @click="selectAge('10대')">10대</button>
-      <button class="age-button" :class="{ selected: selectedAge === '20~30대' }" @click="selectAge('20~30대')">2 ~ 30대</button>
-      <button class="age-button" :class="{ selected: selectedAge === '40~50대' }" @click="selectAge('40~50대')">4 ~ 50대</button>
-      <button class="age-button" :class="{ selected: selectedAge === '60대 이상' }" @click="selectAge('60대 이상')">60대 이상</button>
+  <div class="selection-container">
+    <div class="header">
+      <h2 class="title">회원가입</h2>
+      <p class="subtitle">나이를 알려주세요</p>
     </div>
 
-    <button class="next-button" @click="navigateToGenderSelection">다음</button>
+    <div class="option-buttons">
+      <button
+        v-for="age in ageOptions"
+        :key="age.label"
+        :class="['option-button', { selected: selectedAge === age.label }]"
+        @click="selectAge(age.label)"
+      >
+        {{ age.label }}
+      </button>
+    </div>
+
+    <button class="next-button" @click="goToNext">다음</button>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'AgeSelection',
   data() {
     return {
       selectedAge: null,
+      ageOptions: [
+        { label: '10대' },
+        { label: '2 ~ 30대' },
+        { label: '4 ~ 50대' },
+        { label: '60대 이상' },
+      ],
     };
   },
   methods: {
     selectAge(age) {
       this.selectedAge = age;
     },
-    navigateToGenderSelection() {
+    goToNext() {
       if (this.selectedAge) {
         this.$router.push({ name: 'GenderSelection' });
       } else {
-        alert("나이대를 선택해주세요.");
+        alert('나이대를 선택해주세요.');
       }
     },
   },
@@ -38,13 +49,20 @@ export default {
 </script>
 
 <style scoped>
-.age-selection-container {
+.selection-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 20px;
   height: 100vh;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  justify-content: space-between; /* 화면 내 균형 배치 */
+}
+
+.header {
+  margin-top: 50px;
 }
 
 .title {
@@ -57,20 +75,19 @@ export default {
 .subtitle {
   font-size: 16px;
   color: #666666;
-  margin-bottom: 40px;
 }
 
-.age-options {
+.option-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   max-width: 300px;
 }
 
-.age-button {
+.option-button {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   font-size: 18px;
   color: #333333;
   background-color: #f5f5f5;
@@ -80,7 +97,7 @@ export default {
   text-align: center;
 }
 
-.age-button.selected {
+.option-button.selected {
   background-color: #4CAF50;
   color: #ffffff;
 }
@@ -88,14 +105,14 @@ export default {
 .next-button {
   width: 80%;
   max-width: 300px;
-  padding: 12px;
+  padding: 15px;
   font-size: 18px;
   color: #ffffff;
   background-color: #4CAF50;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-bottom: 50px;
 }
 
 .next-button:hover {
