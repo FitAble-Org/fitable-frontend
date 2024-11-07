@@ -123,7 +123,7 @@ h2 {
   padding: 6px; /* 패딩을 더 작게 조정 */
   width: 30px; /* 크기를 줄여서 선택 시 변화 방지 */
   height: 30px; /* 크기를 줄여서 선택 시 변화 방지 */
-  border-radius: 50%;
+  border-radius: 25%;
   cursor: pointer;
   font-size: 14px;
   color: #333;
