@@ -22,15 +22,10 @@
 
 <script>
 export default {
-  props: {
-    disabilityType: {
-      type: String,
-      required: true,
-    },
-  },
   data() {
     return {
       selectedGrade: null,
+      disabilityType: null, // 쿼리 파라미터에서 값을 설정
     };
   },
   computed: {
@@ -44,6 +39,8 @@ export default {
     },
   },
   mounted() {
+    // 쿼리에서 값 가져오기
+    this.disabilityType = this.$route.query.disabilityType;
     console.log("Selected disability type in mounted:", this.disabilityType);
   },
   methods: {
@@ -52,8 +49,8 @@ export default {
     },
     goToNext() {
       if (this.selectedGrade) {
-        // RegistrationInput 페이지로 이동
-        this.$router.push({ name: 'RegistrationInput' });
+        alert(`선택한 등급: ${this.selectedGrade}`);
+        // 다음 단계로 이동하는 로직 추가
       } else {
         alert('등급을 선택해주세요.');
       }
