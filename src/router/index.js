@@ -6,6 +6,9 @@ import GenderSelection from '@/components/signin/GenderSelection.vue';
 import DisabilityTypeSelection from '@/components/signin/DisabilityTypeSelection.vue';
 import DisabilityGradeSelection from '@/components/signin/DisabilityGradeSelection.vue';
 import RegistrationInput from '@/components/signin/RegistrationInput.vue';
+import IndoorExercise from '@/components/IndoorExercise.vue';
+import OutdoorExercise from '@/components/OutdoorExercise.vue';
+import RecommendedFacilities from '@/components/RecommendedFacilities.vue';
 
 const routes = [
   { path: '/', name: 'Welcome', component: Welcome },
@@ -18,7 +21,22 @@ const routes = [
     name: 'DisabilityGradeSelection', 
     component: DisabilityGradeSelection,
   },
-  { path: '/registration-input', name: 'RegistrationInput', component: RegistrationInput }
+  { path: '/registration-input', name: 'RegistrationInput', component: RegistrationInput },
+  {
+    path: '/indoor-exercise',
+    name: 'IndoorExercise',
+    component: IndoorExercise,
+  },
+  {
+    path: '/outdoor-exercise',
+    name: 'OutdoorExercise',
+    component: OutdoorExercise,
+  },
+  {
+    path: '/recommended-facilities',
+    name: 'RecommendedFacilities',
+    component: RecommendedFacilities,
+  },
 ];
 
 const router = createRouter({
