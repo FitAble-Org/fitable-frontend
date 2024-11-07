@@ -2,7 +2,8 @@
     <div class="map-view-container">
       <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
       <div ref="map" class="map-container"></div>
-      <div v-if="selectedLocation" class="location-info">
+      <div v-if="selectedLocation" class="location-info" :style="{ height: `${infoHeight}px` }">
+        <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
         <h2 class="facility-name">{{ selectedLocation.title }}</h2>
         <div class="facility-details">
           <p class="facility-address">
@@ -11,6 +12,21 @@
           <p class="facility-detail">{{ selectedLocation.detail }}</p>
         </div>
         <button class="navigate-button">길찾기</button>
+        <div class="lecture-info">
+          <p class="lecture-title">탁구 강좌</p>
+          <p class="lecture-time">화, 10 ~ 11시</p>
+          <button class="add-button">추가하기</button>
+        </div>
+        <div class="lecture-info">
+          <p class="lecture-title">탁구 강좌</p>
+          <p class="lecture-time">화, 10 ~ 11시</p>
+          <button class="add-button">추가하기</button>
+        </div>
+        <div class="lecture-info">
+          <p class="lecture-title">탁구 강좌</p>
+          <p class="lecture-time">화, 10 ~ 11시</p>
+          <button class="add-button">추가하기</button>
+        </div>
         <div class="lecture-info">
           <p class="lecture-title">탁구 강좌</p>
           <p class="lecture-time">화, 10 ~ 11시</p>
@@ -27,7 +43,42 @@
   const router = useRouter();
   const map = ref(null);
   const selectedLocation = ref(null);
-  
+
+  const infoHeight = ref(200); // 기본 높이 설정
+  let isDragging = false;
+
+
+  // 드래그 시작 함수
+const startDrag = (event) => {
+  isDragging = true;
+  // 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
+  document.addEventListener('mousemove', onDrag, { passive: false });
+  document.addEventListener('mouseup', stopDrag);
+  document.addEventListener('touchmove', onDrag, { passive: false });
+  document.addEventListener('touchend', stopDrag);
+};
+
+// 드래그 중 함수
+const onDrag = (event) => {
+  if (isDragging) {
+    // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
+    const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+    if (clientY) {
+      infoHeight.value = window.innerHeight - clientY;
+      event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
+    }
+  }
+};
+
+// 드래그 종료 함수
+const stopDrag = () => {
+  isDragging = false;
+  // 모든 이벤트 제거
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
+  document.removeEventListener('touchmove', onDrag);
+  document.removeEventListener('touchend', stopDrag);
+};
   // 표시할 위치 목록
   const locations = [
     {
@@ -105,8 +156,11 @@
   .map-view-container {
     position: relative;
     width: 100%;
+    /* 전체 높이를 화면에 맞춤 */
+    /* height: 100%;  */
+
     height: 100vh;
-    overflow: hidden;
+    /* overflow: hidden; */
   }
   
   .back-button {
@@ -146,6 +200,8 @@
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 10px 10px 0 0;
     z-index: 1000;
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    max-height: 80vh; /* 최대 높이를 제한하여 줄어들 때 스크롤 필요 */
   }
   
   .facility-name {
@@ -176,7 +232,7 @@
     cursor: pointer;
     font-size: 14px;
     position: absolute;
-    top: 20px;
+    top: 35px;
     right: 20px;
   }
   
@@ -209,6 +265,15 @@
     position: absolute;
     top: 10px;
     right: 0;
+  }
+
+  .drag-handle {
+  width: 100%;
+  height: 5px;
+  border-radius: 10px;
+  cursor: ns-resize;
+  background-color: #e9e9e9;
+  margin-bottom: 10px;
   }
   </style>
   
