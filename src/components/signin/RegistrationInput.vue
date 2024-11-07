@@ -6,8 +6,12 @@
   
       <div class="input-fields">
         <input type="text" placeholder="아이디" class="input-field" v-model="username" />
+        <div v-if="usernameExists" class="error-message">존재하는 아이디입니다.</div>
+  
         <input type="password" placeholder="비밀번호" class="input-field" v-model="password" />
-        <input type="password" placeholder="비밀번호 확인" class="input-field" v-model="passwordConfirm" />
+        
+        <input type="password" placeholder="비밀번호 확인" class="input-field" v-model="passwordConfirm" @input="checkPasswordMatch" />
+        <div v-if="!isPasswordMatch" class="error-message">비밀번호가 일치하지 않습니다.</div>
       </div>
   
       <button class="submit-button" @click="register">회원가입</button>
@@ -20,18 +24,21 @@
       return {
         username: '',
         password: '',
-        passwordConfirm: ''
+        passwordConfirm: '',
+        usernameExists: false, 
+        isPasswordMatch: true,
       };
     },
     methods: {
+      checkPasswordMatch() {
+        this.isPasswordMatch = this.password === this.passwordConfirm;
+      },
       register() {
-        if (this.password === this.passwordConfirm) {
-          // 회원가입 처리 로직 추가
+        if (this.isPasswordMatch) {
           alert("회원가입 성공!");
-          // 페이지 이동을 위해 router 사용
-          this.$router.push({ name: 'NextPage' }); // 여기에 원하는 페이지 경로로 변경
+          this.$router.push({ name: 'NextPage' });
         } else {
-          alert("비밀번호가 일치하지 않습니다.");
+          alert("입력 정보를 확인해 주세요.");
         }
       }
     }
@@ -67,7 +74,7 @@
     flex-direction: column;
     gap: 15px;
     width: 100%;
-    max-width: 300px;
+    max-width: 250px;
   }
   
   .input-field {
@@ -79,11 +86,20 @@
     border: none;
     border-radius: 8px;
     text-align: center;
+    max-width: 250px; /* 최대 너비 설정 */
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    text-align: left;
   }
   
   .submit-button {
-    width: 80%;
-    max-width: 300px;
+    width: 100%;
+    max-width: 250px; /* 버튼 최대 너비 설정 */
     padding: 15px;
     font-size: 18px;
     color: #ffffff;
