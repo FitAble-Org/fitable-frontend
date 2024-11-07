@@ -44,13 +44,16 @@
   const map = ref(null);
   const selectedLocation = ref(null);
 
-  const infoHeight = ref(200); // 기본 높이 설정
+  const infoHeight = ref(300); // 기본 높이 설정
+  const MIN_HEIGHT = 250; // 최소 높이 설정
+
   let isDragging = false;
 
 
   // 드래그 시작 함수
 const startDrag = (event) => {
   isDragging = true;
+  event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
   // 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
   document.addEventListener('mousemove', onDrag, { passive: false });
   document.addEventListener('mouseup', stopDrag);
@@ -64,8 +67,8 @@ const onDrag = (event) => {
     // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
     const clientY = event.clientY || (event.touches && event.touches[0].clientY);
     if (clientY) {
-      infoHeight.value = window.innerHeight - clientY;
-      event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
+      const newHeight = window.innerHeight - clientY;
+      infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
     }
   }
 };
