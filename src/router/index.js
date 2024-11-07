@@ -4,6 +4,8 @@ import Home from '@/components/Home.vue';
 import IndoorExercise from '@/components/IndoorExercise.vue';
 import OutdoorExercise from '@/components/OutdoorExercise.vue';
 import RecommendedFacilities from '@/components/RecommendedFacilities.vue';
+import AgeSelection from '@/components/AgeSelection.vue';
+import GenderSelection from '@/components/GenderSelection.vue';
 
 const routes = [
   {
@@ -30,6 +32,16 @@ const routes = [
     path: '/recommended-facilities',
     name: 'RecommendedFacilities',
     component: RecommendedFacilities,
+  },
+  {
+    path: '/age-selection',
+    name: 'AgeSelection',
+    component: AgeSelection,
+  },
+  {
+    path: '/gender-selection',
+    name: 'GenderSelection',
+    component: GenderSelection,
   },
 ];
 
