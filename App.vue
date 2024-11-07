@@ -1,15 +1,21 @@
-<!-- App.vue -->
 <template>
   <div class="app-container">
-    <Header />
-    <router-view /> <!-- 라우터 경로에 따른 컴포넌트를 렌더링합니다 -->
-    <BottomNav />
+    <!-- Welcome 페이지가 아닐 때만 Header와 BottomNav를 표시합니다 -->
+    <Header v-if="showHeaderAndNav" />
+    <router-view />
+    <BottomNav v-if="showHeaderAndNav" />
   </div>
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 import Header from './src/components/Header.vue';
 import BottomNav from './src/components/BottomNav.vue';
+
+// 현재 라우터 경로를 가져와 Welcome 페이지인지 확인
+const route = useRoute();
+const showHeaderAndNav = computed(() => route.name !== 'Welcome');
 </script>
 
 <style scoped>
