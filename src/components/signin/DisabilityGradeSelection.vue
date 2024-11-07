@@ -49,8 +49,14 @@ export default {
     },
     goToNext() {
       if (this.selectedGrade) {
-        alert(`선택한 등급: ${this.selectedGrade}`);
-        // 다음 단계로 이동하는 로직 추가
+        // 'registration-input'으로 이동하면서 선택된 등급과 유형을 쿼리로 전달
+        this.$router.push({
+          name: 'RegistrationInput',
+          query: {
+            disabilityType: this.disabilityType,
+            disabilityLevel: this.selectedGrade
+          }
+        });
       } else {
         alert('등급을 선택해주세요.');
       }
