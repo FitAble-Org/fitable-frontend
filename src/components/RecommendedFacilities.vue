@@ -200,7 +200,7 @@ onMounted(() => {
 
 .location-info {
   background-color: #ffffff;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   position: absolute;
   bottom: 0;
   left: 0;
@@ -280,11 +280,10 @@ onMounted(() => {
 .drag-handle {
 width: 100%;
 text-align: center;
-height: 20px;
+height: 45px;
 border-radius: 10px;
 cursor: ns-resize;
 /* background-color: #e9e9e9; */
 margin: auto;
-margin-bottom: 10px;
 }
 </style>
