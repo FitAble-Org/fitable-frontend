@@ -14,15 +14,28 @@
   
       <!-- 각 활동 표시 -->
       <div v-for="(activity, index) in filteredActivities" :key="index" class="activity-item">
-        <div class="activity-name">{{ activity.name }}</div>
-        <div class="activity-duration">{{ activity.duration }}분</div>
+        <div>
+          <div class="activity-name">{{ activity.name }}</div>
+          <div class="activity-duration">{{ activity.duration }}분</div>
+        </div>
+        <font-awesome-icon icon="fa-regular fa-pen-to-square" class="edit-icon" @click="openEditPopup(index)"/>
+      </div>
+    </div>
+
+    <div v-if="isEditPopupVisible" class="popup-overlay">
+      <div class="popup">
+        <p>몇 분 운동하셨나요?</p>
+        <input type="number" v-model="newDuration" placeholder="시간을 입력하세요" />
+        <button class="confirm-button" @click="saveDuration">저장</button>
+        <button class="cancel-button" @click="closeEditPopup">취소</button>
       </div>
     </div>
   </template>
   
   <script setup>
-  import { defineProps, computed } from 'vue';
-  
+  import { defineProps, computed, ref } from 'vue';
+  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
   const props = defineProps({
     events: Array,
     type: String,
@@ -33,6 +46,32 @@
   
   // 총 운동 시간을 계산
   const totalDuration = computed(() => filteredActivities.value.reduce((sum, activity) => sum + activity.duration, 0));
+
+  // 팝업 상태와 수정할 시간 관련 상태 변수
+  const isEditPopupVisible = ref(false);
+  const editingIndex = ref(null);
+  const newDuration = ref(0);
+
+  // 팝업 열기
+  function openEditPopup(index) {
+    editingIndex.value = index;
+    newDuration.value = filteredActivities.value[index].duration;
+    isEditPopupVisible.value = true;
+  }
+
+  // 팝업 닫기
+  function closeEditPopup() {
+    isEditPopupVisible.value = false;
+    editingIndex.value = null;
+  }
+
+  // 시간 저장
+  function saveDuration() {
+    if (editingIndex.value !== null && newDuration.value >= 0) {
+      filteredActivities.value[editingIndex.value].duration = newDuration.value;
+      closeEditPopup();
+    }
+  }
   </script>
   
   <style scoped>
@@ -79,15 +118,24 @@
     background-color: #e0e0e0;
     margin: 10px 0;
   }
-  
+/*   
   .activity-item {
     display: flex;
-    flex-direction: column; /* 세로 배치 */
+    flex-direction: column; 
     align-items: flex-start;
     padding: 10px 0;
     font-size: 14px;
     color: #333;
-  }
+  } */
+
+  .activity-item {
+  display: flex;
+  justify-content: space-between; /* 아이콘을 오른쪽 끝으로 배치 */
+  align-items: center;
+  padding: 10px 0;
+  font-size: 14px;
+  color: #333;
+}
   
   .activity-name {
     font-weight: bold;
@@ -99,5 +147,71 @@
     font-size: 12px;
     color: #888;
   }
+
+
+.edit-icon {
+  cursor: pointer;
+  color: #4caf50;
+  font-size: 18px;
+}
+
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.confirm-button,
+.cancel-button {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.confirm-button {
+  background-color: #4caf50;
+  color: white;
+  margin-right: 8px;
+}
+
+.cancel-button {
+  background-color: #f5f5f5;
+  color: #333;
+}
   </style>
   

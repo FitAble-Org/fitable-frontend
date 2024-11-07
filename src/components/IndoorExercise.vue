@@ -16,17 +16,13 @@
     </div>
   </div>
 
-
-  <div v-if="isPopupVisible" class="popup-overlay">
-      <div class="popup">
-        <p>운동을 추가했습니다.<br>홈화면에서 운동 후 시간을 기록해 주세요!</p>
-        <button class="confirm-button" @click="closePopup">확인</button>
-      </div>
-  </div>
+  <Popup :isVisible="isPopupVisible" @close="closePopup" />
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import Popup from '@/components/Popup.vue';
+
 
 const exercises = ref([
   { name: '앉았다 일어서기', type: '준비운동', recommendation: '중' },
@@ -46,7 +42,6 @@ const filteredExercises = computed(() => {
 });
 
 function showPopup() {
-  console.log("pop");
   isPopupVisible.value = true;
 }
 
@@ -131,8 +126,7 @@ function closePopup() {
   top: 20px;
   right: 15px;
 }
-
-/* 팝업 오버레이 스타일 */
+/*
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -146,7 +140,6 @@ function closePopup() {
   z-index: 1000;
 }
 
-/* 팝업 스타일 */
 .popup {
   background-color: white;
   padding: 24px;
@@ -173,5 +166,6 @@ function closePopup() {
   cursor: pointer;
   border-radius: 8px;
   font-size: 16px;
-}
+} 
+*/
 </style>
