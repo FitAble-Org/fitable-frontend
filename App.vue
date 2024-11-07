@@ -16,7 +16,7 @@ import BottomNav from './src/components/BottomNav.vue';
 // 현재 라우터 경로를 가져와 특정 페이지인지 확인
 const route = useRoute();
 const showHeaderAndNav = computed(() => 
-  !['Welcome', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection', 'DisabilityGradeSelection'].includes(route.name)
+  !['Welcome', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection', 'DisabilityGradeSelection', 'RegistrationInput'].includes(route.name)
 ); // Welcome, AgeSelection, GenderSelection, RecommendedFacilities에서 헤더와 네비게이션 바를 숨김
 </script>
 

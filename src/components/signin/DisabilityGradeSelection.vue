@@ -1,134 +1,135 @@
 <template>
-    <div class="selection-container">
-      <div class="header">
-        <h2 class="title">회원가입</h2>
-        <p class="subtitle">등급을 알려주세요</p>
-      </div>
-  
-      <div class="option-buttons">
-        <button
-          v-for="grade in grades"
-          :key="grade"
-          :class="['option-button', { selected: selectedGrade === grade }]"
-          @click="selectGrade(grade)"
-        >
-          {{ grade }}
-        </button>
-      </div>
-  
-      <button class="next-button" @click="goToNext">다음</button>
+  <div class="selection-container">
+    <div class="header">
+      <h2 class="title">회원가입</h2>
+      <p class="subtitle">등급을 알려주세요</p>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    computed: {
-      disabilityType() {
-        return this.$route.query.disabilityType;
-      },
-      grades() {
-        console.log("Computed grades based on disabilityType:", this.disabilityType);
-        if (this.disabilityType === '척수장애') {
-          return ['불완전 마비', '완전 마비'];
-        } else {
-          return ['1등급', '2등급', '3등급', '4등급', '5등급', '6등급'];
-        }
-      },
+
+    <div class="option-buttons">
+      <button
+        v-for="grade in grades"
+        :key="grade"
+        :class="['option-button', { selected: selectedGrade === grade }]"
+        @click="selectGrade(grade)"
+      >
+        {{ grade }}
+      </button>
+    </div>
+
+    <button class="next-button" @click="goToNext">다음</button>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    disabilityType: {
+      type: String,
+      required: true,
     },
-    data() {
-      return {
-        selectedGrade: null,
-      };
+  },
+  data() {
+    return {
+      selectedGrade: null,
+    };
+  },
+  computed: {
+    grades() {
+      console.log("Computed grades based on disabilityType:", this.disabilityType);
+      if (this.disabilityType === '척수장애') {
+        return ['불완전 마비', '완전 마비'];
+      } else {
+        return ['1등급', '2등급', '3등급', '4등급', '5등급', '6등급'];
+      }
     },
-    mounted() {
-      console.log("Selected disability type in mounted:", this.disabilityType);
+  },
+  mounted() {
+    console.log("Selected disability type in mounted:", this.disabilityType);
+  },
+  methods: {
+    selectGrade(grade) {
+      this.selectedGrade = grade;
     },
-    methods: {
-      selectGrade(grade) {
-        this.selectedGrade = grade;
-      },
-      goToNext() {
-        if (this.selectedGrade) {
-          alert(`선택한 등급: ${this.selectedGrade}`);
-          // 다음 단계로 이동하는 로직 추가
-        } else {
-          alert('등급을 선택해주세요.');
-        }
-      },
+    goToNext() {
+      if (this.selectedGrade) {
+        // RegistrationInput 페이지로 이동
+        this.$router.push({ name: 'RegistrationInput' });
+      } else {
+        alert('등급을 선택해주세요.');
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  /* 기존 스타일 코드 사용 */
-  .selection-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
-    height: 100vh;
-    background-color: #ffffff;
-    box-sizing: border-box;
-    justify-content: space-between;
-  }
-  
-  .header {
-    margin-top: 50px;
-  }
-  
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333333;
-    margin-bottom: 8px;
-  }
-  
-  .subtitle {
-    font-size: 16px;
-    color: #666666;
-  }
-  
-  .option-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    max-width: 300px;
-  }
-  
-  .option-button {
-    width: 100%;
-    padding: 15px;
-    font-size: 18px;
-    color: #333333;
-    background-color: #f5f5f5;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-  }
-  
-  .option-button.selected {
-    background-color: #4CAF50;
-    color: #ffffff;
-  }
-  
-  .next-button {
-    width: 80%;
-    max-width: 300px;
-    padding: 15px;
-    font-size: 18px;
-    color: #ffffff;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 50px;
-  }
-  
-  .next-button:hover {
-    background-color: #45a049;
-  }
-  </style>
-  
+  },
+};
+</script>
+
+<style scoped>
+.selection-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
+.header {
+  margin-top: 50px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666666;
+}
+
+.option-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.option-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  color: #333333;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.option-button.selected {
+  background-color: #4CAF50;
+  color: #ffffff;
+}
+
+.next-button {
+  width: 80%;
+  max-width: 300px;
+  padding: 15px;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 50px;
+}
+
+.next-button:hover {
+  background-color: #45a049;
+}
+</style>
