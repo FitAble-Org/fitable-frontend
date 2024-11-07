@@ -12,33 +12,24 @@
           <p class="facility-detail">{{ selectedLocation.detail }}</p>
         </div>
         <button class="navigate-button">길찾기</button>
-        <div class="lecture-info">
-          <p class="lecture-title">탁구 강좌</p>
-          <p class="lecture-time">화, 10 ~ 11시</p>
-          <button class="add-button">추가하기</button>
-        </div>
-        <div class="lecture-info">
-          <p class="lecture-title">탁구 강좌</p>
-          <p class="lecture-time">화, 10 ~ 11시</p>
-          <button class="add-button">추가하기</button>
-        </div>
-        <div class="lecture-info">
-          <p class="lecture-title">탁구 강좌</p>
-          <p class="lecture-time">화, 10 ~ 11시</p>
-          <button class="add-button">추가하기</button>
-        </div>
-        <div class="lecture-info">
-          <p class="lecture-title">탁구 강좌</p>
-          <p class="lecture-time">화, 10 ~ 11시</p>
-          <button class="add-button">추가하기</button>
-        </div>
+        
+        <div v-for="(lecture, index) in selectedLocation.lecture" :key="index" class="lecture-info">
+        <p class="lecture-title">{{ lecture.name }}</p>
+        <p class="lecture-time">{{ lecture.time }}</p>
+        <button class="add-button" @click="showPopup()">추가하기</button>
+      </div>
+      
       </div>
     </div>
+
+   <Popup :isVisible="isPopupVisible" @close="closePopup" />
+
 </template>
   
 <script setup>
   import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
+  import Popup from '@/components/Popup.vue';
   
   const router = useRouter();
   const map = ref(null);
@@ -46,8 +37,19 @@
 
   const infoHeight = ref(300); // 기본 높이 설정
   const MIN_HEIGHT = 250; // 최소 높이 설정
-
   let isDragging = false;
+  
+  const isPopupVisible = ref(false);
+
+
+
+  function showPopup() {
+    isPopupVisible.value = true;
+  }
+
+  function closePopup() {
+    isPopupVisible.value = false;
+  }
 
 
   // 드래그 시작 함수
@@ -86,6 +88,10 @@
       detail: '4층 한숲 스포츠센터',
       lat: 37.5665,
       lng: 126.9780,
+      lecture: [
+        { name: '헬스트레이닝 강좌', time: '월, 10 ~ 11시' },
+        { name: '요가 강좌', time: '화, 15 ~ 16시' }
+      ]
     },
     {
       title: '탁구 강좌',
@@ -93,7 +99,11 @@
       detail: '화, 10 ~ 11시',
       lat: 37.5655,
       lng: 126.9769,
-    },
+      lecture: [
+        { name: '탁구 입문 강좌', time: '화, 10 ~ 11시' },
+        { name: '탁구 중급 강좌', time: '수, 14 ~ 15시' }
+      ]
+    }
   ];
   
   // 뒤로가기 동작
