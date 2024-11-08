@@ -6,11 +6,11 @@
     </button>
     <button @click="navigate('indoor')">
       <i class="fas fa-dumbbell"></i>
-      <span>실내운동</span>
+      <span>가정운동</span>
     </button>
     <button @click="navigate('outdoor')">
       <i class="fas fa-tree"></i>
-      <span>야외운동</span>
+      <span>외부운동</span>
     </button>
     <button @click="navigate('profile')">
       <i class="fas fa-user"></i>
