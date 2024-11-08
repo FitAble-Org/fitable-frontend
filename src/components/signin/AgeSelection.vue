@@ -81,12 +81,11 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 100%;
+  width: 80%;
   max-width: 300px;
 }
 
 .option-button {
-  width: 100%;
   padding: 15px;
   font-size: 18px;
   color: #333333;

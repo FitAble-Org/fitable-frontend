@@ -6,12 +6,12 @@
   
       <div class="input-fields">
         <input type="text" placeholder="아이디" class="input-field" v-model="username" />
-        <div v-if="usernameExists" class="error-message">존재하는 아이디입니다.</div>
+        <div v-show="usernameExists" class="error-message">존재하는 아이디입니다.</div>
   
         <input type="password" placeholder="비밀번호" class="input-field" v-model="password" />
         
         <input type="password" placeholder="비밀번호 확인" class="input-field" v-model="passwordConfirm" @input="checkPasswordMatch" />
-        <div v-if="!isPasswordMatch" class="error-message">비밀번호가 일치하지 않습니다.</div>
+        <div v-show="!isPasswordMatch" class="error-message">비밀번호가 일치하지 않습니다.</div>
       </div>
   
       <button class="submit-button" @click="register">회원가입</button>
@@ -73,12 +73,11 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 100%;
-    max-width: 250px;
+    width: 80%;
+    max-width: 300px;
   }
   
   .input-field {
-    width: 100%;
     padding: 15px;
     font-size: 18px;
     color: #333333;
@@ -86,28 +85,26 @@
     border: none;
     border-radius: 8px;
     text-align: center;
-    max-width: 250px; /* 최대 너비 설정 */
   }
   
   .error-message {
     color: red;
     font-size: 14px;
-    margin-top: -10px;
-    margin-bottom: 10px;
+    margin: -10px 0 10px 10px;
     text-align: left;
   }
   
   .submit-button {
-    width: 100%;
-    max-width: 250px; /* 버튼 최대 너비 설정 */
-    padding: 15px;
-    font-size: 18px;
-    color: #ffffff;
-    background-color: #4CAF50;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 50px;
+    width: 80%;
+  max-width: 300px;
+  padding: 15px;
+  font-size: 18px;
+  color: #ffffff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 50px;
   }
   
   .submit-button:hover {
