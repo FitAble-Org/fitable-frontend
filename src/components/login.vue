@@ -1,20 +1,15 @@
 <template>
     <div class="registration-container">
       <div class="header">
-        <h2 class="title">회원가입</h2>
+        <h2 class="title">로그인</h2>
       </div>
   
       <div class="input-fields">
         <input type="text" placeholder="아이디" class="input-field" v-model="username" />
-        <div v-show="usernameExists" class="error-message">존재하는 아이디입니다.</div>
-  
         <input type="password" placeholder="비밀번호" class="input-field" v-model="password" />
-        
-        <input type="password" placeholder="비밀번호 확인" class="input-field" v-model="passwordConfirm" @input="checkPasswordMatch" />
-        <div v-show="!isPasswordMatch" class="error-message">비밀번호가 일치하지 않습니다.</div>
       </div>
   
-      <button class="submit-button" @click="register">회원가입</button>
+      <button class="submit-button" @click="login">로그인</button>
     </div>
   </template>
   
@@ -24,21 +19,15 @@
       return {
         username: '',
         password: '',
-        passwordConfirm: '',
-        usernameExists: false, 
-        isPasswordMatch: true,
       };
     },
     methods: {
-      checkPasswordMatch() {
-        this.isPasswordMatch = this.password === this.passwordConfirm;
-      },
-      register() {
-        if (this.isPasswordMatch) {
-          alert("회원가입 성공!");
-          this.$router.push({ name: 'Login' });
+      login() {
+        if (this.username && this.password) {
+          alert("로그인 성공!");
+          this.$router.push({ name: 'Home' });
         } else {
-          alert("입력 정보를 확인해 주세요.");
+          alert("아이디와 비밀번호를 입력해 주세요.");
         }
       }
     }
@@ -87,24 +76,17 @@
     text-align: center;
   }
   
-  .error-message {
-    color: red;
-    font-size: 14px;
-    margin: -10px 0 10px 10px;
-    text-align: left;
-  }
-  
   .submit-button {
     width: 80%;
-  max-width: 300px;
-  padding: 15px;
-  font-size: 18px;
-  color: #ffffff;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 50px;
+    max-width: 300px;
+    padding: 15px;
+    font-size: 18px;
+    color: #ffffff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 50px;
   }
   
   .submit-button:hover {

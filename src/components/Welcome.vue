@@ -18,7 +18,7 @@
         this.$router.push({ name: 'AgeSelection' }); // 변경된 라우트 이름으로 수정
       },
       navigateToHome() {
-        this.$router.push({ name: 'Home' });
+        this.$router.push({ name: 'Login' });
       },
     },
   };

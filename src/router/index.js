@@ -9,10 +9,12 @@ import RegistrationInput from '@/components/signin/RegistrationInput.vue';
 import IndoorExercise from '@/components/IndoorExercise.vue';
 import OutdoorExercise from '@/components/OutdoorExercise.vue';
 import RecommendedFacilities from '@/components/RecommendedFacilities.vue';
+import Login from '@/components/login.vue';
 
 const routes = [
   { path: '/', name: 'Welcome', component: Welcome },
   { path: '/home', name: 'Home', component: Home },
+  { path: '/login', name: 'Login', component: Login},
   { path: '/age-selection', name: 'AgeSelection', component: AgeSelection },
   { path: '/gender-selection', name: 'GenderSelection', component: GenderSelection },
   { path: '/disability-type-selection', name: 'DisabilityTypeSelection', component: DisabilityTypeSelection },
