@@ -33,7 +33,6 @@ export default {
         { label: '도보 50분 이내', radiusKm: 2 },
         { label: '대중교통 30분 이내', radiusKm: 3 },
       ],
-      facilities: [], // 시설 정보를 저장할 배열
       currentPosition: null, // 사용자 현재 위치
     };
   },
@@ -72,23 +71,15 @@ export default {
 
         axios.post('/api/facilities/nearby', locationRequest)
           .then(response => {
-            this.facilities = response.data.facilities; // 시설 데이터 저장
+            const { itemNames, gptResponseContent } = response.data;
 
-            const responseContent = response.data.gptResponseContent;
-            
-            // 질문과 운동 파트 분리
-            const [questionsPart, exercisesPart] = responseContent.split('\n\n');
-            const questions = questionsPart.split('\n').slice(0, 3); // 질문 배열
-            const exercises = exercisesPart.split('/'); // 운동 배열
-
-            // Question 페이지로 질문과 운동 항목 전달
+            // 질문과 운동 항목 전달
             this.$router.push({
               name: 'Question',
               query: {
-                questions: JSON.stringify(questions),
-                exercises: JSON.stringify(exercises),
+                questions: JSON.stringify(gptResponseContent.split('\n').slice(0, 3)),
+                exercises: JSON.stringify(itemNames), // itemNames 배열 전달
                 index: 0, // 첫 번째 질문으로 시작
-                facilities: JSON.stringify(this.facilities), // 시설 정보 전달
               },
             });
           })
