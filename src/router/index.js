@@ -1,14 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
+//기본
 import Welcome from '@/components/Welcome.vue';
 import Home from '@/components/Home.vue';
+//회원가입
 import AgeSelection from '@/components/signin/AgeSelection.vue';
 import GenderSelection from '@/components/signin/GenderSelection.vue';
 import DisabilityTypeSelection from '@/components/signin/DisabilityTypeSelection.vue';
 import DisabilityGradeSelection from '@/components/signin/DisabilityGradeSelection.vue';
 import RegistrationInput from '@/components/signin/RegistrationInput.vue';
-import IndoorExercise from '@/components/IndoorExercise.vue';
-import RecommendedFacilities from '@/components/RecommendedFacilities.vue';
+//로그인
 import Login from '@/components/Login.vue';
+import IndoorExercise from '@/components/IndoorExercise.vue';
+//외부시설
 import DistanceSelection from '@/components/facilitytraining/DistanceSelection.vue';
 import Question from '@/components/facilitytraining/Question.vue';
 import RecommendedExercise from '@/components/facilitytraining/RecommendedExercise.vue';
