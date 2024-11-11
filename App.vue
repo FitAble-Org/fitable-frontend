@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <!-- 특정 페이지가 아닐 때만 Header와 BottomNav를 표시합니다 -->
-    <Header v-if="showHeaderAndNav" />
+    <!-- 특정 페이지가 아닐 때만 Header와 BottomNav를 각각 표시합니다 -->
+    <Header v-if="showHeader" />
     <router-view />
-    <BottomNav v-if="showHeaderAndNav" />
+    <BottomNav v-if="showNav" />
   </div>
 </template>
 
@@ -15,9 +15,17 @@ import BottomNav from './src/components/BottomNav.vue';
 
 // 현재 라우터 경로를 가져와 특정 페이지인지 확인
 const route = useRoute();
-const showHeaderAndNav = computed(() => 
-  !['Welcome', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection', 'DisabilityGradeSelection', 'RegistrationInput', 'Login'].includes(route.name)
-); // Welcome, AgeSelection, GenderSelection, RecommendedFacilities에서 헤더와 네비게이션 바를 숨김
+
+// 헤더와 네비게이션 바 각각의 표시 조건을 설정
+const showHeader = computed(() => 
+  !['Welcome', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection',
+    'DisabilityGradeSelection', 'RegistrationInput', 'Login',
+  'RecommendedExercise', 'Question', 'FacilitiesMap', 'DistanceSelection'].includes(route.name)
+);
+
+const showNav = computed(() => 
+  !['Welcome', 'FacilitiesMap'].includes(route.name)
+); // 네비게이션 바는 특정 페이지에서만 숨김
 </script>
 
 <style scoped>
