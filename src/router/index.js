@@ -15,6 +15,7 @@ import IndoorExercise from '@/components/IndoorExercise.vue';
 import DistanceSelection from '@/components/facilitytraining/DistanceSelection.vue';
 import Question from '@/components/facilitytraining/Question.vue';
 import RecommendedExercise from '@/components/facilitytraining/RecommendedExercise.vue';
+import FacilitiesMap from '@/components/facilitytraining/FacilitiesMap.vue';
 
 const routes = [
   { path: '/', name: 'Welcome', component: Welcome },
@@ -35,11 +36,6 @@ const routes = [
     component: IndoorExercise,
   },
   {
-    path: '/recommended-facilities',
-    name: 'RecommendedFacilities',
-    component: RecommendedFacilities,
-  },
-  {
     path: '/distance-selection',
     name: 'DistanceSelection',
     component: DistanceSelection,
@@ -54,6 +50,11 @@ const routes = [
     path: '/recommended-exercise',
     name: 'RecommendedExercise',
     component: RecommendedExercise,
+  },
+  {
+    path: '/facilities-map',
+    name: 'FacilitiesMap',
+    component: FacilitiesMap
   },
 ];
 
