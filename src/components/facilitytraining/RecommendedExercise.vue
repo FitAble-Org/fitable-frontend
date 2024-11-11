@@ -14,23 +14,16 @@
 </template>
 
 <script>
-// RecommendedExercise.vue
-
-import axios from 'axios';
-axios.defaults.withCredentials = true; // 세션 유지 설정
-
 export default {
   data() {
     return {
       recommendedExercise: '',
-      facilities: [], // 백엔드에서 받아올 시설 데이터 저장
       exercises: JSON.parse(this.$route.query.exercises || '[]'),
       userResponses: JSON.parse(this.$route.query.userResponses || '[]'),
     };
   },
   created() {
     this.calculateRecommendedExercise();
-    this.fetchFacilitiesByRecommendedExercise();
   },
   methods: {
     calculateRecommendedExercise() {
@@ -38,35 +31,21 @@ export default {
         this.recommendedExercise = '추천 결과가 없습니다.';
         return;
       }
-
       const binaryResponse = this.userResponses.join('');
       const index = parseInt(binaryResponse, 2);
       this.recommendedExercise = this.exercises[index] || '추천 운동 없음';
     },
-    async fetchFacilitiesByRecommendedExercise() {
-      try {
-        const response = await axios.get('/api/facilities/filter', {
-          baseURL: 'http://localhost:8080', // 개별 요청에 baseURL 지정
-          params: { itemName: this.recommendedExercise },
-          withCredentials: true, // 개별 요청에 withCredentials 설정
-        });
-        this.facilities = response.data;
-        console.log("Filtered facilities:", this.facilities);
-      } catch (error) {
-        console.error("Error fetching facilities:", error);
-      }
-    },
     goToMap() {
-      this.$router.push({
-        name: 'FacilitiesMap',
-        query: {
-          facilities: JSON.stringify(this.facilities), // 시설 데이터를 JSON으로 전달
-        },
-      });
-    },
+    this.$router.push({
+      name: 'FacilitiesMap',
+      query: {
+        recommendedExercise: this.recommendedExercise, // 추천 운동명 전달
+        itemName: this.recommendedExercise, // itemName을 추가로 전달
+      },
+    });
+  },
   },
 };
-
 </script>
 
 <style scoped>
