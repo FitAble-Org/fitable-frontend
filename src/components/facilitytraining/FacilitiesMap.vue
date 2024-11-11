@@ -43,7 +43,7 @@ const goBack = () => {
   }
 };
 
-// 카카오 지도와 마커를 초기화하는 함수
+// 현재 위치 마커 추가 및 지도 중심 설정
 const initializeMap = (facilityLocations, centerLat, centerLng) => {
   const container = map.value;
   const options = {
@@ -52,15 +52,27 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
   };
   map.value = new kakao.maps.Map(container, options);
 
-  // 시설 위치에 마커 추가
+  // 사용자 위치 마커 (파란색 원형 마커)
+  const currentPosition = new kakao.maps.LatLng(centerLat, centerLng);
+  const imageSrc = 'https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png';  // 파란색 원형 아이콘 이미지 URL
+  const imageSize = new kakao.maps.Size(24, 24);  // 크기
+  const imageOption = { offset: new kakao.maps.Point(12, 12) };  // 오프셋 (중심 조정)
+
+  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+  const currentMarker = new kakao.maps.Marker({
+    position: currentPosition,
+    image: markerImage,  // 커스텀 이미지 적용
+  });
+  currentMarker.setMap(map.value);  // 마커 지도에 표시
+
+  // 시설 위치 마커 추가
   facilityLocations.forEach((facility) => {
     const markerPosition = new kakao.maps.LatLng(
       facility.fcltyYCrdntValue,
       facility.fcltyXCrdntValue
     );
-    const marker = new kakao.maps.Marker({
-      position: markerPosition,
-    });
+    const marker = new kakao.maps.Marker({ position: markerPosition });
 
     marker.setMap(map.value);
 
@@ -87,7 +99,7 @@ const fetchFacilities = async (lat, lng) => {
     initializeMap(facilities.value, lat, lng); // 지도 초기화 및 마커 추가
   } catch (error) {
     console.error('시설 데이터를 가져오는 데 실패했습니다:', error);
-    alert('시설 데이터를 불러오는 데 문제가 발생했습니다. 다시 시도해주세요.');
+    alert('시설 데이터를 불러오는 데 문제가 발생했습니다.');
   }
 };
 
