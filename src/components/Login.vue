@@ -34,6 +34,7 @@
   };
   </script>
   
+  
   <style scoped>
   .registration-container {
     display: flex;
