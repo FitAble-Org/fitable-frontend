@@ -30,7 +30,7 @@ const navigate = (page) => {
   } else if (page === 'indoor') {
     router.push({ name: 'IndoorExercise' });
   } else if (page === 'outdoor') {
-    router.push({ name: 'OutdoorExercise' });
+    router.push({ name: 'DistanceSelection' });
   } else if (page === 'profile') {
     console.log('내 정보 페이지로 이동 (아직 구현되지 않음)');
   }
