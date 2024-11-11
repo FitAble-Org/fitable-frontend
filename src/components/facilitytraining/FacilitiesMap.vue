@@ -48,7 +48,7 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
   const container = map.value;
   const options = {
     center: new kakao.maps.LatLng(centerLat, centerLng), // 사용자 현재 위치를 초기 중심으로 설정
-    level: 3,
+    level: 5,
   };
   map.value = new kakao.maps.Map(container, options);
 
