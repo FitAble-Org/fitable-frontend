@@ -21,6 +21,11 @@
 </template>
 
 <script>
+
+import axios from 'axios';
+axios.defaults.withCredentials = true; // 세션 유지 설정
+
+
 export default {
   data() {
     return {

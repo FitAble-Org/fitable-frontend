@@ -22,7 +22,8 @@
 
 <script>
 import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.withCredentials = true; // 세션 유지 설정
+axios.defaults.baseURL = 'http://localhost:8080'; // 기본 URL 설정
 
 export default {
   data() {
@@ -95,6 +96,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .selection-container {
