@@ -9,7 +9,7 @@
       <p>{{ recommendedExercise }}</p>
     </div>
 
-    <button class="home-button" @click="goHome">홈으로 돌아가기</button>
+    <button class="map-button" @click="goToMap">지도 보기</button> <!-- 지도 보기 버튼 추가 -->
   </div>
 </template>
 
@@ -36,9 +36,15 @@ export default {
       const index = parseInt(binaryResponse, 2);
       this.recommendedExercise = this.exercises[index] || '추천 운동 없음';
     },
-    goHome() {
-      this.$router.push({ name: 'Home' });
-    },
+    goToMap() {
+    this.$router.push({
+      name: 'FacilitiesMap',
+      query: {
+        facilities: this.$route.query.facilities, // 시설 데이터를 그대로 전달
+      },
+    });
+  }
+
   },
 };
 </script>
@@ -79,7 +85,7 @@ export default {
   margin: 20px 0;
 }
 
-.home-button {
+.map-button { /* 지도 보기 버튼 스타일 */
   width: 80%;
   max-width: 300px;
   padding: 15px;
@@ -92,7 +98,7 @@ export default {
   margin-bottom: 50px;
 }
 
-.home-button:hover {
+.map-button:hover {
   background-color: #45a049;
 }
 </style>

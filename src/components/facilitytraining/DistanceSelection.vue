@@ -33,22 +33,47 @@ export default {
         { label: '도보 50분 이내', radiusKm: 2 },
         { label: '대중교통 30분 이내', radiusKm: 3 },
       ],
+      facilities: [], // 시설 정보를 저장할 배열
+      currentPosition: null, // 사용자 현재 위치
     };
   },
+  mounted() {
+    // 페이지 로드 시 사용자 위치 가져오기
+    this.getUserLocation();
+  },
   methods: {
+    getUserLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.currentPosition = {
+              x: position.coords.longitude, // 경도
+              y: position.coords.latitude,  // 위도
+            };
+          },
+          (error) => {
+            console.error("위치 정보를 가져오지 못했습니다:", error);
+          }
+        );
+      } else {
+        alert("위치 정보를 사용할 수 없는 브라우저입니다.");
+      }
+    },
     selectOption(index) {
       this.selectedOption = index;
     },
     goToNext() {
-      if (this.selectedOption !== null) {
+      if (this.selectedOption !== null && this.currentPosition) {
         const locationRequest = {
-          x: 127.1234,
-          y: 37.5678,
+          x: this.currentPosition.x, // 사용자 위치의 경도
+          y: this.currentPosition.y, // 사용자 위치의 위도
           radiusKm: this.distanceOptions[this.selectedOption].radiusKm,
         };
 
         axios.post('/api/facilities/nearby', locationRequest)
           .then(response => {
+            this.facilities = response.data.facilities; // 시설 데이터 저장
+
             const responseContent = response.data.gptResponseContent;
             
             // 질문과 운동 파트 분리
@@ -63,14 +88,17 @@ export default {
                 questions: JSON.stringify(questions),
                 exercises: JSON.stringify(exercises),
                 index: 0, // 첫 번째 질문으로 시작
+                facilities: JSON.stringify(this.facilities), // 시설 정보 전달
               },
             });
           })
           .catch(error => {
             console.error('API 요청 오류:', error);
           });
+      } else if (!this.currentPosition) {
+        alert("현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
       } else {
-        alert('선호하는 거리를 선택해주세요.');
+        alert("선호하는 거리를 선택해주세요.");
       }
     },
   },

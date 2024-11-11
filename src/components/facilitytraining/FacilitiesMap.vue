@@ -4,173 +4,118 @@
     <div ref="map" class="map-container"></div>
     <div v-if="selectedLocation" class="location-info" :style="{ height: `${infoHeight}px` }">
       <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
-      <h2 class="facility-name">{{ selectedLocation.title }}</h2>
+      <h2 class="facility-name">{{ selectedLocation.fcltyNm }}</h2>
       <div class="facility-details">
         <p class="facility-address">
-          <i class="fas fa-map-marker-alt"></i> {{ selectedLocation.address }}
+          <i class="fas fa-map-marker-alt"></i> {{ selectedLocation.fcltyAddr }}
         </p>
-        <p class="facility-detail">{{ selectedLocation.detail }}</p>
+        <p class="facility-detail">{{ selectedLocation.itemNm }}</p>
       </div>
       <button class="navigate-button">길찾기</button>
-      <div v-for="(lecture, index) in selectedLocation.lecture" :key="index" class="lecture-info">
-      <p class="lecture-title">{{ lecture.name }}</p>
-      <p class="lecture-time">{{ lecture.time }}</p>
-      <button class="add-button" @click="showPopup()">추가하기</button>
-      </div>
     </div>
   </div>
-  <Popup :isVisible="isPopupVisible" @close="closePopup" />
-
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import Popup from '@/components/Popup.vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter();
+const route = useRoute();
 const map = ref(null);
 const selectedLocation = ref(null);
-
-const infoHeight = ref(300); // 기본 높이 설정
-const MIN_HEIGHT = 250; // 최소 높이 설정
+const infoHeight = ref(300);
+const MIN_HEIGHT = 250;
 
 let isDragging = false;
-const isPopupVisible = ref(false);
 
+// 시설 정보 받기
+const facilities = JSON.parse(route.query.facilities || '[]');
 
-
-function showPopup() {
-  isPopupVisible.value = true;
-}
-
-function closePopup() {
-  isPopupVisible.value = false;
-}
-
-
-// 드래그 시작 함수
-const startDrag = (event) => {
-isDragging = true;
-event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
-// 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
-document.addEventListener('mousemove', onDrag, { passive: false });
-document.addEventListener('mouseup', stopDrag);
-document.addEventListener('touchmove', onDrag, { passive: false });
-document.addEventListener('touchend', stopDrag);
-};
-
-// 드래그 중 함수
-const onDrag = (event) => {
-if (isDragging) {
-  // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
-  const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-  if (clientY) {
-    const newHeight = window.innerHeight - clientY;
-    infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
-  }
-}
-};
-
-// 드래그 종료 함수
-const stopDrag = () => {
-isDragging = false;
-// 모든 이벤트 제거
-document.removeEventListener('mousemove', onDrag);
-document.removeEventListener('mouseup', stopDrag);
-document.removeEventListener('touchmove', onDrag);
-document.removeEventListener('touchend', stopDrag);
-};
-// 표시할 위치 목록
-const locations = [
-  {
-    title: '머신 헬스트레이닝',
-    address: '서울특별시 강남구 도봉동',
-    detail: '4층 한숲 스포츠센터',
-    lat: 37.5665,
-    lng: 126.9780,
-    lecture: [
-      { name: '헬스트레이닝 강좌', time: '월, 10 ~ 11시' },
-      { name: '요가 강좌', time: '화, 15 ~ 16시' }
-    ]
-  },
-  {
-    title: '탁구 강좌',
-    address: '서울특별시 강남구 강좌동',
-    detail: '화, 10 ~ 11시',
-    lat: 37.5655,
-    lng: 126.9769,
-    lecture: [
-      { name: '탁구 입문 강좌', time: '화, 10 ~ 11시' },
-      { name: '탁구 중급 강좌', time: '수, 14 ~ 15시' }
-    ]
-  }
-];
-
-// 뒤로가기 동작
+// 뒤로가기 버튼 기능
 const goBack = () => {
-  if (window.history.length > 1) {
-    window.history.back();
+  router.push({ name: 'RecommendedExercise' });
+};
+
+// 지도 초기화 및 시설 마커 표시
+onMounted(() => {
+  // 사용자의 현재 위치 요청 및 지도 초기화
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        const centerPosition = new kakao.maps.LatLng(userLat, userLng);
+
+        // 지도 초기화
+        map.value = new kakao.maps.Map(map.value, {
+          center: centerPosition,
+          level: 3,
+        });
+
+        // 현재 위치 마커 추가
+        const userMarker = new kakao.maps.Marker({
+          position: centerPosition,
+          title: '현재 위치',
+        });
+        userMarker.setMap(map.value);
+
+        // 시설 데이터에서 각 위치에 마커 추가
+        facilities.forEach((facility) => {
+          const markerPosition = new kakao.maps.LatLng(facility.fcltyYCrdntValue, facility.fcltyXCrdntValue);
+          const marker = new kakao.maps.Marker({ position: markerPosition });
+
+          marker.setMap(map.value);
+          kakao.maps.event.addListener(marker, 'click', () => {
+            selectedLocation.value = facility;
+          });
+        });
+      },
+      (error) => {
+        console.error("현재 위치를 불러올 수 없습니다.", error);
+      }
+    );
   } else {
-    router.push({ name: 'OutdoorExercise' });
+    console.error("위치 정보가 지원되지 않는 브라우저입니다.");
+  }
+});
+
+// 드래그 시작
+const startDrag = (event) => {
+  isDragging = true;
+  event.preventDefault();
+  document.addEventListener('mousemove', onDrag, { passive: false });
+  document.addEventListener('mouseup', stopDrag);
+  document.addEventListener('touchmove', onDrag, { passive: false });
+  document.addEventListener('touchend', stopDrag);
+};
+
+// 드래그 중
+const onDrag = (event) => {
+  if (isDragging) {
+    const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+    if (clientY) {
+      const newHeight = window.innerHeight - clientY;
+      infoHeight.value = Math.max(newHeight, MIN_HEIGHT);
+    }
   }
 };
 
-onMounted(() => {
-  // 지도 초기화
-  const container = map.value;
-  const options = {
-    center: new kakao.maps.LatLng(37.5665, 126.9780),
-    level: 3,
-  };
-  map.value = new kakao.maps.Map(container, options);
-
-  // 현재 위치 표시
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      const currentPosition = new kakao.maps.LatLng(lat, lng);
-
-      // 파란색 동그라미 현재 위치 마커 이미지 설정
-      const imageSrc = 'https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png'; // 파란색 동그라미 마커 이미지
-      const imageSize = new kakao.maps.Size(24, 24); // 이미지 크기
-      const imageOption = { offset: new kakao.maps.Point(12, 12) }; // 마커 중심 조정
-
-      const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
-      const marker = new kakao.maps.Marker({
-        position: currentPosition,
-        image: markerImage, // 커스텀 마커 이미지 설정
-      });
-
-      marker.setMap(map.value);
-      map.value.setCenter(currentPosition);
-    });
-  }
-
-  // 위치 목록에 대한 마커 생성 및 클릭 이벤트 추가
-  locations.forEach((location) => {
-    const markerPosition = new kakao.maps.LatLng(location.lat, location.lng);
-    const marker = new kakao.maps.Marker({ position: markerPosition });
-
-    marker.setMap(map.value);
-
-    kakao.maps.event.addListener(marker, 'click', () => {
-      selectedLocation.value = location;
-    });
-  });
-});
+// 드래그 종료
+const stopDrag = () => {
+  isDragging = false;
+  document.removeEventListener('mousemove', onDrag);
+  document.removeEventListener('mouseup', stopDrag);
+  document.removeEventListener('touchmove', onDrag);
+  document.removeEventListener('touchend', stopDrag);
+};
 </script>
 
 <style scoped>
 .map-view-container {
   position: relative;
   width: 100%;
-  /* 전체 높이를 화면에 맞춤 */
-  /* height: 100%;  */
-
   height: 100vh;
-  /* overflow: hidden; */
 }
 
 .back-button {
@@ -183,8 +128,6 @@ onMounted(() => {
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  display: flex;
-  align-items: center;
   z-index: 1000;
 }
 
@@ -205,13 +148,12 @@ onMounted(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  max-width: 100%;
   box-sizing: border-box;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 10px 10px 0 0;
   z-index: 1000;
-  overflow-y: auto; /* 세로 스크롤 활성화 */
-  max-height: 80vh; /* 최대 높이를 제한하여 줄어들 때 스크롤 필요 */
+  overflow-y: auto;
+  max-height: 80vh;
 }
 
 .facility-name {
@@ -246,44 +188,12 @@ onMounted(() => {
   right: 20px;
 }
 
-.lecture-info {
-  border-top: 1px solid #ddd;
-  padding-top: 10px;
-  margin-top: 10px;
-  position: relative;
-}
-
-.lecture-title {
-  color: #333;
-  font-size: 16px;
-  margin: 5px 0;
-}
-
-.lecture-time {
-  color: #777;
-  font-size: 14px;
-}
-
-.add-button {
-  background-color: #e0f7e9;
-  color: #00c853;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  position: absolute;
-  top: 10px;
-  right: 0;
-}
-
 .drag-handle {
-width: 100%;
-text-align: center;
-height: 45px;
-border-radius: 10px;
-cursor: ns-resize;
-/* background-color: #e9e9e9; */
-margin: auto;
+  width: 100%;
+  text-align: center;
+  height: 45px;
+  border-radius: 10px;
+  cursor: ns-resize;
+  margin: auto;
 }
 </style>
