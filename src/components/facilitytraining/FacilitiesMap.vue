@@ -2,7 +2,8 @@
   <div class="map-view-container">
     <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
     <div ref="map" class="map-container"></div>
-    <div v-if="selectedLocation" class="location-info">
+    <div v-if="selectedLocation" class="location-info" :style="{ height: `${infoHeight}px` }">
+      <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
       <h2 class="facility-name">{{ selectedLocation.fcltyNm }}</h2>
       <div class="facility-details">
         <p class="facility-address">
@@ -37,9 +38,12 @@ const facilities = ref([]);
 const isPopupVisible = ref(false);
 const selectedExercise = ref(null);
 
-
 // 이전 페이지에서 전달된 itemName 값 사용
 const itemName = route.query.itemName || '';
+
+const infoHeight = ref(300); // 기본 높이 설정
+const MIN_HEIGHT = 250; // 최소 높이 설정
+let isDragging = false;
 
 // 뒤로가기 동작
 const goBack = () => {
@@ -138,6 +142,39 @@ function closePopup() {
   isPopupVisible.value = false;
   selectedExercise.value = null;
 }
+
+// 드래그 시작 함수
+const startDrag = (event) => {
+isDragging = true;
+event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
+// 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
+document.addEventListener('mousemove', onDrag, { passive: false });
+document.addEventListener('mouseup', stopDrag);
+document.addEventListener('touchmove', onDrag, { passive: false });
+document.addEventListener('touchend', stopDrag);
+};
+
+// 드래그 중 함수
+const onDrag = (event) => {
+if (isDragging) {
+  // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
+  const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+  if (clientY) {
+    const newHeight = window.innerHeight - clientY;
+    infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
+  }
+}
+};
+
+// 드래그 종료 함수
+const stopDrag = () => {
+isDragging = false;
+// 모든 이벤트 제거
+document.removeEventListener('mousemove', onDrag);
+document.removeEventListener('mouseup', stopDrag);
+document.removeEventListener('touchmove', onDrag);
+document.removeEventListener('touchend', stopDrag);
+};
 </script>
 
 <style scoped>
@@ -215,7 +252,7 @@ function closePopup() {
   cursor: pointer;
   font-size: 14px;
   position: absolute;
-  top: 20px;
+  top: 50px;
   right: 20px;
 }
 
@@ -248,5 +285,15 @@ function closePopup() {
   position: absolute;
   top: 10px;
   right: 0;
+}
+
+.drag-handle {
+width: 100%;
+text-align: center;
+height: 35px;
+border-radius: 10px;
+cursor: ns-resize;
+/* background-color: #e9e9e9; */
+margin: auto;
 }
 </style>
