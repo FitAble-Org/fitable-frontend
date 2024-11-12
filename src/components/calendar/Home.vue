@@ -38,6 +38,9 @@ const outdoorActivities = ref([]);
     const currentYear = dayjs().year();
     const currentMonth = dayjs().month() + 1;
     await fetchMonthlySchedule(currentYear, currentMonth);
+
+    const today = dayjs().format('YYYY-MM-DD');
+    onDateSelected(today);
   });
 
   const onDateSelected = (date) => {
