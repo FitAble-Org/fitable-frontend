@@ -8,45 +8,57 @@
     <div class="exercise-list">
       <div v-for="(exercise, index) in filteredExercises" :key="index" class="exercise-item">
         <div>
-          <div class="exercise-name">{{ exercise.name }}</div>
-          <div class="exercise-recommendation">추천도: {{ exercise.recommendation }}</div>
+          <div class="exercise-name">{{ exercise.exerciseName }}</div>
+          <div class="exercise-recommendation">추천도: {{ exercise.rankName }}</div>
         </div>
-        <button class="add-button" @click="showPopup()">추가하기</button>
+        <button class="add-button" @click="showPopup(exercise)">추가하기</button>
       </div>
     </div>
   </div>
 
-  <Popup :isVisible="isPopupVisible" @close="closePopup" />
+  <Popup :isVisible="isPopupVisible" :exercise="selectedExercise" exerciseType="가정운동" @close="closePopup" />
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import Popup from '@/components/Popup.vue';
+import appClient from '@/axios/apiClient.js';
 
-
-const exercises = ref([
-  { name: '앉았다 일어서기', type: '준비운동', recommendation: '중' },
-  { name: '요가', type: '준비운동', recommendation: '중' },
-  { name: '윗몸 일으키기', type: '준비운동', recommendation: '중' },
-]);
-
+const exercises = ref([]);
 const selectedTab = ref('준비운동');
 const isPopupVisible = ref(false);
+const selectedExercise = ref(null);
+
+
+onMounted(async () => {
+await fetchRecommendedTraining();
+});
+
+async function fetchRecommendedTraining() {
+try {
+  const response = await appClient.get(`home-training`); // API 엔드포인트에 맞게 수정
+  exercises.value = response.data;
+} catch (error) {
+  console.error('추천 가정운동 요청 중 오류 발생:', error);
+}
+}
 
 const selectTab = (tab) => {
   selectedTab.value = tab;
 };
 
 const filteredExercises = computed(() => {
-  return exercises.value.filter(exercise => exercise.type === selectedTab.value);
+  return exercises.value.filter(exercise => exercise.sportsStep === selectedTab.value);
 });
 
-function showPopup() {
+function showPopup(exercise) {
+  selectedExercise.value = exercise;
   isPopupVisible.value = true;
 }
 
 function closePopup() {
   isPopupVisible.value = false;
+  selectedExercise.value = null;
 }
 </script>
 

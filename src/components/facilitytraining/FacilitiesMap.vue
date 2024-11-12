@@ -14,22 +14,29 @@
       <div class="lecture-info">
         <p class="lecture-title">{{ selectedLocation.fcltyCourseSdivNm || '강좌 정보 없음' }}</p>
         <p class="lecture-time">운영 시간: 09:00 ~ 18:00</p> <!-- 예시 시간 -->
-        <button class="add-button">추가하기</button>
+        <button class="add-button" @click="showPopup(selectedLocation)">추가하기</button>
       </div>
     </div>
   </div>
+  <Popup :isVisible="isPopupVisible" :exercise="selectedExercise" exerciseType="외부운동" @close="closePopup" />
+
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import axios from 'axios';
+import Popup from '@/components/Popup.vue';
 
 const router = useRouter();
 const route = useRoute();
 const map = ref(null);
 const selectedLocation = ref(null);
 const facilities = ref([]);
+
+const isPopupVisible = ref(false);
+const selectedExercise = ref(null);
+
 
 // 이전 페이지에서 전달된 itemName 값 사용
 const itemName = route.query.itemName || '';
@@ -79,6 +86,7 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
     // 마커 클릭 이벤트
     kakao.maps.event.addListener(marker, 'click', () => {
       selectedLocation.value = {
+        exerciseId: facility.id,
         fcltyNm: facility.fcltyNm,
         fcltyAddr: facility.fcltyAddr,
         itemNm: facility.itemNm,
@@ -120,6 +128,16 @@ onMounted(() => {
     alert("위치 정보를 사용할 수 없는 브라우저입니다.");
   }
 });
+
+function showPopup(exercise) {
+  selectedExercise.value = exercise;
+  isPopupVisible.value = true;
+}
+
+function closePopup() {
+  isPopupVisible.value = false;
+  selectedExercise.value = null;
+}
 </script>
 
 <style scoped>

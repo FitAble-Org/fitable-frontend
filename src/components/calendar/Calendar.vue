@@ -69,7 +69,7 @@ const isSelected = (day) => selectedDate.value === formatDate(day);
 
 const hasEvent = (day) => {
   const date = formatDate(day);
-  return props.events.some((event) => event.date === date);
+  return props.events.some((event) => event.datePerformed=== date);
 };
 
 const isWeekend = (day) => {

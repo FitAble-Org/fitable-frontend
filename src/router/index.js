@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 //기본
 import Welcome from '@/components/Welcome.vue';
-import Home from '@/components/Home.vue';
+import Home from '@/components/calendar/Home.vue';
 //회원가입
 import AgeSelection from '@/components/signin/AgeSelection.vue';
 import GenderSelection from '@/components/signin/GenderSelection.vue';
