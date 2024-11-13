@@ -9,8 +9,8 @@
       <button
         v-for="type in disabilityTypes"
         :key="type.label"
-        :class="['option-button', { selected: selectedType === type.label }]"
-        @click="selectType(type.label)"
+        :class="['option-button', { selected: selectedType === type }]"
+        @click="selectType(type)"
       >
         {{ type.label }}
       </button>
@@ -38,10 +38,14 @@ export default {
       this.selectedType = type;
     },
     goToNext() {
+      console.log(this.$route.query);
       if (this.selectedType) {
         this.$router.push({
           name: 'DisabilityGradeSelection',
-          query: { disabilityType: this.selectedType }
+          query: {
+            ...this.$route.query, 
+            disabilityType: this.selectedType.value
+          }
         });
       } else {
         alert('유형을 선택해주세요.');

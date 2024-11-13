@@ -31,6 +31,7 @@
 <script setup>
 import { defineProps, computed, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import apiClient from '@/axios/apiClient.js';
 
 const props = defineProps({
   events: {
@@ -69,11 +70,22 @@ function closeEditPopup() {
 }
 
 // 시간 저장
-function saveDuration() {
+async function saveDuration() {
 
   if (editingIndex.value !== null && newDuration.value >= 0) {
-    props.events[editingIndex.value].duration = newDuration.value;
-    closeEditPopup();
+    const activity = props.events[editingIndex.value];
+
+    try {
+      console.log(activity);
+      await apiClient.post('calendar/time', {
+        id: activity.calendarId,
+        duration: newDuration.value
+      });
+      props.events[editingIndex.value].duration = newDuration.value;
+      closeEditPopup();
+    } catch (error) {
+      console.error("Failed to update duration:", error);
+    }
   }
 }
 </script>

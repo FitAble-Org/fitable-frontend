@@ -17,7 +17,7 @@
   import dayjs from 'dayjs';
   import Calendar from '@/components/calendar/Calendar.vue';
   import EventList from '@/components/calendar/EventList.vue';
-  import appClient from '@/axios/apiClient.js';
+  import apiClient from '@/axios/apiClient.js';
 
   
   const events = ref([]);
@@ -26,8 +26,8 @@ const indoorActivities = ref([]);
 const outdoorActivities = ref([]);
 
   async function fetchMonthlySchedule(year, month) {
-  try {
-    const response = await appClient.get(`calendar/${year}/${month}`); // API 엔드포인트에 맞게 수정
+    try {
+    const response = await apiClient.get(`calendar/${year}/${month}`); // API 엔드포인트에 맞게 수정
     events.value = response.data;
   } catch (error) {
     console.error('이 달의 스케줄 요청 중 오류 발생:', error);

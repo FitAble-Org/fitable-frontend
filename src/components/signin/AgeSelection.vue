@@ -9,8 +9,8 @@
       <button
         v-for="age in ageOptions"
         :key="age.label"
-        :class="['option-button', { selected: selectedAge === age.label }]"
-        @click="selectAge(age.label)"
+        :class="['option-button', { selected: selectedAge === age }]"
+        @click="selectAge(age)"
       >
         {{ age.label }}
       </button>
@@ -26,10 +26,10 @@ export default {
     return {
       selectedAge: null,
       ageOptions: [
-        { label: '10대' },
-        { label: '2 ~ 30대' },
-        { label: '4 ~ 50대' },
-        { label: '60대 이상' },
+        { label: '10대', value: "TEENAGER"},
+        { label: '2 ~ 30대', value: "YOUNG_ADULT"},
+        { label: '4 ~ 50대', value: "MIDDLE_AGED"},
+        { label: '60대 이상', value: "SENIOR"},
       ],
     };
   },
@@ -39,7 +39,10 @@ export default {
     },
     goToNext() {
       if (this.selectedAge) {
-        this.$router.push({ name: 'GenderSelection' });
+        this.$router.push({
+          name: 'GenderSelection',
+          query: { ageGroup: this.selectedAge.value }
+        });
       } else {
         alert('나이대를 선택해주세요.');
       }

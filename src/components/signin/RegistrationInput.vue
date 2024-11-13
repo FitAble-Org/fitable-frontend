@@ -19,6 +19,8 @@
   </template>
   
   <script>
+  import axios from 'axios';
+
   export default {
     data() {
       return {
@@ -33,13 +35,26 @@
       checkPasswordMatch() {
         this.isPasswordMatch = this.password === this.passwordConfirm;
       },
-      register() {
+      async register() {
+        console.log(this.$route.query);
         if (this.isPasswordMatch) {
-          alert("회원가입 성공!");
-          this.$router.push({ name: 'Login' });
-        } else {
+          try {
+           await axios.post('http://localhost:8080/api/users/register', {
+             ...this.$route.query,
+             loginId: this.username,
+             password: this.password
+            })
+            alert("회원가입 성공!");
+          }
+          catch(error) {
+            console.error("회원가입 오류:", error);
+          alert("회원가입 중 오류가 발생했습니다.");
+          }
+        }
+        else {
           alert("입력 정보를 확인해 주세요.");
         }
+          this.$router.push({ name: 'Login' });
       }
     }
   };

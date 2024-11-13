@@ -8,11 +8,11 @@
     <div class="option-buttons">
       <button
         v-for="grade in grades"
-        :key="grade"
+        :key="grade.label"
         :class="['option-button', { selected: selectedGrade === grade }]"
         @click="selectGrade(grade)"
       >
-        {{ grade }}
+        {{ grade.label }}
       </button>
     </div>
 
@@ -26,15 +26,21 @@ export default {
     return {
       selectedGrade: null,
       disabilityType: null, // 쿼리 파라미터에서 값을 설정
+      generalLevelTypes:[{ label: '1등급', value: "LEVEL_1" }, { label: '2등급', value: "LEVEL_2" },
+          { label: '3등급', value: "LEVEL_3" }, { label: '4등급', value: "LEVEL_4" },
+          { label: '5등급', value: "LEVEL_5" }, { label: '6등급', value: "LEVEL_6" }
+      ],
+      spineLevelTypes:[{label: '불완전 마비', value: "PARTIAL_PARALYSIS"}, {label: '완전 마비', value: "COMPLETE_PARALYSIS"}]
+
     };
   },
   computed: {
     grades() {
       console.log("Computed grades based on disabilityType:", this.disabilityType);
-      if (this.disabilityType === '척수장애') {
-        return ['불완전 마비', '완전 마비'];
+      if (this.disabilityType === 'SPINAL') {
+        return this.spineLevelTypes;
       } else {
-        return ['1등급', '2등급', '3등급', '4등급', '5등급', '6등급'];
+        return this.generalLevelTypes;
       }
     },
   },
@@ -46,6 +52,7 @@ export default {
   methods: {
     selectGrade(grade) {
       this.selectedGrade = grade;
+      console.log(grade);
     },
     goToNext() {
       if (this.selectedGrade) {
@@ -53,8 +60,8 @@ export default {
         this.$router.push({
           name: 'RegistrationInput',
           query: {
-            disabilityType: this.disabilityType,
-            disabilityLevel: this.selectedGrade
+            ...this.$route.query,
+            disabilityLevel: this.selectedGrade.value
           }
         });
       } else {

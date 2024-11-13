@@ -14,6 +14,8 @@
   </template>
   
   <script>
+  import apiClient, { setAuthToken } from '@/axios/apiClient';
+
   export default {
     data() {
       return {
@@ -22,15 +24,41 @@
       };
     },
     methods: {
-      login() {
+      async login() {
         if (this.username && this.password) {
-          alert("로그인 성공!");
-          this.$router.push({ name: 'Home' });
-        } else {
-          alert("아이디와 비밀번호를 입력해 주세요.");
+     
+          try {
+          const response = await apiClient.post('users/login', {
+            loginId: this.username,
+            password: this.password,
+          });
+
+          // 로그인 성공 시 처리
+          if (response.status === 200) {
+            alert("로그인 성공!");
+           // 응답 헤더에서 JWT 토큰 추출
+            const token = response.headers['authorization'];
+    
+            if (token) {
+              // Bearer 접두사가 포함되어 있을 수 있으므로 제거
+              const jwtToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+              setAuthToken(jwtToken);
+              localStorage.setItem('jwtToken', jwtToken);
+            }
+
+            this.$router.push({ name: 'Home' });
+          } else {
+            alert("로그인에 실패했습니다. 다시 시도해 주세요.");
+          }
+        } catch (error) {
+          console.error("로그인 오류:", error);
+          alert("로그인 중 오류가 발생했습니다.");
         }
+      } else {
+        alert("아이디와 비밀번호를 입력해 주세요.");
       }
-    }
+    },
+  },
   };
   </script>
   

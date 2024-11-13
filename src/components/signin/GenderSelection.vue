@@ -9,8 +9,8 @@
       <button
         v-for="gender in genderOptions"
         :key="gender.label"
-        :class="['option-button', { selected: selectedGender === gender.label }]"
-        @click="selectGender(gender.label)"
+        :class="['option-button', { selected: selectedGender === gender }]"
+        @click="selectGender(gender)"
       >
         {{ gender.label }}
       </button>
@@ -26,8 +26,8 @@ export default {
     return {
       selectedGender: null,
       genderOptions: [
-        { label: '여성' },
-        { label: '남성' },
+        { label: '여성', value: "FEMALE" },
+        { label: '남성', value: "MALE"},
       ],
     };
   },
@@ -36,8 +36,16 @@ export default {
       this.selectedGender = gender;
     },
     goToNext() {
+      console.log(this.$route.query
+      );
       if (this.selectedGender) {
-        this.$router.push({ name: 'DisabilityTypeSelection' });
+        this.$router.push({
+          name: 'DisabilityTypeSelection',
+          query: {
+            ...this.$route.query, 
+            gender: this.selectedGender.value
+          }
+         });
       } else {
         alert('성별을 선택해주세요.');
       }
