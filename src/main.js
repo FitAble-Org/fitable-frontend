@@ -9,11 +9,11 @@ import { setAuthToken } from '@/axios/apiClient';
 // Add the icon to the library
 library.add(faPenToSquare);
 
-localStorage.clear();
-// const token = localStorage.getItem('jwtToken');
-// if (token) {
-//   setAuthToken(token);
-// }
+// localStorage.clear();
+const token = localStorage.getItem('jwtToken');
+if (token) {
+  setAuthToken(token);
+}
 
 const app = createApp(App);
 

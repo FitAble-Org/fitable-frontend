@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import appClient from '@/axios/apiClient.js';
+import apiClient from '@/axios/apiClient.js';
 
 export default {
   props: {
@@ -34,7 +34,7 @@ export default {
           duration: 0,
           exerciseType: this.exerciseType // this.exerciseType으로 수정
         };
-        await appClient.post('/calendar', requestData);
+        await apiClient.post('/calendar', requestData);
         this.$emit('close'); // 모달 닫기 이벤트 발생
       } catch (error) {
         console.error("Failed to add exercise:", error);

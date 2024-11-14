@@ -64,13 +64,14 @@ export default {
            await apiClient.post('users/profile', {
              ...this.$route.query,
              disabilityLevel: this.selectedGrade.value
-            })
-            alert("프로필 변경 성공!");
+           })
+            
           }
           catch(error) {
             console.error("변경 오류:", error);
           alert("회원가입 프로필 변경 중 오류가 발생했습니다.");
-          }
+        }
+        this.$router.push({ name: 'MyPage' });
         
       } else {
         alert('등급을 선택해주세요.');

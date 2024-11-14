@@ -29,8 +29,8 @@
   import { useRouter } from 'vue-router';
   
   const user = ref({
-    username: 'user001',
-    tags: ['20-30대', '남성', '척수장애', '불완전 마비']
+    username: '',
+    tags: null
   });
   
   const router = useRouter();
@@ -38,8 +38,14 @@
   // 사용자 정보 가져오기
   const fetchUserInfo = async () => {
     try {
-      const response = await apiClient.get('/user/info');
-      user.value = response.data;
+      const response = await apiClient.get('users/profile');
+      const { loginId, ...tag } = response.data;
+      user.value.username = loginId;
+      user.value.tags = tag;
+      user.value.tags.gender = user.value.tags.gender === 'F' ? '여성' : '남성';
+      user.value.tags.ageGroup = user.value.tags.ageGroup.replace(" ", "~");
+      console.log(user.value.tags.ageGroup);
+
     } catch (error) {
       console.error("Error fetching user info:", error);
     }
@@ -47,7 +53,6 @@
   
   // 프로필 재설정 페이지로 이동
   const goToProfileSettings = () => {
-    alert("!!")
     router.push({ name: 'ProfileAgeSelection' }); // 변경된 라우트 이름으로 수정
   };
   
