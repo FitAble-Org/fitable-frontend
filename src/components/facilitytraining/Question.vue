@@ -22,8 +22,8 @@
 
 <script>
 
-import axios from 'axios';
-axios.defaults.withCredentials = true; // 세션 유지 설정
+import apiClient from '@/axios/apiClient.js';
+// axios.defaults.withCredentials = true; // 세션 유지 설정
 
 
 export default {

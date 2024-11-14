@@ -16,6 +16,12 @@ import DistanceSelection from '@/components/facilitytraining/DistanceSelection.v
 import Question from '@/components/facilitytraining/Question.vue';
 import RecommendedExercise from '@/components/facilitytraining/RecommendedExercise.vue';
 import FacilitiesMap from '@/components/facilitytraining/FacilitiesMap.vue';
+//마이페이지
+import MyPage from '@/components/mypage/Mypage.vue';
+import ProfileAgeSelection from '@/components/mypage/ProfileAgeSelection.vue';
+import ProfileDisabilityGradeSelection from '@/components/mypage/ProfileDisabilityGradeSelection.vue';
+import ProfileDisabilityTypeSelection from '@/components/mypage/ProfileDisabilityTypeSelection.vue';
+import ProfileGenderSelection from '@/components/mypage/ProfileGenderSelection.vue';
 
 const routes = [
   { path: '/', name: 'Welcome', component: Welcome },
@@ -56,8 +62,32 @@ const routes = [
     name: 'FacilitiesMap',
     component: FacilitiesMap
   },
+  {
+    path: '/my-page',
+    name: 'MyPage',
+    component: MyPage
+  },
+  {
+    path: '/profile-age-selection',
+    name: 'ProfileAgeSelection',
+    component: ProfileAgeSelection
+  },
+  {
+    path: '/profile-disability-grade-selection',
+    name: 'ProfileDisabilityGradeSelection',
+    component: ProfileDisabilityGradeSelection
+  },
+  {
+    path: '/profile-disability-type-selection',
+    name: 'ProfileDisabilityTypeSelection',
+    component: ProfileDisabilityTypeSelection
+  },
+  {
+    path: '/profile-gender-selection',
+    name: 'ProfileGenderSelection',
+    component: ProfileGenderSelection
+  },
 ];
-
 const router = createRouter({
   history: createWebHistory(),
   routes,

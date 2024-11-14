@@ -26,7 +26,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import axios from 'axios';
+import apiClient from '@/axios/apiClient.js';
 import Popup from '@/components/Popup.vue';
 
 const router = useRouter();
@@ -103,7 +103,7 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 // 시설 데이터 가져오기
 const fetchFacilities = async (lat, lng) => {
   try {
-    const response = await axios.get('/api/facilities/filter', {
+    const response = await apiClient.get('facilities/filter', {
       params: { itemName, latitude: lat, longitude: lng }, // itemName과 현재 위치를 사용하여 요청
     });
     facilities.value = response.data;

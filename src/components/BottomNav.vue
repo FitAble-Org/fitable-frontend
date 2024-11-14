@@ -12,7 +12,7 @@
       <i class="fas fa-tree"></i>
       <span>외부운동</span>
     </button>
-    <button @click="navigate('profile')">
+    <button @click="navigate('my-page')">
       <i class="fas fa-user"></i>
       <span>내 정보</span>
     </button>
@@ -31,8 +31,8 @@ const navigate = (page) => {
     router.push({ name: 'IndoorExercise' });
   } else if (page === 'outdoor') {
     router.push({ name: 'DistanceSelection' });
-  } else if (page === 'profile') {
-    console.log('내 정보 페이지로 이동 (아직 구현되지 않음)');
+  } else if (page === 'my-page') {
+    router.push({ name: 'MyPage' });
   }
 };
 </script>

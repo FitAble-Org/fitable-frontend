@@ -19,7 +19,7 @@
   </template>
   
   <script>
-  import axios from 'axios';
+  import apiClient from '@/axios/apiClient.js';
 
   export default {
     data() {
@@ -39,7 +39,7 @@
         console.log(this.$route.query);
         if (this.isPasswordMatch) {
           try {
-           await axios.post('http://localhost:8080/api/users/register', {
+           await apiClient.post('users/register', {
              ...this.$route.query,
              loginId: this.username,
              password: this.password

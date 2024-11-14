@@ -21,9 +21,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-axios.defaults.withCredentials = true; // 세션 유지 설정
-axios.defaults.baseURL = 'http://localhost:8080'; // 기본 URL 설정
+  import apiClient from '@/axios/apiClient.js';
 
 export default {
   data() {
@@ -70,7 +68,7 @@ export default {
           radiusKm: this.distanceOptions[this.selectedOption].radiusKm,
         };
 
-        axios.post('/api/facilities/nearby', locationRequest)
+        apiClient.post('facilities/nearby', locationRequest)
           .then(response => {
             const { itemNames, gptResponseContent } = response.data;
 

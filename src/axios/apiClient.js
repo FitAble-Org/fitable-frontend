@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api/',
+  // baseURL: 'http://localhost:8080/api/',
+  baseURL: 'http://43.201.248.185:8081/api/',
   withCredentials: true
 });
 
