@@ -17,7 +17,7 @@ import Question from '@/components/facilitytraining/Question.vue';
 import RecommendedExercise from '@/components/facilitytraining/RecommendedExercise.vue';
 import FacilitiesMap from '@/components/facilitytraining/FacilitiesMap.vue';
 //마이페이지
-import MyPage from '@/components/myPage/Mypage.vue'; 
+import MyPage from '@/components/mypage/myPage.vue'; 
 import ProfileAgeSelection from '@/components/mypage/ProfileAgeSelection.vue';
 import ProfileDisabilityGradeSelection from '@/components/mypage/ProfileDisabilityGradeSelection.vue';
 import ProfileDisabilityTypeSelection from '@/components/mypage/ProfileDisabilityTypeSelection.vue';
