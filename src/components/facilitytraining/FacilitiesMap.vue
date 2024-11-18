@@ -1,6 +1,8 @@
 <template>
   <div class="map-view-container">
-    <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
+    <div class="map-header">
+      <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
+    </div>
     <div ref="map" class="map-container"></div>
     <div v-if="selectedLocation" class="location-info" :style="{ height: `${infoHeight}px` }">
       <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
@@ -183,6 +185,14 @@ document.removeEventListener('touchend', stopDrag);
   width: 100%;
   height: 100vh;
   overflow: hidden;
+}
+
+.map-header {
+  position: absolute;
+  z-index: 1000;
+  height: 100px;
+  width: 100%;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0) 80%);
 }
 
 .back-button {
