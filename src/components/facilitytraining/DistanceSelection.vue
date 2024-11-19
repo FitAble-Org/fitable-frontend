@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import apiClient from '@/axios/apiClient.js';
+import apiClient from '@/axios/apiClient.js';
 
 export default {
   data() {
@@ -36,8 +36,7 @@ export default {
     };
   },
   mounted() {
-    // 페이지 로드 시 사용자 위치 가져오기
-    this.getUserLocation();
+    this.getUserLocation(); // 페이지 로드 시 위치 가져오기
   },
   methods: {
     getUserLocation() {
@@ -45,87 +44,56 @@ export default {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             this.currentPosition = {
-              x: position.coords.longitude, // 경도
-              y: position.coords.latitude,  // 위도
+              x: position.coords.longitude,
+              y: position.coords.latitude,
             };
           },
           (error) => {
-            console.error("위치 정보를 가져오지 못했습니다:", error);
+            console.error('위치 정보를 가져오지 못했습니다:', error);
           }
         );
       } else {
-        alert("위치 정보를 사용할 수 없는 브라우저입니다.");
+        alert('위치 정보를 사용할 수 없는 브라우저입니다.');
       }
     },
     selectOption(index) {
       this.selectedOption = index;
     },
-    goToNext() {
+    async goToNext() {
       if (this.selectedOption !== null && this.currentPosition) {
         const locationRequest = {
-          x: this.currentPosition.x, // 사용자 위치의 경도
-          y: this.currentPosition.y, // 사용자 위치의 위도
+          x: this.currentPosition.x,
+          y: this.currentPosition.y,
           radiusKm: this.distanceOptions[this.selectedOption].radiusKm,
         };
 
-        // API 요청
-        apiClient.post('facilities/nearby', locationRequest)
-          .then(response => {
-            this.navigateToQuestion(response.data); // 라우팅 메서드 호출
-          })
-          .catch(async error => {
-            if (error.response && error.response.status === 401) {
-              // Access Token 만료 처리
-              try {
-                const refreshResponse = await apiClient.post('auth/refresh', {
-                  refreshToken: localStorage.getItem('refreshToken'), // 로컬 스토리지에서 Refresh Token 가져오기
-                });
-
-                const { accessToken } = refreshResponse.data;
-
-                // 새 Access Token 저장
-                localStorage.setItem('accessToken', accessToken);
-
-                // 기존 요청 다시 시도
-                return apiClient.post('facilities/nearby', locationRequest)
-                  .then(response => {
-                    this.navigateToQuestion(response.data); // 라우팅 메서드 호출
-                  })
-                  .catch(err => {
-                    console.error('API 요청 재시도 오류:', err);
-                  });
-              } catch (refreshError) {
-                console.error('토큰 갱신 오류:', refreshError);
-                alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-                this.$router.push({ name: 'Login' }); // 로그인 페이지로 이동
-              }
-            } else {
-              console.error('API 요청 오류:', error);
-            }
-          });
+        try {
+          const response = await apiClient.post('facilities/nearby', locationRequest);
+          this.navigateToQuestion(response.data);
+        } catch (error) {
+          console.error('API 요청 오류:', error);
+          alert('시설 정보를 가져오는 데 문제가 발생했습니다.');
+        }
       } else if (!this.currentPosition) {
-        alert("현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+        alert('현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
       } else {
-        alert("선호하는 거리를 선택해주세요.");
+        alert('선호하는 거리를 선택해주세요.');
       }
     },
-
-    // 중복된 라우팅 코드 분리
     navigateToQuestion(data) {
       const { itemNames, gptResponseContent } = data;
       this.$router.push({
         name: 'Question',
         query: {
           questions: JSON.stringify(gptResponseContent.split('\n').slice(0, 3)),
-          exercises: JSON.stringify(itemNames), // itemNames 배열 전달
-          index: 0, // 첫 번째 질문으로 시작
+          exercises: JSON.stringify(itemNames),
+          index: 0,
         },
       });
     },
   },
 };
 </script>
-
 
 <style scoped>
 .selection-container {
