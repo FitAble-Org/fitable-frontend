@@ -20,36 +20,39 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      selectedAge: null,
-      ageOptions: [
-        { label: '10대', value: "TEENAGER"},
-        { label: '2 ~ 30대', value: "YOUNG_ADULT"},
-        { label: '4 ~ 50대', value: "MIDDLE_AGED"},
-        { label: '60대 이상', value: "SENIOR"},
-      ],
-    };
-  },
-  methods: {
-    selectAge(age) {
-      this.selectedAge = age;
-    },
-    goToNext() {
-      if (this.selectedAge) {
-        this.$router.push({
-          name: 'GenderSelection',
-          query: { ageGroup: this.selectedAge.value }
-        });
-      } else {
-        alert('나이대를 선택해주세요.');
-      }
-    },
-  },
-};
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+// 상태 관리
+const selectedAge = ref(null);
+const ageOptions = [
+  { label: '10대', value: 'TEENAGER' },
+  { label: '2 ~ 30대', value: 'YOUNG_ADULT' },
+  { label: '4 ~ 50대', value: 'MIDDLE_AGED' },
+  { label: '60대 이상', value: 'SENIOR' },
+];
+
+// 나이 선택
+function selectAge(age) {
+  selectedAge.value = age;
+}
+
+// 다음 단계로 이동
+function goToNext() {
+  if (selectedAge.value) {
+    router.push({
+      name: 'GenderSelection',
+      query: { ageGroup: selectedAge.value.value },
+    });
+  } else {
+    alert('나이대를 선택해주세요.');
+  }
+}
 </script>
+
 
 <style scoped>
 .selection-container {

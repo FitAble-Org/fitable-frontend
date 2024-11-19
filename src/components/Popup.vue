@@ -7,42 +7,44 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { toRefs } from 'vue';
 import apiClient from '@/axios/apiClient.js';
 
-export default {
-  props: {
-    isVisible: {
-      type: Boolean,
-      required: true
-    },
-    exercise: {
-      type: Object,
-      required: true
-    },
-    exerciseType: {
-      type: String,
-      required: true
-    }
+// Props 및 Emits 정의
+defineProps({
+  isVisible: {
+    type: Boolean,
+    required: true,
   },
-  emits: ['close'],
-  methods: {
-    async addCalendar() {
-      try {
-        const requestData = {
-          exerciseId: this.exercise.exerciseId,
-          duration: 0,
-          exerciseType: this.exerciseType // this.exerciseType으로 수정
-        };
-        await apiClient.post('/calendar', requestData);
-        this.$emit('close'); // 모달 닫기 이벤트 발생
-      } catch (error) {
-        console.error("Failed to add exercise:", error);
-      }
-    }
+  exercise: {
+    type: Object,
+    required: true,
+  },
+  exerciseType: {
+    type: String,
+    required: true,
+  },
+});
+
+const emit = defineEmits(['close']);
+
+// 캘린더에 운동 추가 함수
+async function addCalendar() {
+  try {
+    const requestData = {
+      exerciseId: exercise.exerciseId,
+      duration: 0,
+      exerciseType, // this.exerciseType 대신 간단하게 사용
+    };
+    await apiClient.post('/calendar', requestData);
+    emit('close'); // 모달 닫기 이벤트 발생
+  } catch (error) {
+    console.error('Failed to add exercise:', error);
   }
-};
+}
 </script>
+
 
 <style scoped>
 .popup-overlay {

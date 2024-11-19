@@ -13,30 +13,29 @@
     </div>
   </template>
   
-  <script>
-  // import apiClient, { setAuthToken } from '@/axios/apiClient';
-  import apiClient from '@/axios/apiClient';
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import apiClient from '@/axios/apiClient.js';
+// import { setAuthToken } from '@/auth'; 
+
+const router = useRouter();
+
+// 상태 관리
+const username = ref('');
+const password = ref('');
 
 
-  export default {
-    data() {
-      return {
-        username: '',
-        password: '',
-      };
-    },
-    methods: {
-      async login() {
-        if (this.username && this.password) {
-     
-          try {
-          const response = await apiClient.post('users/login', {
-            loginId: this.username,
-            password: this.password,
-          });
-
-          // 로그인 성공 시 처리
-          if (response.status === 200) {
+// 로그인 함수
+async function login() {
+  if (username.value && password.value) {
+    try {
+      const response = await apiClient.post('users/login', {
+        loginId: username.value,
+        password: password.value,
+      });
+      // 로그인 성공 시 처리
+      if (response.status === 200) {
             alert("로그인 성공!");
            // 응답 헤더에서 JWT 토큰 추출
             const token = response.headers['authorization'];
@@ -49,21 +48,20 @@
               localStorage.setItem('jwtToken', jwtToken);
             }
 
-            this.$router.push({ name: 'Home' });
-          } else {
-            alert("로그인에 실패했습니다. 다시 시도해 주세요.");
-          }
-        } catch (error) {
-          console.error("로그인 오류:", error);
-          alert("로그인 중 오류가 발생했습니다.");
-        }
+        router.push({ name: 'Home' });
       } else {
-        alert("아이디와 비밀번호를 입력해 주세요.");
+        alert('로그인에 실패했습니다. 다시 시도해 주세요.');
       }
-    },
-  },
-  };
-  </script>
+    } catch (error) {
+      console.error('로그인 오류:', error);
+      alert('로그인 중 오류가 발생했습니다.');
+    }
+  } else {
+    alert('아이디와 비밀번호를 입력해 주세요.');
+  }
+}
+</script>
+
   
   
   <style scoped>

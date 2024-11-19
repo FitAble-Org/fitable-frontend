@@ -1,29 +1,31 @@
 <template>
-    <div class="welcome-container">
-      <h1 class="title">Fitable</h1>
-      <p class="description">
-        실내외 운동으로 건강을 챙기세요!<br />
-        맞춤 운동 추천과 주변 시설, 강좌 정보로 언제 어디서나 손쉽게 운동을 시작해보세요.
-      </p>
-      <button class="button" @click="navigateToRegister">회원가입</button>
-      <button class="button" @click="navigateToHome">로그인</button>
-    </div>
-  </template>
+  <div class="welcome-container">
+    <h1 class="title">Fitable</h1>
+    <p class="description">
+      실내외 운동으로 건강을 챙기세요!<br />
+      맞춤 운동 추천과 주변 시설, 강좌 정보로 언제 어디서나 손쉽게 운동을 시작해보세요.
+    </p>
+    <button class="button" @click="navigateToRegister">회원가입</button>
+    <button class="button" @click="navigateToHome">로그인</button>
+  </div>
+</template>
   
-  <script>
-  export default {
-    name: 'Welcome',
-    methods: {
-      navigateToRegister() {
-        this.$router.push({ name: 'AgeSelection' }); // 변경된 라우트 이름으로 수정
-      },
-      navigateToHome() {
-        this.$router.push({ name: 'Login' });
-      },
-    },
-  };
-  </script>
-  
+<script setup>
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+// 회원가입 페이지로 이동
+function navigateToRegister() {
+  router.push({ name: 'AgeSelection' }); // 변경된 라우트 이름으로 이동
+}
+
+// 로그인 페이지로 이동
+function navigateToHome() {
+  router.push({ name: 'Login' });
+}
+</script>
+
   <style scoped>
   .welcome-container {
     display: flex;
