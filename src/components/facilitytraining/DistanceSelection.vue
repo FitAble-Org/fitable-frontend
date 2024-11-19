@@ -125,7 +125,7 @@ export default {
         };
 
         try {
-          const response = await apiClient.post("/api/facilities/nearby", locationRequest);
+          const response = await apiClient.post("facilities/nearby", locationRequest);
           navigateToQuestion(response.data);
         } catch (error) {
           console.error("API 요청 오류:", error);
