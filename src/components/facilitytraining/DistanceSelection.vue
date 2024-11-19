@@ -21,76 +21,134 @@
 </template>
 
 <script>
-import apiClient from '@/axios/apiClient.js';
+import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+
+const apiClient = axios.create({
+  baseURL: "https://api.fitable.kro.kr",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Axios 요청 인터셉터 설정
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    config.headers["Authorization"] = `Bearer ${token}`; // Authorization 헤더 추가
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+// Axios 응답 인터셉터 설정 (토큰 만료 시 처리)
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response && error.response.status === 401) {
+      try {
+        const refreshResponse = await axios.post(
+          "https://api.fitable.kro.kr/api/users/refresh",
+          { refreshToken: localStorage.getItem("refreshToken") }
+        );
+        const newAccessToken = refreshResponse.data.accessToken;
+        localStorage.setItem("accessToken", newAccessToken);
+
+        // 이전 요청 재시도
+        error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return apiClient.request(error.config);
+      } catch (refreshError) {
+        console.error("리프레시 토큰 갱신 실패:", refreshError);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
+        window.location.href = "/login";
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default {
-  data() {
-    return {
-      selectedOption: null,
-      distanceOptions: [
-        { label: '도보 15분 이내', radiusKm: 1 },
-        { label: '도보 50분 이내', radiusKm: 2 },
-        { label: '대중교통 30분 이내', radiusKm: 3 },
-      ],
-      currentPosition: null, // 사용자 현재 위치
-    };
-  },
-  mounted() {
-    this.getUserLocation(); // 페이지 로드 시 위치 가져오기
-  },
-  methods: {
-    getUserLocation() {
+  setup() {
+    const selectedOption = ref(null);
+    const distanceOptions = reactive([
+      { label: "도보 15분 이내", radiusKm: 1 },
+      { label: "도보 50분 이내", radiusKm: 2 },
+      { label: "대중교통 30분 이내", radiusKm: 3 },
+    ]);
+    const currentPosition = ref(null);
+    const router = useRouter();
+
+    const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            this.currentPosition = {
+            currentPosition.value = {
               x: position.coords.longitude,
               y: position.coords.latitude,
             };
           },
           (error) => {
-            console.error('위치 정보를 가져오지 못했습니다:', error);
+            console.error("위치 정보를 가져오지 못했습니다:", error);
           }
         );
       } else {
-        alert('위치 정보를 사용할 수 없는 브라우저입니다.');
+        alert("위치 정보를 사용할 수 없는 브라우저입니다.");
       }
-    },
-    selectOption(index) {
-      this.selectedOption = index;
-    },
-    async goToNext() {
-      if (this.selectedOption !== null && this.currentPosition) {
-        const locationRequest = {
-          x: this.currentPosition.x,
-          y: this.currentPosition.y,
-          radiusKm: this.distanceOptions[this.selectedOption].radiusKm,
-        };
+    };
 
-        try {
-          const response = await apiClient.post('facilities/nearby', locationRequest);
-          this.navigateToQuestion(response.data);
-        } catch (error) {
-          console.error('API 요청 오류:', error);
-          alert('시설 정보를 가져오는 데 문제가 발생했습니다.');
-        }
-      } else if (!this.currentPosition) {
-        alert('현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
-      } else {
-        alert('선호하는 거리를 선택해주세요.');
-      }
-    },
-    navigateToQuestion(data) {
+    const selectOption = (index) => {
+      selectedOption.value = index;
+    };
+
+    const navigateToQuestion = (data) => {
       const { itemNames, gptResponseContent } = data;
-      this.$router.push({
-        name: 'Question',
+      router.push({
+        name: "Question",
         query: {
-          questions: JSON.stringify(gptResponseContent.split('\n').slice(0, 3)),
+          questions: JSON.stringify(gptResponseContent.split("\n").slice(0, 3)),
           exercises: JSON.stringify(itemNames),
           index: 0,
         },
       });
-    },
+    };
+
+    const goToNext = async () => {
+      if (selectedOption.value !== null && currentPosition.value) {
+        const locationRequest = {
+          x: currentPosition.value.x,
+          y: currentPosition.value.y,
+          radiusKm: distanceOptions[selectedOption.value].radiusKm,
+        };
+
+        try {
+          const response = await apiClient.post("facilities/nearby", locationRequest);
+          navigateToQuestion(response.data);
+        } catch (error) {
+          console.error("API 요청 오류:", error);
+          alert("시설 정보를 가져오는 데 문제가 발생했습니다.");
+        }
+      } else if (!currentPosition.value) {
+        alert("현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      } else {
+        alert("선호하는 거리를 선택해주세요.");
+      }
+    };
+
+    onMounted(() => {
+      getUserLocation();
+    });
+
+    return {
+      selectedOption,
+      distanceOptions,
+      currentPosition,
+      selectOption,
+      goToNext,
+    };
   },
 };
 </script>
