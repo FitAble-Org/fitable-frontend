@@ -20,66 +20,69 @@
   </div>
 </template>
 
-<script>
-import apiClient from '@/axios/apiClient.js'
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import apiClient from '@/axios/apiClient.js';
 
-export default {
-  data() {
-    return {
-      selectedGrade: null,
-      disabilityType: null, // 쿼리 파라미터에서 값을 설정
-      generalLevelTypes:[{ label: '1등급', value: "LEVEL_1" }, { label: '2등급', value: "LEVEL_2" },
-          { label: '3등급', value: "LEVEL_3" }, { label: '4등급', value: "LEVEL_4" },
-          { label: '5등급', value: "LEVEL_5" }, { label: '6등급', value: "LEVEL_6" }
-      ],
-      spineLevelTypes:[{label: '불완전 마비', value: "PARTIAL_PARALYSIS"}, {label: '완전 마비', value: "COMPLETE_PARALYSIS"}]
+const router = useRouter();
+const route = useRoute();
 
-    };
-  },
-  computed: {
-    grades() {
-      console.log("Computed grades based on disabilityType:", this.disabilityType);
-      if (this.disabilityType === 'SPINAL') {
-        return this.spineLevelTypes;
-      } else {
-        return this.generalLevelTypes;
-      }
-    },
-  },
-  mounted() {
-    // 쿼리에서 값 가져오기
-    this.disabilityType = this.$route.query.disabilityType;
-    console.log("Selected disability type in mounted:", this.disabilityType);
-  },
-  methods: {
-    selectGrade(grade) {
-      this.selectedGrade = grade;
-      console.log(grade);
-    },
-    async goToNext() {
-      if (this.selectedGrade) {
-        // 'registration-input'으로 이동하면서 선택된 등급과 유형을 쿼리로 전달
-        console.log(this.$route.query);
-          try {
-           await apiClient.post('users/profile', {
-             ...this.$route.query,
-             disabilityLevel: this.selectedGrade.value
-           })
-            
-          }
-          catch(error) {
-            console.error("변경 오류:", error);
-          alert("회원가입 프로필 변경 중 오류가 발생했습니다.");
-        }
-        this.$router.push({ name: 'MyPage' });
-        
-      } else {
-        alert('등급을 선택해주세요.');
-      }
-    },
-  },
-};
+// 상태 관리
+const selectedGrade = ref(null);
+const disabilityType = ref(null); // 쿼리 파라미터에서 설정
+const generalLevelTypes = [
+  { label: '1등급', value: 'LEVEL_1' },
+  { label: '2등급', value: 'LEVEL_2' },
+  { label: '3등급', value: 'LEVEL_3' },
+  { label: '4등급', value: 'LEVEL_4' },
+  { label: '5등급', value: 'LEVEL_5' },
+  { label: '6등급', value: 'LEVEL_6' },
+];
+const spineLevelTypes = [
+  { label: '불완전 마비', value: 'PARTIAL_PARALYSIS' },
+  { label: '완전 마비', value: 'COMPLETE_PARALYSIS' },
+];
+
+// 등급 리스트 계산
+const grades = computed(() => {
+  console.log('Computed grades based on disabilityType:', disabilityType.value);
+  return disabilityType.value === 'SPINAL' ? spineLevelTypes : generalLevelTypes;
+});
+
+// 쿼리에서 값 가져오기
+onMounted(() => {
+  disabilityType.value = route.query.disabilityType;
+  console.log('Selected disability type in mounted:', disabilityType.value);
+});
+
+// 등급 선택
+function selectGrade(grade) {
+  selectedGrade.value = grade;
+  console.log(grade);
+}
+
+// 다음 단계로 이동
+async function goToNext() {
+  if (selectedGrade.value) {
+    try {
+      console.log(route.query);
+      await apiClient.post('users/profile', {
+        ...route.query,
+        disabilityLevel: selectedGrade.value.value,
+      });
+    } catch (error) {
+      console.error('변경 오류:', error);
+      alert('회원가입 프로필 변경 중 오류가 발생했습니다.');
+      return;
+    }
+    router.push({ name: 'MyPage' });
+  } else {
+    alert('등급을 선택해주세요.');
+  }
+}
 </script>
+
 
 <style scoped>
 .selection-container {

@@ -13,40 +13,46 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      recommendedExercise: '',
-      exercises: JSON.parse(this.$route.query.exercises || '[]'),
-      userResponses: JSON.parse(this.$route.query.userResponses || '[]'),
-    };
-  },
-  created() {
-    this.calculateRecommendedExercise();
-  },
-  methods: {
-    calculateRecommendedExercise() {
-      if (!this.exercises.length || !this.userResponses.length) {
-        this.recommendedExercise = '추천 결과가 없습니다.';
-        return;
-      }
-      const binaryResponse = this.userResponses.join('');
-      const index = parseInt(binaryResponse, 2);
-      this.recommendedExercise = this.exercises[index] || '추천 운동 없음';
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+// 상태 관리
+const recommendedExercise = ref('');
+const exercises = ref(JSON.parse(route.query.exercises || '[]'));
+const userResponses = ref(JSON.parse(route.query.userResponses || '[]'));
+
+// 추천 운동 계산
+function calculateRecommendedExercise() {
+  if (!exercises.value.length || !userResponses.value.length) {
+    recommendedExercise.value = '추천 결과가 없습니다.';
+    return;
+  }
+  const binaryResponse = userResponses.value.join('');
+  const index = parseInt(binaryResponse, 2);
+  recommendedExercise.value = exercises.value[index] || '추천 운동 없음';
+}
+
+// 지도 페이지로 이동
+function goToMap() {
+  router.push({
+    name: 'FacilitiesMap',
+    query: {
+      recommendedExercise: recommendedExercise.value, // 추천 운동명 전달
+      itemName: recommendedExercise.value, // itemName을 추가로 전달
     },
-    goToMap() {
-    this.$router.push({
-      name: 'FacilitiesMap',
-      query: {
-        recommendedExercise: this.recommendedExercise, // 추천 운동명 전달
-        itemName: this.recommendedExercise, // itemName을 추가로 전달
-      },
-    });
-  },
-  },
-};
+  });
+}
+
+// 컴포넌트가 로드되면 추천 운동 계산
+onMounted(() => {
+  calculateRecommendedExercise();
+});
 </script>
+
 
 <style scoped>
 .selection-container {

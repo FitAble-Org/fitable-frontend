@@ -20,97 +20,103 @@
   </div>
 </template>
 
-<script>
-
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import apiClient from '@/axios/apiClient.js';
-// axios.defaults.withCredentials = true; // 세션 유지 설정
 
+// 상태 관리
+const selectedOption = ref(null);
+const responseOptions = ref([
+  { label: '네', value: 1 },
+  { label: '아니오', value: 0 },
+]);
+const questions = ref([]);
+const exercises = ref([]);
+const index = ref(0);
+const userResponses = ref([]);
 
-export default {
-  data() {
-    return {
-      selectedOption: null,
-      responseOptions: [
-        { label: '네', value: 1 },
-        { label: '아니오', value: 0 },
-      ],
-      questions: [],
-      exercises: [],
-      index: 0,
-      userResponses: [],
-    };
-  },
-  computed: {
-    question() {
-      return this.questions[this.index] || '질문이 없습니다.';
-    },
-  },
-  created() {
-    this.loadDataFromQuery();
-  },
-  watch: {
-    '$route.query.index': function(newIndex) {
-      this.index = parseInt(newIndex || 0);
+// 라우터 관련 설정
+const router = useRouter();
+const route = useRoute();
+
+// 현재 질문 가져오기
+const question = computed(() => questions.value[index.value] || '질문이 없습니다.');
+
+// 쿼리에서 데이터 로드
+function loadDataFromQuery() {
+  try {
+    questions.value = JSON.parse(route.query.questions || '[]');
+    exercises.value = JSON.parse(route.query.exercises || '[]');
+    index.value = parseInt(route.query.index || 0);
+    userResponses.value = JSON.parse(route.query.userResponses || '[]');
+    console.log('Data loaded on created:', {
+      questions: questions.value,
+      exercises: exercises.value,
+      index: index.value,
+      userResponses: userResponses.value,
+    });
+  } catch (error) {
+    console.error('Error parsing route query:', error);
+  }
+}
+
+// 옵션 선택
+function selectOption(idx) {
+  selectedOption.value = idx;
+  console.log('Option selected:', idx);
+}
+
+// 다음 질문으로 이동
+async function goToNext() {
+  if (selectedOption.value !== null) {
+    userResponses.value.push(selectedOption.value);
+    console.log('Updated userResponses:', userResponses.value);
+
+    const nextIndex = index.value + 1;
+
+    if (nextIndex < questions.value.length) {
+      // 다음 질문으로 이동
+      await router.push({
+        name: 'Question',
+        query: {
+          questions: JSON.stringify(questions.value),
+          exercises: JSON.stringify(exercises.value),
+          index: nextIndex.toString(),
+          userResponses: JSON.stringify(userResponses.value),
+        },
+      });
+      console.log('Navigated to next question:', nextIndex);
+    } else {
+      // 마지막 질문 후 추천 페이지로 이동
+      await router.push({
+        name: 'RecommendedExercise',
+        query: {
+          exercises: JSON.stringify(exercises.value),
+          userResponses: JSON.stringify(userResponses.value),
+        },
+      });
+      console.log('Navigated to RecommendedExercise');
     }
-  },
-  methods: {
-    loadDataFromQuery() {
-      try {
-        this.questions = JSON.parse(this.$route.query.questions || '[]');
-        this.exercises = JSON.parse(this.$route.query.exercises || '[]');
-        this.index = parseInt(this.$route.query.index || 0);
-        this.userResponses = JSON.parse(this.$route.query.userResponses || '[]');
-        console.log("Data loaded on created:", {
-          questions: this.questions,
-          exercises: this.exercises,
-          index: this.index,
-          userResponses: this.userResponses,
-        });
-      } catch (error) {
-        console.error("Error parsing route query:", error);
-      }
-    },
-    selectOption(idx) {
-      this.selectedOption = idx;
-      console.log("Option selected:", idx);
-    },
-    async goToNext() {
-      if (this.selectedOption !== null) {
-        this.userResponses.push(this.selectedOption);
-        console.log("Updated userResponses:", this.userResponses);
+  } else {
+    alert('응답을 선택해주세요.');
+  }
+}
 
-        const nextIndex = this.index + 1;
+// 라우트 쿼리 변경 감지
+watch(
+  () => route.query.index,
+  (newIndex) => {
+    index.value = parseInt(newIndex || 0);
+  }
+);
 
-        if (nextIndex < this.questions.length) {
-          // 다음 질문으로 이동
-          await this.$router.push({
-            name: 'Question',
-            query: {
-              questions: JSON.stringify(this.questions),
-              exercises: JSON.stringify(this.exercises),
-              index: nextIndex.toString(),
-              userResponses: JSON.stringify(this.userResponses),
-            },
-          });
-          console.log("Navigated to next question:", nextIndex);
-        } else {
-          // 마지막 질문 후 추천 페이지로 이동
-          await this.$router.push({
-            name: 'RecommendedExercise',
-            query: {
-              exercises: JSON.stringify(this.exercises),
-              userResponses: JSON.stringify(this.userResponses),
-            },
-          });
-          console.log("Navigated to RecommendedExercise");
-        }
-      } else {
-        alert('응답을 선택해주세요.');
-      }
-    },
-  },
-};
+// 컴포넌트가 로드될 때 데이터 초기화
+onMounted(() => {
+  loadDataFromQuery();
+});
 </script>
+
 
 <style scoped>
 .selection-container {
