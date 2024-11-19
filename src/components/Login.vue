@@ -42,10 +42,10 @@ async function login() {
     
             if (token) {
               // Bearer 접두사가 포함되어 있을 수 있으므로 제거
-              const jwtToken = token.startsWith('Bearer ') ? token.slice(7) : token;
-              console.log(jwtToken);
-              // setAuthToken(jwtToken);
-              localStorage.setItem('jwtToken', jwtToken);
+              const accessToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+              console.log(accessToken);
+              // setAuthToken(accessToken);
+              localStorage.setItem('accessToken', accessToken);
             }
 
         router.push({ name: 'Home' });
