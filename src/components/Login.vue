@@ -14,7 +14,9 @@
   </template>
   
   <script>
-  import apiClient, { setAuthToken } from '@/axios/apiClient';
+  // import apiClient, { setAuthToken } from '@/axios/apiClient';
+  import apiClient from '@/axios/apiClient';
+
 
   export default {
     data() {
@@ -37,15 +39,15 @@
           if (response.status === 200) {
             alert("로그인 성공!");
            // 응답 헤더에서 JWT 토큰 추출
-            const token = response.headers['authorization'];
+            // const token = response.headers['authorization'];
     
-            if (token) {
-              // Bearer 접두사가 포함되어 있을 수 있으므로 제거
-              const jwtToken = token.startsWith('Bearer ') ? token.slice(7) : token;
-              console.log(jwtToken);
-              setAuthToken(jwtToken);
-              localStorage.setItem('jwtToken', jwtToken);
-            }
+            // if (token) {
+            //   // Bearer 접두사가 포함되어 있을 수 있으므로 제거
+            //   const jwtToken = token.startsWith('Bearer ') ? token.slice(7) : token;
+            //   console.log(jwtToken);
+            //   setAuthToken(jwtToken);
+            //   localStorage.setItem('jwtToken', jwtToken);
+            // }
 
             this.$router.push({ name: 'Home' });
           } else {

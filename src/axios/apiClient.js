@@ -7,6 +7,7 @@ const apiClient = axios.create({
   withCredentials: true, // CORS 허용
 });
 
+
 // 요청 인터셉터 추가: Access Token 추가
 apiClient.interceptors.request.use(
   (config) => {
