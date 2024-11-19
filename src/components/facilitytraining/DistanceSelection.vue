@@ -64,7 +64,7 @@ apiClient.interceptors.response.use(
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-        window.location.href = "/login";
+        window.location.href = "/api/login";
       }
     }
     return Promise.reject(error);
@@ -125,7 +125,7 @@ export default {
         };
 
         try {
-          const response = await apiClient.post("facilities/nearby", locationRequest);
+          const response = await apiClient.post("/api/facilities/nearby", locationRequest);
           navigateToQuestion(response.data);
         } catch (error) {
           console.error("API 요청 오류:", error);
