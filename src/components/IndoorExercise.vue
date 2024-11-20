@@ -54,6 +54,7 @@ const filteredExercises = computed(() => {
 
 function showPopup(exercise) {
   selectedExercise.value = exercise;
+  console.log(selectedExercise.value)
   isPopupVisible.value = true;
 }
 

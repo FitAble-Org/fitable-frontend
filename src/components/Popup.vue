@@ -12,7 +12,7 @@ import { toRefs } from 'vue';
 import apiClient from '@/axios/apiClient.js';
 
 // Props 및 Emits 정의
-defineProps({
+const props = defineProps({
   isVisible: {
     type: Boolean,
     required: true,
@@ -27,13 +27,18 @@ defineProps({
   },
 });
 
+const { exercise, exerciseType } = toRefs(props);
+
+
 const emit = defineEmits(['close']);
 
 // 캘린더에 운동 추가 함수
 async function addCalendar() {
   try {
+    console.log(exercise.value)
+    console.log(exerciseType)
     const requestData = {
-      exerciseId: exercise.exerciseId,
+      exerciseId: exercise.value.exerciseId,
       duration: 0,
       exerciseType, // this.exerciseType 대신 간단하게 사용
     };
