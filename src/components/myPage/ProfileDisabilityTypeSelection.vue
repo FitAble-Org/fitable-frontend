@@ -9,7 +9,7 @@
       <button
         v-for="type in disabilityTypes"
         :key="type.label"
-        :class="['option-button', { selected: selectedType === type }]"
+        :class="['option-button', { selected: selectedType?.value === type.value }]"
         @click="selectType(type)"
       >
         {{ type.label }}

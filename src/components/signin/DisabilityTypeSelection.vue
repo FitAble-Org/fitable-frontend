@@ -9,7 +9,7 @@
       <button
         v-for="type in disabilityTypes"
         :key="type.label"
-        :class="['option-button', { selected: selectedType === type }]"
+        :class="['option-button', { selected: selectedType?.value === type.value }]"
         @click="selectType(type)"
       >
         {{ type.label }}
@@ -38,6 +38,7 @@ const disabilityTypes = [
 // 장애 유형 선택
 function selectType(type) {
   selectedType.value = type;
+  console.log(selectedType.value);
 }
 
 // 다음 단계로 이동

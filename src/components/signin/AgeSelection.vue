@@ -9,7 +9,7 @@
       <button
         v-for="age in ageOptions"
         :key="age.label"
-        :class="['option-button', { selected: selectedAge === age }]"
+        :class="['option-button', { selected: selectedAge?.value === age.value }]"
         @click="selectAge(age)"
       >
         {{ age.label }}
@@ -37,7 +37,11 @@ const ageOptions = [
 
 // 나이 선택
 function selectAge(age) {
+  // event.preventDefault();
+  console.log(age)
   selectedAge.value = age;
+  console.log(selectedAge.value)
+  console.log(age==selectedAge.value)
 }
 
 // 다음 단계로 이동

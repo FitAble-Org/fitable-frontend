@@ -35,9 +35,10 @@ await fetchRecommendedTraining();
 });
 
 async function fetchRecommendedTraining() {
-try {
-  const response = await appClient.get(`home-training`); // API 엔드포인트에 맞게 수정
-  exercises.value = response.data;
+  try {
+    const response = await appClient.get(`home-training`); // API 엔드포인트에 맞게 수정
+    exercises.value = response.data;
+    console.log(exercises.value)
 } catch (error) {
   console.error('추천 가정운동 요청 중 오류 발생:', error);
 }

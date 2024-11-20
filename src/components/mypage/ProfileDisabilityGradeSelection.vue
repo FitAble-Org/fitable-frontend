@@ -9,7 +9,7 @@
       <button
         v-for="grade in grades"
         :key="grade.label"
-        :class="['option-button', { selected: selectedGrade === grade }]"
+        :class="['option-button', { selected: selectedGrade?.value === grade.value }]"
         @click="selectGrade(grade)"
       >
         {{ grade.label }}

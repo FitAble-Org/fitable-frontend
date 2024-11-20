@@ -9,7 +9,7 @@
       <button
         v-for="age in ageOptions"
         :key="age.label"
-        :class="['option-button', { selected: selectedAge === age }]"
+        :class="['option-button', { selected: selectedAge?.value === age.value }]"
         @click="selectAge(age)"
       >
         {{ age.label }}

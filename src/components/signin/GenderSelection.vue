@@ -9,7 +9,7 @@
       <button
         v-for="gender in genderOptions"
         :key="gender.label"
-        :class="['option-button', { selected: selectedGender === gender }]"
+        :class="['option-button', { selected: selectedGender?.value === gender.value }]"
         @click="selectGender(gender)"
       >
         {{ gender.label }}
@@ -37,6 +37,7 @@ const genderOptions = [
 // 성별 선택
 function selectGender(gender) {
   selectedGender.value = gender;
+  console.log(selectedGender.value.value)
 }
 
 // 다음 단계로 이동
