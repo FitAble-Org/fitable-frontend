@@ -4,8 +4,16 @@
       <button class="back-button" @click="goBack">← 추천 시설 및 강좌</button>
     </div>
     <div ref="map" class="map-container"></div>
-    <div v-if="selectedLocation" class="location-info" :style="{ height: `${infoHeight}px` }">
-      <div class="drag-handle" @mousedown="startDrag" @touchstart="startDrag"></div>
+    <div
+      v-if="selectedLocation"
+      class="location-info"
+      :style="{ height: `${infoHeight}px` }"
+    >
+      <div
+        class="drag-handle"
+        @mousedown="startDrag"
+        @touchstart="startDrag"
+      ></div>
       <h2 class="facility-name">{{ selectedLocation.fcltyNm }}</h2>
       <div class="facility-details">
         <p class="facility-address">
@@ -15,21 +23,30 @@
       </div>
       <button class="navigate-button">길찾기</button>
       <div class="lecture-info">
-        <p class="lecture-title">{{ selectedLocation.fcltyCourseSdivNm || '강좌 정보 없음' }}</p>
-        <p class="lecture-time">운영 시간: 09:00 ~ 18:00</p> <!-- 예시 시간 -->
-        <button class="add-button" @click="showPopup(selectedLocation)">추가하기</button>
+        <p class="lecture-title">
+          {{ selectedLocation.fcltyCourseSdivNm || "강좌 정보 없음" }}
+        </p>
+        <p class="lecture-time">운영 시간: 09:00 ~ 18:00</p>
+        <!-- 예시 시간 -->
+        <button class="add-button" @click="showPopup(selectedLocation)">
+          추가하기
+        </button>
       </div>
     </div>
   </div>
-  <Popup :isVisible="isPopupVisible" :exercise="selectedExercise" exerciseType="외부운동" @close="closePopup" />
-
+  <Popup
+    :isVisible="isPopupVisible"
+    :exercise="selectedExercise"
+    exerciseType="외부운동"
+    @close="closePopup"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import apiClient from '@/axios/apiClient.js';
-import Popup from '@/components/Popup.vue';
+import { ref, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import apiClient from "@/axios/apiClient.js";
+import Popup from "@/components/Popup.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -41,7 +58,7 @@ const isPopupVisible = ref(false);
 const selectedExercise = ref(null);
 
 // 이전 페이지에서 전달된 itemName 값 사용
-const itemName = route.query.itemName || '';
+const itemName = route.query.itemName || "";
 
 const infoHeight = ref(300); // 기본 높이 설정
 const MIN_HEIGHT = 250; // 최소 높이 설정
@@ -52,7 +69,7 @@ const goBack = () => {
   if (window.history.length > 1) {
     window.history.back();
   } else {
-    router.push({ name: 'OutdoorExercise' });
+    router.push({ name: "OutdoorExercise" });
   }
 };
 
@@ -67,17 +84,22 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 
   // 사용자 위치 마커 (파란색 원형 마커)
   const currentPosition = new kakao.maps.LatLng(centerLat, centerLng);
-  const imageSrc = 'https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png';  // 파란색 원형 아이콘 이미지 URL
-  const imageSize = new kakao.maps.Size(24, 24);  // 크기
-  const imageOption = { offset: new kakao.maps.Point(12, 12) };  // 오프셋 (중심 조정)
+  const imageSrc =
+    "https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png"; // 파란색 원형 아이콘 이미지 URL
+  const imageSize = new kakao.maps.Size(24, 24); // 크기
+  const imageOption = { offset: new kakao.maps.Point(12, 12) }; // 오프셋 (중심 조정)
 
-  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+  const markerImage = new kakao.maps.MarkerImage(
+    imageSrc,
+    imageSize,
+    imageOption
+  );
 
   const currentMarker = new kakao.maps.Marker({
     position: currentPosition,
-    image: markerImage,  // 커스텀 이미지 적용
+    image: markerImage, // 커스텀 이미지 적용
   });
-  currentMarker.setMap(map.value);  // 마커 지도에 표시
+  currentMarker.setMap(map.value); // 마커 지도에 표시
 
   // 시설 위치 마커 추가
   facilityLocations.forEach((facility) => {
@@ -90,7 +112,7 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
     marker.setMap(map.value);
 
     // 마커 클릭 이벤트
-    kakao.maps.event.addListener(marker, 'click', () => {
+    kakao.maps.event.addListener(marker, "click", () => {
       selectedLocation.value = {
         exerciseId: facility.id,
         fcltyNm: facility.fcltyNm,
@@ -105,15 +127,15 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 // 시설 데이터 가져오기
 const fetchFacilities = async (lat, lng) => {
   try {
-    const response = await apiClient.get('facilities/filter', {
+    const response = await apiClient.get("facilities/filter", {
       params: { itemName, latitude: lat, longitude: lng }, // itemName과 현재 위치를 사용하여 요청
     });
     facilities.value = response.data;
     console.log("Fetched facilities:", facilities.value); // 응답값을 로그로 남김
     initializeMap(facilities.value, lat, lng); // 지도 초기화 및 마커 추가
   } catch (error) {
-    console.error('시설 데이터를 가져오는 데 실패했습니다:', error);
-    alert('시설 데이터를 불러오는 데 문제가 발생했습니다.');
+    console.error("시설 데이터를 가져오는 데 실패했습니다:", error);
+    alert("시설 데이터를 불러오는 데 문제가 발생했습니다.");
   }
 };
 
@@ -147,35 +169,36 @@ function closePopup() {
 
 // 드래그 시작 함수
 const startDrag = (event) => {
-isDragging = true;
-event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
-// 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
-document.addEventListener('mousemove', onDrag, { passive: false });
-document.addEventListener('mouseup', stopDrag);
-document.addEventListener('touchmove', onDrag, { passive: false });
-document.addEventListener('touchend', stopDrag);
+  isDragging = true;
+  event.preventDefault(); // 기본 동작 방지 (모바일 스크롤)
+  // 터치와 마우스 이벤트 모두 등록, passive: false로 스크롤 방지
+  document.addEventListener("mousemove", onDrag, { passive: false });
+  document.addEventListener("mouseup", stopDrag);
+  document.addEventListener("touchmove", onDrag, { passive: false });
+  document.addEventListener("touchend", stopDrag);
 };
 
 // 드래그 중 함수
 const onDrag = (event) => {
-if (isDragging) {
-  // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
-  const clientY = event.clientY || (event.touches && event.touches[0].clientY);
-  if (clientY) {
-    const newHeight = window.innerHeight - clientY;
-    infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
+  if (isDragging) {
+    // 터치 이벤트와 마우스 이벤트의 clientY 값을 얻음
+    const clientY =
+      event.clientY || (event.touches && event.touches[0].clientY);
+    if (clientY) {
+      const newHeight = window.innerHeight - clientY;
+      infoHeight.value = Math.max(newHeight, MIN_HEIGHT); // 최소 높이를 MIN_HEIGHT로 제한
+    }
   }
-}
 };
 
 // 드래그 종료 함수
 const stopDrag = () => {
-isDragging = false;
-// 모든 이벤트 제거
-document.removeEventListener('mousemove', onDrag);
-document.removeEventListener('mouseup', stopDrag);
-document.removeEventListener('touchmove', onDrag);
-document.removeEventListener('touchend', stopDrag);
+  isDragging = false;
+  // 모든 이벤트 제거
+  document.removeEventListener("mousemove", onDrag);
+  document.removeEventListener("mouseup", stopDrag);
+  document.removeEventListener("touchmove", onDrag);
+  document.removeEventListener("touchend", stopDrag);
 };
 </script>
 
@@ -183,7 +206,7 @@ document.removeEventListener('touchend', stopDrag);
 .map-view-container {
   position: relative;
   width: 100%;
-  height: 100vh;    
+  height: 100vh;
   overflow: hidden;
 }
 
@@ -192,7 +215,11 @@ document.removeEventListener('touchend', stopDrag);
   z-index: 1000;
   height: 100px;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0) 80%);
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.8) 40%,
+    rgba(255, 255, 255, 0) 80%
+  );
 }
 
 .back-button {
@@ -247,7 +274,8 @@ document.removeEventListener('touchend', stopDrag);
   margin-bottom: 20px;
 }
 
-.facility-address, .facility-detail {
+.facility-address,
+.facility-detail {
   color: #777;
   font-size: 14px;
   margin: 5px 0;
@@ -298,12 +326,12 @@ document.removeEventListener('touchend', stopDrag);
 }
 
 .drag-handle {
-width: 100%;
-text-align: center;
-height: 35px;
-border-radius: 10px;
-cursor: ns-resize;
-/* background-color: #e9e9e9; */
-margin: auto;
+  width: 100%;
+  text-align: center;
+  height: 35px;
+  border-radius: 10px;
+  cursor: ns-resize;
+  /* background-color: #e9e9e9; */
+  margin: auto;
 }
 </style>

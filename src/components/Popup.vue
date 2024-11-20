@@ -1,15 +1,15 @@
 <template>
   <div class="popup-overlay" v-if="isVisible">
     <div class="popup">
-      <p>운동을 추가했습니다.<br>홈화면에서 운동 후 시간을 기록해 주세요!</p>
+      <p>운동을 추가했습니다.<br />홈화면에서 운동 후 시간을 기록해 주세요!</p>
       <button class="confirm-button" @click="addCalendar">확인</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { toRefs } from 'vue';
-import apiClient from '@/axios/apiClient.js';
+import { toRefs } from "vue";
+import apiClient from "@/axios/apiClient.js";
 
 // Props 및 Emits 정의
 const props = defineProps({
@@ -29,27 +29,24 @@ const props = defineProps({
 
 const { exercise, exerciseType } = toRefs(props);
 
-
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 // 캘린더에 운동 추가 함수
 async function addCalendar() {
   try {
-    console.log(exercise.value)
-    console.log(exerciseType)
     const requestData = {
       exerciseId: exercise.value.exerciseId,
       duration: 0,
-      exerciseType, // this.exerciseType 대신 간단하게 사용
+      exerciseType: exerciseType.value, // this.exerciseType 대신 간단하게 사용
     };
-    await apiClient.post('calendar', requestData);
-    emit('close'); // 모달 닫기 이벤트 발생
+    console.log(requestData);
+    await apiClient.post("calendar", requestData);
+    emit("close"); // 모달 닫기 이벤트 발생
   } catch (error) {
-    console.error('Failed to add exercise:', error);
+    console.error("Failed to add exercise:", error);
   }
 }
 </script>
-
 
 <style scoped>
 .popup-overlay {
