@@ -37,7 +37,7 @@ async function addCalendar() {
       duration: 0,
       exerciseType, // this.exerciseType 대신 간단하게 사용
     };
-    await apiClient.post('/calendar', requestData);
+    await apiClient.post('calendar', requestData);
     emit('close'); // 모달 닫기 이벤트 발생
   } catch (error) {
     console.error('Failed to add exercise:', error);
