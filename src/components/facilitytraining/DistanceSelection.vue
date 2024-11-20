@@ -23,53 +23,8 @@
 <script>
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import apiClient from '@/axios/apiClient.js';
 
-const apiClient = axios.create({
-  baseURL: "https://api.fitable.kro.kr",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Axios 요청 인터셉터 설정
-apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem("accessToken");
-  if (token) {
-    config.headers["Authorization"] = `Bearer ${token}`; // Authorization 헤더 추가
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
-
-// Axios 응답 인터셉터 설정 (토큰 만료 시 처리)
-apiClient.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    if (error.response && error.response.status === 401) {
-      try {
-        const refreshResponse = await axios.post(
-          "https://api.fitable.kro.kr/api/users/refresh",
-          { refreshToken: localStorage.getItem("refreshToken") }
-        );
-        const newAccessToken = refreshResponse.data.accessToken;
-        localStorage.setItem("accessToken", newAccessToken);
-
-        // 이전 요청 재시도
-        error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return apiClient.request(error.config);
-      } catch (refreshError) {
-        console.error("리프레시 토큰 갱신 실패:", refreshError);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        alert("세션이 만료되었습니다. 다시 로그인해주세요.");
-        window.location.href = "/api/login";
-      }
-    }
-    return Promise.reject(error);
-  }
-);
 
 export default {
   setup() {
