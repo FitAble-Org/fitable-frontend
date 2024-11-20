@@ -21,32 +21,29 @@
 </template>
 
 <script>
-  import apiClient from '@/axios/apiClient.js';
+import { ref, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import apiClient from '@/axios/apiClient.js';
+
 
 export default {
-  data() {
-    return {
-      selectedOption: null,
-      distanceOptions: [
-        { label: '도보 15분 이내', radiusKm: 1 },
-        { label: '도보 50분 이내', radiusKm: 2 },
-        { label: '대중교통 30분 이내', radiusKm: 3 },
-      ],
-      currentPosition: null, // 사용자 현재 위치
-    };
-  },
-  mounted() {
-    // 페이지 로드 시 사용자 위치 가져오기
-    this.getUserLocation();
-  },
-  methods: {
-    getUserLocation() {
+  setup() {
+    const selectedOption = ref(null);
+    const distanceOptions = reactive([
+      { label: "도보 15분 이내", radiusKm: 1 },
+      { label: "도보 50분 이내", radiusKm: 2 },
+      { label: "대중교통 30분 이내", radiusKm: 3 },
+    ]);
+    const currentPosition = ref(null);
+    const router = useRouter();
+
+    const getUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            this.currentPosition = {
-              x: position.coords.longitude, // 경도
-              y: position.coords.latitude,  // 위도
+            currentPosition.value = {
+              x: position.coords.longitude,
+              y: position.coords.latitude,
             };
           },
           (error) => {
@@ -56,45 +53,60 @@ export default {
       } else {
         alert("위치 정보를 사용할 수 없는 브라우저입니다.");
       }
-    },
-    selectOption(index) {
-      this.selectedOption = index;
-    },
-    goToNext() {
-      if (this.selectedOption !== null && this.currentPosition) {
+    };
+
+    const selectOption = (index) => {
+      selectedOption.value = index;
+    };
+
+    const navigateToQuestion = (data) => {
+      const { itemNames, gptResponseContent } = data;
+      router.push({
+        name: "Question",
+        query: {
+          questions: JSON.stringify(gptResponseContent.split("\n").slice(0, 3)),
+          exercises: JSON.stringify(itemNames),
+          index: 0,
+        },
+      });
+    };
+
+    const goToNext = async () => {
+      if (selectedOption.value !== null && currentPosition.value) {
         const locationRequest = {
-          x: this.currentPosition.x, // 사용자 위치의 경도
-          y: this.currentPosition.y, // 사용자 위치의 위도
-          radiusKm: this.distanceOptions[this.selectedOption].radiusKm,
+          x: currentPosition.value.x,
+          y: currentPosition.value.y,
+          radiusKm: distanceOptions[selectedOption.value].radiusKm,
         };
 
-        apiClient.post('facilities/nearby', locationRequest)
-          .then(response => {
-            const { itemNames, gptResponseContent } = response.data;
-
-            // 질문과 운동 항목 전달
-            this.$router.push({
-              name: 'Question',
-              query: {
-                questions: JSON.stringify(gptResponseContent.split('\n').slice(0, 3)),
-                exercises: JSON.stringify(itemNames), // itemNames 배열 전달
-                index: 0, // 첫 번째 질문으로 시작
-              },
-            });
-          })
-          .catch(error => {
-            console.error('API 요청 오류:', error);
-          });
-      } else if (!this.currentPosition) {
+        try {
+          const response = await apiClient.post("facilities/nearby", locationRequest);
+          navigateToQuestion(response.data);
+        } catch (error) {
+          console.error("API 요청 오류:", error);
+          alert("시설 정보를 가져오는 데 문제가 발생했습니다.");
+        }
+      } else if (!currentPosition.value) {
         alert("현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
       } else {
         alert("선호하는 거리를 선택해주세요.");
       }
-    },
+    };
+
+    onMounted(() => {
+      getUserLocation();
+    });
+
+    return {
+      selectedOption,
+      distanceOptions,
+      currentPosition,
+      selectOption,
+      goToNext,
+    };
   },
 };
 </script>
-
 
 <style scoped>
 .selection-container {

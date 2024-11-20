@@ -18,48 +18,48 @@
     </div>
   </template>
   
-  <script>
-  import apiClient from '@/axios/apiClient.js';
+  <script setup>
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import apiClient from '@/axios/apiClient.js';
 
-  export default {
-    data() {
-      return {
-        username: '',
-        password: '',
-        passwordConfirm: '',
-        usernameExists: false, 
-        isPasswordMatch: true,
-      };
-    },
-    methods: {
-      checkPasswordMatch() {
-        this.isPasswordMatch = this.password === this.passwordConfirm;
-      },
-      async register() {
-        console.log(this.$route.query);
-        if (this.isPasswordMatch) {
-          try {
-           await apiClient.post('users/register', {
-             ...this.$route.query,
-             loginId: this.username,
-             password: this.password
-            })
-            alert("회원가입 성공!");
-          }
-          catch(error) {
-            console.error("회원가입 오류:", error);
-          alert("회원가입 중 오류가 발생했습니다.");
-          }
-        }
-        else {
-          alert("입력 정보를 확인해 주세요.");
-        }
-          this.$router.push({ name: 'Login' });
-      }
+const router = useRouter();
+const route = useRoute();
+
+// 상태 관리
+const username = ref('');
+const password = ref('');
+const passwordConfirm = ref('');
+const usernameExists = ref(false);
+const isPasswordMatch = ref(true);
+
+// 비밀번호 확인
+function checkPasswordMatch() {
+  isPasswordMatch.value = password.value === passwordConfirm.value;
+}
+
+// 회원가입
+async function register() {
+  console.log(route.query);
+  if (isPasswordMatch.value) {
+    try {
+      await apiClient.post('users/register', {
+        ...route.query,
+        loginId: username.value,
+        password: password.value,
+      });
+      alert('회원가입 성공!');
+      router.push({ name: 'Login' });
+    } catch (error) {
+      console.error('회원가입 오류:', error);
+      alert('회원가입 중 오류가 발생했습니다.');
     }
-  };
-  </script>
-  
+  } else {
+    alert('입력 정보를 확인해 주세요.');
+  }
+}
+</script>
+
   <style scoped>
   .registration-container {
     display: flex;

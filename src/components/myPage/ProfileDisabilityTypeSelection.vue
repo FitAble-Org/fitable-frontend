@@ -20,40 +20,44 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      selectedType: null,
-      disabilityTypes: [
-        { label: '지적장애', value: 'INTELLECTUAL' },
-        { label: '청각장애', value: 'HEARING' },
-        { label: '시각장애', value: 'VISION' },
-        { label: '척수장애', value: 'SPINAL' },
-      ],
-    };
-  },
-  methods: {
-    selectType(type) {
-      this.selectedType = type;
-    },
-    goToNext() {
-      console.log(this.$route.query);
-      if (this.selectedType) {
-        this.$router.push({
-          name: 'ProfileDisabilityGradeSelection',
-          query: {
-            ...this.$route.query, 
-            disabilityType: this.selectedType.value
-          }
-        });
-      } else {
-        alert('유형을 선택해주세요.');
-      }
-    },
-  },
-};
+<script setup>
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+// 상태 관리
+const selectedType = ref(null);
+const disabilityTypes = [
+  { label: '지적장애', value: 'INTELLECTUAL' },
+  { label: '청각장애', value: 'HEARING' },
+  { label: '시각장애', value: 'VISION' },
+  { label: '척수장애', value: 'SPINAL' },
+];
+
+// 유형 선택
+function selectType(type) {
+  selectedType.value = type;
+}
+
+// 다음 단계로 이동
+function goToNext() {
+  console.log(route.query);
+  if (selectedType.value) {
+    router.push({
+      name: 'ProfileDisabilityGradeSelection',
+      query: {
+        ...route.query,
+        disabilityType: selectedType.value.value,
+      },
+    });
+  } else {
+    alert('유형을 선택해주세요.');
+  }
+}
 </script>
+
 
 <style scoped>
 .selection-container {

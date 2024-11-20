@@ -58,9 +58,9 @@
   
   // 로그아웃 처리
   const logout = () => {
-    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('accessToken');
     apiClient.defaults.headers.common['Authorization'] = null;
-    router.push('/login');
+    // router.push('/login');
   };
   
   // 페이지 마운트 시 사용자 정보 가져오기

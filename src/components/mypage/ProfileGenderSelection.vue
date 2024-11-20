@@ -20,39 +20,42 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      selectedGender: null,
-      genderOptions: [
-        { label: '여성', value: "FEMALE" },
-        { label: '남성', value: "MALE"},
-      ],
-    };
-  },
-  methods: {
-    selectGender(gender) {
-      this.selectedGender = gender;
-    },
-    goToNext() {
-      console.log(this.$route.query
-      );
-      if (this.selectedGender) {
-        this.$router.push({
-          name: 'ProfileDisabilityTypeSelection',
-          query: {
-            ...this.$route.query, 
-            gender: this.selectedGender.value
-          }
-         });
-      } else {
-        alert('성별을 선택해주세요.');
-      }
-    },
-  },
-};
+<script setup>
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+// 상태 관리
+const selectedGender = ref(null);
+const genderOptions = [
+  { label: '여성', value: 'FEMALE' },
+  { label: '남성', value: 'MALE' },
+];
+
+// 성별 선택
+function selectGender(gender) {
+  selectedGender.value = gender;
+}
+
+// 다음 단계로 이동
+function goToNext() {
+  console.log(route.query);
+  if (selectedGender.value) {
+    router.push({
+      name: 'ProfileDisabilityTypeSelection',
+      query: {
+        ...route.query,
+        gender: selectedGender.value.value,
+      },
+    });
+  } else {
+    alert('성별을 선택해주세요.');
+  }
+}
 </script>
+
 
 <style scoped>
 .selection-container {
