@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/mixins/sharedStyles.scss";
+@use "@/mixins/sharedStyles.scss";
 </style>
 
 <style scoped>

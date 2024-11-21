@@ -50,10 +50,10 @@
     border-radius: 8px;
     cursor: pointer;
     text-align: center;
-    &:hover {
+    &.selected { /* 선택된 상태 */
         background-color: #4CAF50;
-        color: #ffffff;      
-    }
+        color: #ffffff;
+      }
   }
 
   .next-button {
