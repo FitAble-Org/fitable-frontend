@@ -22,6 +22,7 @@
         <p class="facility-detail">{{ selectedLocation.itemNm }}</p>
       </div>
       <button class="navigate-button">길찾기</button>
+      
       <div class="lecture-info">
         <p class="lecture-title">
           {{ selectedLocation.fcltyCourseSdivNm || "강좌 정보 없음" }}
@@ -33,8 +34,8 @@
       </div>
 
       <!-- 블로그 리뷰 섹션 -->
-      <div v-if="blogReviews.length" class="blog-reviews">
-        <h3>블로그 리뷰 {{ blogReviews.length }}</h3>
+      <div v-if="blogReviews.length" class="blog-info">
+        <h2 class="blog-review">블로그 리뷰 {{ blogReviews.length }}</h2>
         <ul class="review-list">
           <li
             v-for="review in blogReviews"
@@ -105,8 +106,9 @@ const sanitizeText = (text) => {
 };
 
 // 블로그 리뷰 데이터 가져오기
-const fetchBlogReviews = async (query) => {
+const fetchBlogReviews = async (facilityName, facilityAddress) => {
   try {
+    const query = `${facilityAddress} ${facilityName}`; // 주소와 시설명을 결합
     const response = await apiClient.get("/facilities/reviews/blog", {
       params: { query, display: 3 },
     });
@@ -181,8 +183,8 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
         fcltyCourseSdivNm: facility.fcltyCourseSdivNm,
       };
 
-      // 리뷰 데이터 가져오기
-      fetchBlogReviews(facility.fcltyNm);
+      // 리뷰 데이터 가져오기 (주소 + 시설명으로 검색)
+      fetchBlogReviews(facility.fcltyAddr, facility.fcltyNm);
     });
   });
 };
@@ -283,7 +285,6 @@ const stopDrag = () => {
 <style scoped>
 
 .blog-reviews {
-  padding: 20px;
 }
 
 .review-list {
@@ -415,7 +416,7 @@ const stopDrag = () => {
 
 .lecture-info {
   border-top: 1px solid #ddd;
-  padding-top: 10px;
+  padding-top: 15px;
   margin-top: 10px;
   position: relative;
 }
@@ -452,5 +453,21 @@ const stopDrag = () => {
   cursor: ns-resize;
   /* background-color: #e9e9e9; */
   margin: auto;
+}
+
+.blog-info {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.blog-review {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 10px;
+  padding-bottom: 10px;
+  padding-top: 5px;
 }
 </style>
