@@ -74,14 +74,14 @@ function goToNext() {
 }
 
 .header {
-  margin-top: 100px;
+  margin-top: 50px;
 }
 
 .title {
   font-size: 24px;
   font-weight: bold;
   color: #333333;
-  margin-bottom: 8px;
+  margin-bottom: 30px;
 }
 
 .subtitle {

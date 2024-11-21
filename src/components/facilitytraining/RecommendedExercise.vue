@@ -9,7 +9,18 @@
       <p>{{ recommendedExercise }}</p>
     </div>
 
-    <button class="map-button" @click="goToMap">지도 보기</button> <!-- 지도 보기 버튼 추가 -->
+    <div class="option-buttons">
+      <button
+        v-for="(option, idx) in responseOptions"
+        :key="option.label"
+        :class="['option-button', { selected: selectedOption === idx }]"
+        @click="selectOption(idx)"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+
+    <button class="next-button" @click="goToMap">지도 보기</button>
   </div>
 </template>
 
@@ -75,7 +86,7 @@ onMounted(() => {
   font-size: 24px;
   font-weight: bold;
   color: #333333;
-  margin-bottom: 8px;
+  margin-bottom: 30px;
 }
 
 .subtitle {
