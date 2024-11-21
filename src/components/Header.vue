@@ -39,6 +39,5 @@ h1 {
   font-size: 24px;
   color: #333;
   margin: 0;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 </style>
