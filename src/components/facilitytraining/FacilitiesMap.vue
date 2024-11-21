@@ -27,19 +27,45 @@
           {{ selectedLocation.fcltyCourseSdivNm || "강좌 정보 없음" }}
         </p>
         <p class="lecture-time">운영 시간: 09:00 ~ 18:00</p>
-        <!-- 예시 시간 -->
         <button class="add-button" @click="showPopup(selectedLocation)">
           추가하기
         </button>
       </div>
+
+      <!-- 블로그 리뷰 섹션 -->
+      <div v-if="blogReviews.length" class="blog-reviews">
+        <h3>블로그 리뷰 {{ blogReviews.length }}</h3>
+        <ul class="review-list">
+          <li
+            v-for="review in blogReviews"
+            :key="review.link"
+            class="review-item"
+            @click="openBlogLink(review.link)"
+          >
+            <img
+              src="https://via.placeholder.com/80"
+              alt="블로그 썸네일"
+              class="review-thumbnail"
+            />
+            <div class="review-content">
+              <!-- sanitizeText 함수로 HTML 태그 제거 후 표시 -->
+              <p class="review-title">{{ sanitizeText(review.title) }}</p>
+              <p class="review-description">{{ sanitizeText(review.description) }}</p>
+              <p class="review-blogger">
+                작성자: {{ sanitizeText(review.bloggername) }} | 작성일: {{ formatDate(review.postdate) }}
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
+    <Popup
+      :isVisible="isPopupVisible"
+      :exercise="selectedExercise"
+      exerciseType="외부운동"
+      @close="closePopup"
+    />
   </div>
-  <Popup
-    :isVisible="isPopupVisible"
-    :exercise="selectedExercise"
-    exerciseType="외부운동"
-    @close="closePopup"
-  />
 </template>
 
 <script setup>
@@ -53,6 +79,7 @@ const route = useRoute();
 const map = ref(null);
 const selectedLocation = ref(null);
 const facilities = ref([]);
+const blogReviews = ref([]); // 블로그 리뷰 데이터
 
 const isPopupVisible = ref(false);
 const selectedExercise = ref(null);
@@ -63,6 +90,39 @@ const itemName = route.query.itemName || "";
 const infoHeight = ref(300); // 기본 높이 설정
 const MIN_HEIGHT = 250; // 최소 높이 설정
 let isDragging = false;
+
+// 날짜 포맷 함수 (연도-월-일 형식으로 변환)
+const formatDate = (dateString) => {
+  const year = dateString.slice(0, 4);
+  const month = dateString.slice(4, 6);
+  const day = dateString.slice(6, 8);
+  return `${year}-${month}-${day}`;
+};
+
+// 텍스트에서 HTML 태그 제거 함수
+const sanitizeText = (text) => {
+  return text.replace(/<\/?[^>]+(>|$)/g, ""); // HTML 태그 제거
+};
+
+// 블로그 리뷰 데이터 가져오기
+const fetchBlogReviews = async (query) => {
+  try {
+    const response = await apiClient.get("/facilities/reviews/blog", {
+      params: { query, display: 3 },
+    });
+    blogReviews.value = response.data || []; // 데이터가 없으면 빈 배열
+    console.log("블로그 리뷰 데이터:", blogReviews.value);
+  } catch (error) {
+    console.error("블로그 리뷰를 가져오는 데 실패했습니다:", error);
+    alert("블로그 리뷰 데이터를 불러오는 데 문제가 발생했습니다.");
+    blogReviews.value = [];
+  }
+};
+
+// 리뷰 클릭 시 해당 블로그 링크 열기
+const openBlogLink = (link) => {
+  window.open(link, "_blank");
+};
 
 // 뒤로가기 동작
 const goBack = () => {
@@ -77,17 +137,17 @@ const goBack = () => {
 const initializeMap = (facilityLocations, centerLat, centerLng) => {
   const container = map.value;
   const options = {
-    center: new kakao.maps.LatLng(centerLat, centerLng), // 사용자 현재 위치를 초기 중심으로 설정
+    center: new kakao.maps.LatLng(centerLat, centerLng),
     level: 5,
   };
   map.value = new kakao.maps.Map(container, options);
 
-  // 사용자 위치 마커 (파란색 원형 마커)
+  // 사용자 위치 마커
   const currentPosition = new kakao.maps.LatLng(centerLat, centerLng);
   const imageSrc =
-    "https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png"; // 파란색 원형 아이콘 이미지 URL
-  const imageSize = new kakao.maps.Size(24, 24); // 크기
-  const imageOption = { offset: new kakao.maps.Point(12, 12) }; // 오프셋 (중심 조정)
+    "https://img.icons8.com/emoji/48/000000/blue-circle-emoji.png";
+  const imageSize = new kakao.maps.Size(24, 24);
+  const imageOption = { offset: new kakao.maps.Point(12, 12) };
 
   const markerImage = new kakao.maps.MarkerImage(
     imageSrc,
@@ -97,9 +157,9 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 
   const currentMarker = new kakao.maps.Marker({
     position: currentPosition,
-    image: markerImage, // 커스텀 이미지 적용
+    image: markerImage,
   });
-  currentMarker.setMap(map.value); // 마커 지도에 표시
+  currentMarker.setMap(map.value);
 
   // 시설 위치 마커 추가
   facilityLocations.forEach((facility) => {
@@ -119,7 +179,10 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
         fcltyAddr: facility.fcltyAddr,
         itemNm: facility.itemNm,
         fcltyCourseSdivNm: facility.fcltyCourseSdivNm,
-      }; // 선택된 시설 정보 업데이트
+      };
+
+      // 리뷰 데이터 가져오기
+      fetchBlogReviews(facility.fcltyNm);
     });
   });
 };
@@ -128,11 +191,10 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 const fetchFacilities = async (lat, lng) => {
   try {
     const response = await apiClient.get("facilities/filter", {
-      params: { itemName, latitude: lat, longitude: lng }, // itemName과 현재 위치를 사용하여 요청
+      params: { itemName, latitude: lat, longitude: lng },
     });
     facilities.value = response.data;
-    console.log("Fetched facilities:", facilities.value); // 응답값을 로그로 남김
-    initializeMap(facilities.value, lat, lng); // 지도 초기화 및 마커 추가
+    initializeMap(facilities.value, lat, lng);
   } catch (error) {
     console.error("시설 데이터를 가져오는 데 실패했습니다:", error);
     alert("시설 데이터를 불러오는 데 문제가 발생했습니다.");
@@ -161,7 +223,6 @@ onMounted(() => {
     const script = document.createElement("script");
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY`;
     script.onload = () => {
-      console.log("Kakao Maps 스크립트가 로드되었습니다.");
       loadKakaoMap();
     };
     script.onerror = () => {
@@ -218,7 +279,49 @@ const stopDrag = () => {
 };
 </script>
 
+
 <style scoped>
+
+.blog-reviews {
+  padding: 20px;
+}
+
+.review-list {
+  list-style: none;
+  padding: 0;
+}
+
+.review-item {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.review-thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.review-content {
+  flex: 1;
+}
+
+.review-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 5px;
+}
+
+.review-description {
+  font-size: 14px;
+  color: #555;
+}
+
+.review-blogger {
+  font-size: 12px;
+  color: #777;
+}
 .map-view-container {
   position: relative;
   width: 100%;
