@@ -1,12 +1,17 @@
 /* styles.css */
-:root {
+@font-face {
+    font-family: 'SUIT-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
+    font-weight: 1000;
+    font-style: normal;
+  }
+  
+  :root {
     --main-font: 'SUIT-Regular';
   }
   
   /* 모든 텍스트 요소에 기본 폰트 적용 */
   body, h1, h2, h3, h4, h5, h6, p, span, a, li, blockquote, strong, em, button, input, textarea, div {
     font-family: var(--main-font) !important;
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2')  !important;
-    font-weight: 400  !important;
-    font-style: normal  !important;
   }
+  
