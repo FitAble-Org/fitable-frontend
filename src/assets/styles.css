@@ -1,17 +1,10 @@
 /* styles.css */
-body, h1, h2, h3, h4, h5, h6, p, span, a, li, blockquote, strong, em {
-    font-family: "ABeeZee", sans-serif;
-}
-
-.abeezee-regular {
-    font-family: "ABeeZee", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-}
-
-.abeezee-regular-italic {
-    font-family: "ABeeZee", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-}
+:root {
+    --main-font: "ABeeZee", sans-serif;
+  }
+  
+  /* 모든 텍스트 요소에 기본 폰트 적용 */
+  body, h1, h2, h3, h4, h5, h6, p, span, a, li, blockquote, strong, em, button, input, textarea {
+    font-family: var(--main-font) !important;
+  }
   
