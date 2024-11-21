@@ -140,20 +140,36 @@ const fetchFacilities = async (lat, lng) => {
 };
 
 onMounted(() => {
-  // 사용자 현재 위치 가져오기
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        fetchFacilities(lat, lng); // 현재 위치를 기반으로 시설 요청 및 지도 초기화
-      },
-      (error) => {
-        console.error("위치 정보를 가져오지 못했습니다:", error);
-      }
-    );
+  const loadKakaoMap = () => {
+    if (window.kakao && kakao.maps) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          fetchFacilities(lat, lng);
+        },
+        (error) => {
+          console.error("위치 정보를 가져오지 못했습니다:", error);
+        }
+      );
+    } else {
+      console.error("Kakao Maps 스크립트가 아직 로드되지 않았습니다.");
+    }
+  };
+
+  if (typeof kakao === "undefined") {
+    const script = document.createElement("script");
+    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_APP_KEY`;
+    script.onload = () => {
+      console.log("Kakao Maps 스크립트가 로드되었습니다.");
+      loadKakaoMap();
+    };
+    script.onerror = () => {
+      console.error("Kakao Maps 스크립트 로드 실패");
+    };
+    document.head.appendChild(script);
   } else {
-    alert("위치 정보를 사용할 수 없는 브라우저입니다.");
+    loadKakaoMap();
   }
 });
 
