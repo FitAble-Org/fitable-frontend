@@ -28,6 +28,8 @@ const pageTitle = computed(() => {
 .header-container {
   background-color: #ffffff;
   padding: 20px;
+  padding-top: 30px;
+  padding-bottom: 25px;
   width: 100%;
   box-sizing: border-box;
   position: sticky;
@@ -37,9 +39,7 @@ const pageTitle = computed(() => {
 
 h1 {
   font-size: 24px;
-  font-weight: bold;
   color: #333;
   margin: 0;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 </style>
