@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <div class="indoor-exercise-container">
     <div class="exercise-tabs">
       <button :class="{ active: selectedTab === '준비운동' }" @click="selectTab('준비운동')">준비운동</button>
@@ -17,35 +17,9 @@
   </div>
 
   <Popup :isVisible="isPopupVisible" :exercise="selectedExercise" exerciseType="가정운동" @close="closePopup" />
-</template> -->
-
-<template>
-  <div class="exercise-timeline">
-    <Timeline :value="events" layout="horizontal" align="top">
-      <template #content="slotProps">
-        <div class="step-wrapper" :class="{ active: slotProps.item.active }">
-          <p class="step-title">{{ slotProps.item.title }}</p>
-          <p class="step-subtitle">{{ slotProps.item.subtitle }}</p>
-        </div>
-      </template>
-    </Timeline>
-
-    <div class="cards">
-      <div
-        v-for="(exercise, index) in selectedExercises"
-        :key="index"
-        class="exercise-card"
-      >
-        <h3 class="exercise-title">{{ exercise.name }}</h3>
-        <p class="exercise-detail">추천도: {{ exercise.recommendation }}</p>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script setup>
-import Timeline from 'primevue/timeline';
-
 import { ref, computed, onMounted } from 'vue';
 import Popup from '@/components/Popup.vue';
 import appClient from '@/axios/apiClient.js';
