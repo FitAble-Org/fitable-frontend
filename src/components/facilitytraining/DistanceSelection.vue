@@ -1,7 +1,7 @@
 <template>
   <div class="selection-container">
     <div class="header">
-      <h2 class="title">어느 정도 거리의 운동 시설을 찾기 원하시나요?</h2>
+      <h2 class="title">어느 정도 거리의 운동<br> 시설을 원하시나요?</h2>
       <p class="subtitle">선호하는 이동 거리를 선택해주세요</p>
     </div>
 
@@ -130,10 +130,10 @@ export default {
 }
 
 .title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
   color: #333333;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
 
 .subtitle {
