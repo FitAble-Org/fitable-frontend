@@ -28,6 +28,8 @@ const pageTitle = computed(() => {
 .header-container {
   background-color: #ffffff;
   padding: 20px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   width: 100%;
   box-sizing: border-box;
   position: sticky;

@@ -94,7 +94,7 @@ function goToNext() {
 }
 
 .header {
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
 .title {
