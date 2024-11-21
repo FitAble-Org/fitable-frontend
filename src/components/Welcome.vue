@@ -51,8 +51,8 @@ function navigateToHome() {
   }
   
   .button {
-    width: 80%;
-    max-width: 300px;
+    width: 90%;
+    height: 60px;
     padding: 12px;
     font-size: 18px;
     color: #ffffff;

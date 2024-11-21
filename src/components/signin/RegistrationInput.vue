@@ -43,6 +43,11 @@ async function register() {
   console.log(route.query);
   if (isPasswordMatch.value) {
     try {
+      console.log({
+        ...route.query,
+        loginId: username.value,
+        password: password.value,
+      });
       await apiClient.post('users/register', {
         ...route.query,
         loginId: username.value,
@@ -59,6 +64,10 @@ async function register() {
   }
 }
 </script>
+
+<style lang="scss">
+@import "@/mixins/sharedStyles.scss";
+</style>
 
   <style scoped>
   .registration-container {
@@ -83,24 +92,7 @@ async function register() {
     color: #333333;
     margin-bottom: 8px;
   }
-  
-  .input-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 80%;
-    max-width: 300px;
-  }
-  
-  .input-field {
-    padding: 15px;
-    font-size: 18px;
-    color: #333333;
-    background-color: #f5f5f5;
-    border: none;
-    border-radius: 8px;
-    text-align: center;
-  }
+
   
   .error-message {
     color: red;
@@ -109,21 +101,5 @@ async function register() {
     text-align: left;
   }
   
-  .submit-button {
-    width: 80%;
-  max-width: 300px;
-  padding: 15px;
-  font-size: 18px;
-  color: #ffffff;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 50px;
-  }
-  
-  .submit-button:hover {
-    background-color: #45a049;
-  }
   </style>
   

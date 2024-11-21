@@ -83,6 +83,9 @@ async function goToNext() {
 }
 </script>
 
+<style lang="scss">
+@import "@/mixins/sharedStyles.scss";
+</style>
 
 <style scoped>
 .selection-container {
@@ -113,44 +116,4 @@ async function goToNext() {
   color: #666666;
 }
 
-.option-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 80%;
-  max-width: 300px;
-}
-
-.option-button {
-  padding: 15px;
-  font-size: 18px;
-  color: #333333;
-  background-color: #f5f5f5;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.option-button.selected {
-  background-color: #4CAF50;
-  color: #ffffff;
-}
-
-.next-button {
-  width: 80%;
-  max-width: 300px;
-  padding: 15px;
-  font-size: 18px;
-  color: #ffffff;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 80px;
-}
-
-.next-button:hover {
-  background-color: #45a049;
-}
 </style>
