@@ -29,10 +29,9 @@ const router = useRouter();
 // 상태 관리
 const selectedAge = ref(null);
 const ageOptions = [
-  { label: '10대', value: 'TEENAGER' },
-  { label: '2 ~ 30대', value: 'YOUNG_ADULT' },
-  { label: '4 ~ 50대', value: 'MIDDLE_AGED' },
-  { label: '60대 이상', value: 'SENIOR' },
+  { label: '10대 20대', value: 'YOUNG_ADULT' },
+  { label: '30대 40대', value: 'MIDDLE_AGED' },
+  { label: '50대 이상', value: 'SENIOR' },
 ];
 
 // 나이 선택
