@@ -29,7 +29,7 @@ const pageTitle = computed(() => {
   background-color: #ffffff;
   padding: 20px;
   padding-top: 30px;
-  padding-bottom: 30px;
+  padding-bottom: 25px;
   width: 100%;
   box-sizing: border-box;
   position: sticky;
