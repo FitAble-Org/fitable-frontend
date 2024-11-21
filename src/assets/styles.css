@@ -1,10 +1,9 @@
 /* styles.css */
 :root {
-    --main-font: "ABeeZee", sans-serif;
+    --main-font: "Nanum Gothic Coding", monospace;
   }
   
   /* 모든 텍스트 요소에 기본 폰트 적용 */
   body, h1, h2, h3, h4, h5, h6, p, span, a, li, blockquote, strong, em, button, input, textarea {
     font-family: var(--main-font) !important;
   }
-  
