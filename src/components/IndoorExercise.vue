@@ -140,3 +140,4 @@ function closePopup() {
   top: 20px;
   right: 15px;
 }
+</style>
