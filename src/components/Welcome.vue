@@ -42,8 +42,7 @@ function navigateToHome() {
 .logo {
   width: 300px; /* 로고 크기 조정 */
   height: auto;
-  padding-top: 30px;
-  margin-bottom: 20px;
+  padding-top: 60px;
 }
 
 .title {
