@@ -71,7 +71,7 @@
 
       </div>
     </div>
-    <Popup
+    <AddToCalendarPopup
       :isVisible="isPopupVisible"
       :exercise="selectedExercise"
       exerciseType="외부운동"
@@ -84,7 +84,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import apiClient from "@/axios/apiClient.js";
-import Popup from "@/components/Popup.vue";
+import AddToCalendarPopup from "@/components/popup/AddToCalendarPopup.vue";
 
 const router = useRouter();
 const route = useRoute();

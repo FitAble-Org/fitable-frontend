@@ -50,22 +50,33 @@ async function addCalendar() {
     await apiClient.post('calendar', requestData);
 
     if (exerciseType.value === "가정운동") {
-
-      console.log(exercise.value)
-      console.log( {
-        exerciseName: exercise.value.exerciseName,
-          exerciseId: exercise.value.exerciseId,
-          exerciseType: exercise.value.sportsStep
-      })
-        
-      router.push({
-        name: "IndoorExerciseInfo",
-        query: {
+      console.log({
           exerciseName: exercise.value.exerciseName,
           exerciseId: exercise.value.exerciseId,
-          exerciseType: exercise.value.sportsStep
-        }
-      });
+          exerciseStep: exercise.value.exerciseStep
+      })
+        
+      if (exercise.value.exerciseStep == "마무리운동") {
+        router.push({
+          name: "Home"
+        });
+      }
+      else if(exercise.value.exerciseStep == "준비운동") {
+        router.push({
+          name: "IndoorExercise",
+          query: {
+            exerciseStep: "본운동"
+          }
+        });
+      }
+      else if(exercise.value.exerciseStep == "본운동") {
+        router.push({
+          name: "IndoorExercise",
+          query: {
+            exerciseStep: "마무리운동"
+          }
+        });
+      }
     }
     else {
       emit('close'); // 모달 닫기 이벤트 발생

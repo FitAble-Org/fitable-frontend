@@ -30,9 +30,20 @@
           </li>
         </ul>
       </div>
+      <button class="add-button" @click="showPopup()">
+        운동 추가하기
+      </button>
     </div>
   </div>
   <div v-else class="loading-container">로딩 중...</div>
+
+  <AddToCalendarPopup
+    :isVisible="isPopupVisible"
+    :exercise="exercise"
+    exerciseType="가정운동"
+    @close="closePopup"
+  />
+  
 </template>
 
 <script setup>
@@ -40,9 +51,11 @@ import { useRoute, onBeforeRouteUpdate } from "vue-router";
 import { ref, watch } from "vue";
 import Timeline from 'primevue/timeline';
 import appClient from '@/axios/apiClient.js';
+import AddToCalendarPopup from '@/components/popup/AddToCalendarPopup.vue';
+
 
 const route = useRoute();
-
+const isPopupVisible = ref(false);
 const isReady = ref(false); // 데이터 로드 여부
 const selectedTab = ref(null);
 const exerciseTypes = ref(['준비운동', '본운동', '마무리운동']);
@@ -50,6 +63,21 @@ const exerciseName = ref('');
 const exerciseId = ref(null);
 const exerciseSteps = ref([]);
 const apiKey = 'AIzaSyD3HXT8PT2WmgLfPyyh1xdW-vwWOEu4xG4';
+const exercise = ref(null)
+
+function showPopup() {
+  exercise.value = {
+    exerciseName,
+    exerciseId,
+    exerciseStep: route.query.exerciseType
+  };
+  console.log( exercise.value )
+  isPopupVisible.value = true;
+}
+
+function closePopup() {
+  isPopupVisible.value = false;
+}
 
 // 라우트 변화 시 데이터 로드
 function loadRouteData() {
@@ -204,7 +232,7 @@ async function loadYoutube() {
 }
 
 .exercise-title {
-  font-size: 14px; /* 제목 크기 */
+  font-size: 17px; /* 제목 크기 */
   margin: 0;
   /* font-weight: 600;  */
   color: #333; /* 제목 색상 */
@@ -221,7 +249,7 @@ async function loadYoutube() {
   display: flex; /* 아이콘과 텍스트를 수평으로 배치 */
   align-items: flex-start; /* 아이콘과 텍스트 위쪽 정렬 */
   margin-bottom: 18px; /* 리스트 간격 */
-  font-size: 13px; /* 텍스트 크기 */
+  font-size: 16px; /* 텍스트 크기 */
   color: #666; /* 텍스트 색상 */
 }
 
@@ -232,16 +260,34 @@ async function loadYoutube() {
 }
 
 .circle {
-  width: 10px
+  width: 13px
   ; /* 동그라미 크기 */
-  height: 10px; /* 동그라미 크기 */
+  height: 13px; /* 동그라미 크기 */
   border-radius: 50%; /* 동그라미 모양 */
   background-color: rgb(255, 255, 255); /* 동그라미 색상 */
   flex-shrink: 0; /* 크기 줄어들지 않게 고정 */
-  border: 3px solid #4caf50;
+  border: 4px solid #4caf50;
 }
 
 .text {
   line-height: 1.5; /* 텍스트 줄 간격 */
+}
+
+.add-button {
+  width: 80%;
+  height: 50px;
+  background-color: #4caf50; /* 버튼 배경색 */
+  color: white; /* 버튼 텍스트 색상 */
+  padding: 10px 20px; /* 버튼 여백 */
+  border: none; /* 테두리 제거 */
+  border-radius: 4px; /* 둥근 테두리 */
+  font-size: 16px; /* 텍스트 크기 */
+  cursor: pointer; /* 클릭 커서 표시 */
+  margin-top: 10px; /* 상단 마진 */
+  transition: background-color 0.3s ease; /* 부드러운 색상 전환 */
+}
+
+.add-button:hover {
+  background-color: #45a049; /* 마우스 오버 색상 */
 }
 </style>

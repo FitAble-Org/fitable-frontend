@@ -3,26 +3,23 @@
     <div class="exercise-tabs">
       <button
         :class="{ active: selectedTab === '준비운동' }"
-        @click="selectTab('준비운동')"
       >
         준비운동
       </button>
       <button
         :class="{ active: selectedTab === '본운동' }"
-        @click="selectTab('본운동')"
       >
         본운동
       </button>
       <button
         :class="{ active: selectedTab === '마무리운동' }"
-        @click="selectTab('마무리운동')"
       >
         마무리운동
       </button>
     </div>
 
 <!-- Timeline -->
-<Timeline :value="exerciseTypes" layout="horizontal" align="bottom" class="custom-timeline">
+<Timeline :value="exerciseSteps" layout="horizontal" align="bottom" class="custom-timeline">
       <template #marker="slotProps">
         <span
           class="timeline-marker"
@@ -51,7 +48,7 @@
   </div>
 
   <!-- Popup -->
-  <Popup
+  <SelectExercisePopup
     :isVisible="isPopupVisible"
     :exercise="selectedExercise"
     exerciseType="가정운동"
@@ -63,14 +60,16 @@
 import Timeline from 'primevue/timeline';
 
 import { ref, computed, onMounted } from 'vue';
-import Popup from '@/components/Popup.vue';
+import { useRoute } from 'vue-router';
+import SelectExercisePopup from '@/components/popup/SelectExercisePopup.vue';
 import appClient from '@/axios/apiClient.js';
 
 const exercises = ref([]);
-const selectedTab = ref('준비운동');
+const route = useRoute(); // useRoute로 현재 라우트 정보 가져오기
+const selectedTab = ref(route.query.exerciseStep || '준비운동');
 const isPopupVisible = ref(false);
 const selectedExercise = ref(null);
-const exerciseTypes = ref(['준비운동', '본운동', '마무리운동']);
+const exerciseSteps = ref(['준비운동', '본운동', '마무리운동']);
 
 onMounted(async () => {
   await fetchRecommendedTraining();
@@ -85,10 +84,6 @@ async function fetchRecommendedTraining() {
     console.error('추천 가정운동 요청 중 오류 발생:', error);
   }
 }
-
-const selectTab = (tab) => {
-  selectedTab.value = tab;
-};
 
 const filteredExercises = computed(() => {
   const filtered = exercises.value.filter(
