@@ -50,14 +50,19 @@ async function addCalendar() {
     await apiClient.post('calendar', requestData);
 
     if (exerciseType.value === "가정운동") {
+
+      console.log(exercise.value)
       console.log( {
-          exerciseName: exercise.value.exerciseName,
+        exerciseName: exercise.value.exerciseName,
+          exerciseId: exercise.value.exerciseId,
           exerciseType: exercise.value.sportsStep
-        })
+      })
+        
       router.push({
         name: "IndoorExerciseInfo",
         query: {
           exerciseName: exercise.value.exerciseName,
+          exerciseId: exercise.value.exerciseId,
           exerciseType: exercise.value.sportsStep
         }
       });

@@ -36,7 +36,6 @@ async function login() {
       });
       // 로그인 성공 시 처리
       if (response.status === 200) {
-            alert("로그인 성공!");
            // 응답 헤더에서 JWT 토큰 추출
             const token = response.headers['authorization'];
     
@@ -54,7 +53,7 @@ async function login() {
       }
     } catch (error) {
       console.error('로그인 오류:', error);
-      alert('로그인 중 오류가 발생했습니다.');
+      consloe('로그인 중 오류가 발생했습니다.');
     }
   } else {
     alert('아이디와 비밀번호를 입력해 주세요.');

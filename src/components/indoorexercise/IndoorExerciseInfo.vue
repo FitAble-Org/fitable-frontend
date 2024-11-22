@@ -1,22 +1,10 @@
 <template>
-  <div class="indoor-exercise-info-container">
+  <div v-if="isReady" class="indoor-exercise-info-container">
     <!-- 운동 탭 -->
     <div class="exercise-tabs">
-      <button
-        :class="{ active: selectedTab === '준비운동' }"
-      >
-        준비운동
-      </button>
-      <button
-        :class="{ active: selectedTab === '본운동' }"
-      >
-        본운동
-      </button>
-      <button
-        :class="{ active: selectedTab === '마무리운동' }"
-      >
-        마무리운동
-      </button>
+      <button :class="{ active: selectedTab === '준비운동' }">준비운동</button>
+      <button :class="{ active: selectedTab === '본운동' }">본운동</button>
+      <button :class="{ active: selectedTab === '마무리운동' }">마무리운동</button>
     </div>
 
     <!-- 타임라인 -->
@@ -24,9 +12,7 @@
       <template #marker="slotProps">
         <span
           class="timeline-marker"
-          :style="{
-            borderColor: slotProps.item === selectedTab ? '#4caf50' : '#ccc',
-          }"
+          :style="{ borderColor: slotProps.item === selectedTab ? '#4caf50' : '#ccc' }"
         ></span>
       </template>
     </Timeline>
@@ -34,75 +20,88 @@
     <div class="content-container">
       <div class="video-container"></div>
       <div class="exercise-instruction-card">
-        <h3 class="exercise-title">양팔 벌려 높이 뛰기</h3>
+        <h3 class="exercise-title">{{ exerciseName }}</h3>
         <ul class="exercise-steps">
-          <li>어깨너비로 다리를 벌리고 서세요.</li>
-          <li>엉덩이를 뒤로 빼면서 천천히 앉습니다.</li>
-          <li>허벅지가 바닥과 평행할 때까지 내려갑니다.</li>
-          <li>다시 일어나면서 처음 자세로 돌아갑니다.</li>
+          <li v-for="(step, index) in exerciseSteps" :key="index">{{ step }}</li>
         </ul>
-     </div>
+      </div>
     </div>
   </div>
-
-
+  <div v-else class="loading-container">로딩 중...</div>
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, onBeforeRouteUpdate } from "vue-router";
+import { ref, watch } from "vue";
 import Timeline from 'primevue/timeline';
-import { ref, onMounted } from 'vue';
 import appClient from '@/axios/apiClient.js';
-import axios from 'axios';
-
 
 const route = useRoute();
-// console.log(route.query);
-const selectedTab = ref(route.query.exerciseType);
+
+const isReady = ref(false); // 데이터 로드 여부
+const selectedTab = ref(null);
 const exerciseTypes = ref(['준비운동', '본운동', '마무리운동']);
-const apiKey = 'AIzaSyCaQJaPVv80FcQmKfgqeM3b7malJQ8sZgE'; // 발급받은 API 키
+const exerciseName = ref('');
+const exerciseId = ref(null);
+const exerciseSteps = ref([]);
+const apiKey = 'AIzaSyD3HXT8PT2WmgLfPyyh1xdW-vwWOEu4xG4';
 
-onMounted(async () => {
-  await fetchRecommendedTraining();
-  await loadYoutube();
-});
+// 라우트 변화 시 데이터 로드
+function loadRouteData() {
+  selectedTab.value = route.query.exerciseType || null;
+  exerciseName.value = route.query.exerciseName || '';
+  exerciseId.value = route.query.exerciseId || null;
 
-async function fetchRecommendedTraining() {
-  try {
-    const response = await appClient.get(`home-training`);
-    console.log(response.data); // 데이터를 필요에 따라 추가적으로 처리
-  } catch (error) {
-    console.error('추천 가정운동 요청 중 오류 발생:', error);
+  if (exerciseId.value && exerciseName.value) {
+    fetchExerciseInstructions();
+    loadYoutube();
+  } else {
+    console.warn("운동 ID가 제공되지 않았습니다.");
   }
 }
 
-console.log(route.query.exerciseName);
+// Watch route query changes
+watch(() => route.query, loadRouteData, { immediate: true });
+
+async function fetchExerciseInstructions() {
+  try {
+    if (!exerciseId.value) return;
+
+    const response = await appClient.get(`home-training/instruction`, {
+      params: { exerciseId: exerciseId.value },
+    });
+    const instruction = response.data || '';
+    exerciseSteps.value = instruction.split('/');
+  } catch (error) {
+    console.error("운동 방법 요청 중 오류 발생:", error);
+  } finally {
+    isReady.value = true; // 데이터 로드 완료
+  }
+}
 
 async function loadYoutube() {
-  const query = route.query.exerciseName; // 검색할 키워드
-  console.log("왜 안댕");
-  fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent("국민체력100"+query)}&type=video&maxResults=1&key=${apiKey}`)
-    .then(response => response.json())
-    .then(data => {
+  const query = exerciseName.value;
+  fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent("국민체력100" + query)}&type=video&maxResults=1&key=${apiKey}`)
+    .then((response) => response.json())
+    .then((data) => {
       if (data.items && data.items.length > 0) {
         const videoId = data.items[0].id.videoId;
-        const videoContainer = document.querySelector('.video-container'); // 단일 요소 선택
+        const videoContainer = document.querySelector(".video-container");
         videoContainer.innerHTML = `
-        <iframe
-          width="80%"
-          height="170"
-          src="https://www.youtube.com/embed/${videoId}"
-          frameborder="0"
-          allowfullscreen
-        ></iframe>
-      `;
-      console.log("유튜브")
+          <iframe
+            width="80%"
+            height="170"
+            src="https://www.youtube.com/embed/${videoId}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
+        `;
       } else {
-        alert('검색 결과가 없습니다.');
+        alert("검색 결과가 없습니다.");
       }
     })
-    .catch(error => {
-      console.error('YouTube API 요청 중 오류 발생:', error);
+    .catch((error) => {
+      console.error("YouTube API 요청 중 오류 발생:", error);
     });
 }
 </script>
@@ -113,9 +112,18 @@ async function loadYoutube() {
   margin: 0 !important;
 }
 
-::deep(.p-timeline-event-opposite){
+::v-deep(.p-timeline-event-opposite){
   padding: 0 !important;
   margin: 0 !important;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
 }
 
 h3{
