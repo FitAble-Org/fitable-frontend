@@ -15,14 +15,9 @@ const route = useRoute();
 const pageTitle = computed(() => {
   switch (route.name) {
     case 'Home':
-      return '오늘의 운동';
-    case 'IndoorExercise':
-      return '가정 운동';
-    case 'IndoorExerciseInfo':
-      return '가정 운동';
-    
+      return 'Schedules';
     default:
-      return '오늘의 운동';
+      return 'Schedules';
   }
 });
 </script>
@@ -41,6 +36,8 @@ const pageTitle = computed(() => {
 }
 
 h1 {
+  font-family: "ABeeZee", sans-serif;
+  font-style: normal;
   font-size: 24px;
   font-weight: 500; /* 글씨 두께 조절 (normal과 동일) */
   color: #333;
