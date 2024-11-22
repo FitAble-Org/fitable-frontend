@@ -476,7 +476,6 @@ const stopDrag = () => {
 .lecture-title {
   color: #333;
   font-size: 16px;
-  font-weight: bold;
   margin: 5px 0;
 }
 
@@ -517,10 +516,10 @@ const stopDrag = () => {
 
 .blog-review {
   font-size: 18px;
-  font-weight: bold;
   color: #333;
   margin: 0 0 10px;
   padding-bottom: 10px;
+  font-weight: bold;
   padding-top: 5px;
 }
 

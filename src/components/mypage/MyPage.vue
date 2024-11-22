@@ -88,7 +88,6 @@ onMounted(fetchUserInfo);
 
 h2 {
   font-size: 24px;
-  font-weight: bold;
   color: #333;
 }
 
