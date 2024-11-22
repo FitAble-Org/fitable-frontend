@@ -1,10 +1,10 @@
 <template>
   <div class="welcome-container">
     <img class="logo" src="@/assets/fitable.png" alt="Fitable Logo" />
-    <h1 class="title">Fitable</h1>
+    <h1 class="title">FitAble</h1>
     <p class="description">
-      실내외 운동으로 건강을 챙기세요!<br />
-      맞춤 운동 추천과 주변 시설, 강좌 정보로 언제 어디서나 손쉽게 운동을 시작해보세요.
+      경증 장애인분들을 위한 맞춤 운동 및 시설 추천 어플<br />
+      맞춤형 운동을 통한 건강 관리를 시작해 보세요!
     </p>
     <button class="button" @click="navigateToRegister">회원가입</button>
     <button class="button" @click="navigateToHome">로그인</button>
