@@ -21,7 +21,7 @@ const showHeader = computed(() =>
   !['Welcome', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection',
     'DisabilityGradeSelection', 'RegistrationInput', 'Login',
     'RecommendedExercise', 'Question', 'FacilitiesMap', 'DistanceSelection', 'MyPage',
-    'ProfileAgeSelection', 'ProfileDisabilityGradeSelection', 'ProfileDisabilityTypeSelection', 'ProfileGenderSelection'].includes(route.name)
+    'ProfileAgeSelection', 'ProfileDisabilityGradeSelection', 'ProfileDisabilityTypeSelection', 'ProfileGenderSelection', 'IndoorExercise'].includes(route.name)
 );
 
 const showNav = computed(() => 
