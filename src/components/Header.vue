@@ -18,6 +18,9 @@ const pageTitle = computed(() => {
       return '오늘의 운동';
     case 'IndoorExercise':
       return '가정 운동';
+    case 'IndoorExerciseInfo':
+      return '가정 운동';
+    
     default:
       return '오늘의 운동';
   }

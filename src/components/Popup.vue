@@ -1,7 +1,8 @@
 <template>
   <div class="popup-overlay" v-if="isVisible">
     <div class="popup">
-      <p>운동을 추가할까요?</p>
+      <p>운동을 추가할까요? </p>
+      <p>운동 뒤 시간을 추가해주세요!</p>
       <div class="btn-conatainer">
         <button class="confirm-button" @click="addCalendar">확인</button>
         <button class="cancle-button" @click="emit('close')">취소</button>
@@ -12,7 +13,10 @@
 
 <script setup>
 import { toRefs } from 'vue';
+import { useRouter } from 'vue-router';
 import apiClient from '@/axios/apiClient.js';
+
+const router = useRouter();
 
 // Props 및 Emits 정의
 const props = defineProps({
@@ -38,15 +42,29 @@ const emit = defineEmits(['close']);
 // 캘린더에 운동 추가 함수
 async function addCalendar() {
   try {
-    console.log(exercise.value)
-    console.log(exerciseType.value)
     const requestData = {
       exerciseId: exercise.value.exerciseId,
       duration: 0,
-      exerciseType, // this.exerciseType 대신 간단하게 사용
+      exerciseType: exerciseType.value // this.exerciseType 대신 간단하게 사용
     };
     await apiClient.post('calendar', requestData);
-    emit('close'); // 모달 닫기 이벤트 발생
+
+    if (exerciseType.value === "가정운동") {
+      console.log( {
+          exerciseName: exercise.value.exerciseName,
+          exerciseType: exercise.value.sportsStep
+        })
+      router.push({
+        name: "IndoorExerciseInfo",
+        query: {
+          exerciseName: exercise.value.exerciseName,
+          exerciseType: exercise.value.sportsStep
+        }
+      });
+    }
+    else {
+      emit('close'); // 모달 닫기 이벤트 발생
+    }
   } catch (error) {
     console.error('Failed to add exercise:', error);
   }

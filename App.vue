@@ -25,7 +25,7 @@ const showHeader = computed(() =>
 );
 
 const showNav = computed(() => 
-  !['Welcome', 'FacilitiesMap', 'Login', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection',
+  !['Welcome', 'FacilitiesMap', 'Login', 'AgeSelection', 'GenderSelection', 'RecommendedFacilities', 'DisabilityTypeSelection', 
     'DisabilityGradeSelection', 'RegistrationInput', 'ProfileAgeSelection', 'ProfileDisabilityGradeSelection', 'ProfileDisabilityTypeSelection', 'ProfileGenderSelection'].includes(route.name)
 ); // 네비게이션 바는 특정 페이지에서만 숨김
 </script>
