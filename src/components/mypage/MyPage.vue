@@ -76,7 +76,7 @@ onMounted(fetchUserInfo);
 }
 
 .content-container {
-  padding: 20px 20px 30px 20px;
+  padding: 40px 20px 30px 20px;
   /* height: 30%; */
   /* 사용자 정보 영역 고정 높이 */
   box-sizing: border-box;
