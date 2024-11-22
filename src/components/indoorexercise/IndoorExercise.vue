@@ -132,7 +132,7 @@ function closePopup() {
   border: none;
   color: #a0a0a0;
   background-color: #f5f5f5;
-  font-size: 16px;
+  font-size: 15px;
   cursor: pointer;
 }
 

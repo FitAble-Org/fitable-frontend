@@ -20,9 +20,14 @@
     <div class="content-container">
       <div class="video-container"></div>
       <div class="exercise-instruction-card">
-        <h3 class="exercise-title">{{ exerciseName }}</h3>
+        <p class="exercise-title">{{ exerciseName }}</p>
         <ul class="exercise-steps">
-          <li v-for="(step, index) in exerciseSteps" :key="index">{{ step }}</li>
+          <li v-for="(step, index) in exerciseSteps" :key="index">
+            <div class="exercise-item">
+              <div class="circle"></div>
+              <div class="text">{{ step }}</div>
+            </div>
+          </li>
         </ul>
       </div>
     </div>
@@ -112,10 +117,6 @@ async function loadYoutube() {
   margin: 0 !important;
 }
 
-::v-deep(.p-timeline-event-opposite){
-  padding: 0 !important;
-  margin: 0 !important;
-}
 
 .loading-container {
   display: flex;
@@ -125,11 +126,6 @@ async function loadYoutube() {
   font-size: 18px;
   color: #666;
 }
-
-h3{
-  margin: 10px;
-}
-
 .indoor-exercise-info-container {
   max-width: 480px;
   margin: 0 auto;
@@ -150,9 +146,9 @@ h3{
   flex: 1;
   border: none;
   background-color: #f5f5f5;
-  font-size: 16px;
+  font-size: 13px;
   cursor: pointer;
-  color: #333;
+  color: #a0a0a0;
 }
 
 .exercise-tabs .active {
@@ -178,11 +174,11 @@ h3{
   justify-content: center; /* 수평 가운데 정렬 */
   align-items: center; /* 수직 가운데 정렬 */
   flex-direction: column; /* 내부 요소를 세로로 배치 */
-  margin: 20px 0 70px 0; /* 컨테이너 상단 여백 */
+  margin: 0 0 70px 0; /* 컨테이너 상단 여백 */
   width: 100%; /* 컨테이너 너비를 부모에 맞춤 */
   /* min-height: 300px; 컨테이너 최소 높이 설정 (필요에 따라 조정) */
   box-sizing: border-box; /* 테두리 및 패딩 포함 */
-  gap: 20PX;
+  gap: 40PX;
 }
 .video-container {
   display: flex; 
@@ -190,9 +186,7 @@ h3{
   align-items: center; 
   flex-direction: column;
   width: 100%;
-  /* min-height: 300px;  */
   box-sizing: border-box; 
-  /* gap: 40PX; */
 }
 
 .video-container iframe {
@@ -202,19 +196,19 @@ h3{
 
 .exercise-instruction-card {
   background-color: #ffffff; /* 카드 배경 */
-  border: 1px solid #e0e0e0; /* 외곽선 */
+  /* border: 1px solid #e0e0e0;  */
   border-radius: 4px; /* 둥근 모서리 */
   padding: 12px; /* 내부 여백 */
   width: 80%;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-  font-family: Arial, sans-serif; /* 기본 글꼴 */
+  box-shadow: 4px 2px 4px rgba(0, 0, 0, 0.01); 
 }
 
 .exercise-title {
-  font-size: 18px; /* 제목 크기 */
-  font-weight: bold; /* 제목 굵게 */
+  font-size: 14px; /* 제목 크기 */
+  margin: 0;
+  /* font-weight: 600;  */
   color: #333; /* 제목 색상 */
-  margin-bottom: 12px; /* 제목과 리스트 간격 */
+  margin-bottom: 18px; 
 }
 
 .exercise-steps {
@@ -226,16 +220,28 @@ h3{
 .exercise-steps li {
   display: flex; /* 아이콘과 텍스트를 수평으로 배치 */
   align-items: flex-start; /* 아이콘과 텍스트 위쪽 정렬 */
-  margin-bottom: 8px; /* 리스트 간격 */
-  font-size: 14px; /* 텍스트 크기 */
+  margin-bottom: 18px; /* 리스트 간격 */
+  font-size: 13px; /* 텍스트 크기 */
   color: #666; /* 텍스트 색상 */
 }
 
-.exercise-steps li::before {
-  content: "●"; /* 아이콘으로 동그라미 사용 */
-  color: #4caf50; /* 동그라미 색상 */
-  font-size: 12px; /* 동그라미 크기 */
-  margin-right: 8px; /* 동그라미와 텍스트 간격 */
-  line-height: 1; /* 동그라미 위치 조정 */
+.exercise-item {
+  display: flex;
+  align-items: center; /* 세로 가운데 정렬 */
+  gap: 10px; /* 동그라미와 텍스트 사이 간격 조절 */
+}
+
+.circle {
+  width: 10px
+  ; /* 동그라미 크기 */
+  height: 10px; /* 동그라미 크기 */
+  border-radius: 50%; /* 동그라미 모양 */
+  background-color: rgb(255, 255, 255); /* 동그라미 색상 */
+  flex-shrink: 0; /* 크기 줄어들지 않게 고정 */
+  border: 3px solid #4caf50;
+}
+
+.text {
+  line-height: 1.5; /* 텍스트 줄 간격 */
 }
 </style>
