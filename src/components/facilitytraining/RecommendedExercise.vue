@@ -84,7 +84,6 @@ onMounted(() => {
 
 .title {
   font-size: 24px;
-  font-weight: bold;
   color: #333333;
   margin-bottom: 30px;
 }
@@ -95,7 +94,7 @@ onMounted(() => {
 }
 
 .result {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: bold;
   color: #4CAF50;
   margin: 20px 0;
