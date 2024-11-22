@@ -476,6 +476,7 @@ const stopDrag = () => {
 .lecture-title {
   color: #333;
   font-size: 16px;
+  font-weight: bold;
   margin: 5px 0;
 }
 
