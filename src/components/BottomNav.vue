@@ -6,11 +6,11 @@
     </button>
     <button @click="navigate('indoor')">
       <i class="fas fa-dumbbell"></i>
-      <span>가정운동</span>
+      <span>추천운동</span>
     </button>
     <button @click="navigate('outdoor')">
       <i class="fas fa-tree"></i>
-      <span>외부운동</span>
+      <span>추천시설</span>
     </button>
     <button @click="navigate('my-page')">
       <i class="fas fa-user"></i>
@@ -42,7 +42,7 @@ const navigate = (page) => {
   display: flex;
   justify-content: space-around;
   padding: 10px;
-  background-color: #f8f8f8;
+  background-color: #ffffff;
   border-top: 1px solid #ddd;
   position: fixed;
   bottom: 0;
@@ -59,7 +59,7 @@ const navigate = (page) => {
   align-items: center;
   background: none;
   border: none;
-  color: #555;
+  color: #999999;
   font-size: 12px;
 }
 
