@@ -91,9 +91,15 @@ const selectTab = (tab) => {
 };
 
 const filteredExercises = computed(() => {
-  return exercises.value.filter(
+  const filtered = exercises.value.filter(
     (exercise) => exercise.sportsStep === selectedTab.value
   );
+
+  // 랜덤으로 섞기
+  const shuffled = filtered.sort(() => Math.random() - 0.5);
+
+  // 최대 5개 선택
+  return shuffled.slice(0, 4);
 });
 
 function showPopup(exercise) {

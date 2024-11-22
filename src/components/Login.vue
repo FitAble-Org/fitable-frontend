@@ -53,7 +53,7 @@ async function login() {
       }
     } catch (error) {
       console.error('로그인 오류:', error);
-      consloe('로그인 중 오류가 발생했습니다.');
+      alert('로그인 중 오류가 발생했습니다.');
     }
   } else {
     alert('아이디와 비밀번호를 입력해 주세요.');
