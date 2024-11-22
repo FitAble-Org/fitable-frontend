@@ -10,7 +10,10 @@ import DisabilityGradeSelection from "@/components/signin/DisabilityGradeSelecti
 import RegistrationInput from "@/components/signin/RegistrationInput.vue";
 //로그인
 import Login from "@/components/Login.vue";
-import IndoorExercise from "@/components/IndoorExercise.vue";
+//가정운동
+import IndoorExercise from "@/components/indoorexercise/IndoorExercise.vue";
+import IndoorExerciseInfo from "@/components/indoorexercise/IndoorExerciseInfo.vue";
+
 //외부시설
 import DistanceSelection from "@/components/facilitytraining/DistanceSelection.vue";
 import Question from "@/components/facilitytraining/Question.vue";
@@ -52,6 +55,11 @@ const routes = [
     path: "/indoor-exercise",
     name: "IndoorExercise",
     component: IndoorExercise,
+  },
+  {
+    path: "/indoor-exercise-info",
+    name: "IndoorExerciseInfo",
+    component: IndoorExerciseInfo,
   },
   {
     path: "/distance-selection",

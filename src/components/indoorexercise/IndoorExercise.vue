@@ -124,16 +124,16 @@ function closePopup() {
   margin: 20px 0 0 0;
   /* background-color: #f5f5f5; */
   overflow: hidden;
+
 }
 
 .exercise-tabs button {
   flex: 1;
   border: none;
+  color: #a0a0a0;
   background-color: #f5f5f5;
-;
   font-size: 16px;
   cursor: pointer;
-  color: #333;
 }
 
 .exercise-tabs .active {
