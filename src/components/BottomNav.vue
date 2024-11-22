@@ -41,7 +41,7 @@ const navigate = (page) => {
 .bottom-nav {
   display: flex;
   justify-content: space-around;
-  padding: 14px;
+  padding: 11px;
   background-color: #ffffff;
   border-top: 1px solid #ececec;
 
