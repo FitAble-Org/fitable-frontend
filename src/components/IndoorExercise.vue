@@ -132,7 +132,6 @@ function closePopup() {
   background-color: #f5f5f5;
 ;
   font-size: 16px;
-  font-weight: bold;
   cursor: pointer;
   color: #333;
 }
@@ -178,7 +177,6 @@ function closePopup() {
 
 .exercise-name {
   font-size: 16px;
-  font-weight: bold;
   margin-bottom: 10px;
   color: #333;
 }

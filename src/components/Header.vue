@@ -39,6 +39,7 @@ const pageTitle = computed(() => {
 
 h1 {
   font-size: 24px;
+  font-weight: 500; /* 글씨 두께 조절 (normal과 동일) */
   color: #333;
   margin: 0;
 }
