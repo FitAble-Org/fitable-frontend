@@ -25,7 +25,10 @@
             </p>
             <p class="facility-detail">{{ selectedLocation.itemNm }}</p>
           </div>
-          <button class="navigate-button">길찾기</button>
+          <button class="navigate-button" @click="navigateToFacility">
+            길찾기
+          </button>
+
 
         </div>
       
@@ -113,6 +116,31 @@ const sanitizeText = (text) => {
   return text.replace(/<\/?[^>]+(>|$)/g, ""); // HTML 태그 제거
 };
 
+const navigateToFacility = () => {
+  const location = selectedLocation.value;
+
+  if (!location || !location.fcltyYCrdntValue || !location.fcltyXCrdntValue) {
+    alert("위치 정보가 올바르지 않습니다.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const currentLat = position.coords.latitude;
+      const currentLng = position.coords.longitude;
+
+      // 카카오맵 길찾기 URL 생성
+      const kakaoUrl = `https://map.kakao.com/link/from/현재위치,${currentLat},${currentLng}/to/${location.fcltyNm},${location.fcltyYCrdntValue},${location.fcltyXCrdntValue}`;
+      window.open(kakaoUrl, "_blank");
+    },
+    (error) => {
+      console.error("현재 위치를 가져오는 데 실패했습니다.", error);
+      alert("현재 위치를 가져올 수 없습니다. 위치 설정을 확인해주세요.");
+    }
+  );
+};
+
+
 // 블로그 리뷰 데이터 가져오기
 const fetchBlogReviews = async (facilityName, facilityAddress) => {
   try {
@@ -183,17 +211,19 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 
     // 마커 클릭 이벤트
     kakao.maps.event.addListener(marker, "click", () => {
-      selectedLocation.value = {
-        exerciseId: facility.id,
-        fcltyNm: facility.fcltyNm,
-        fcltyAddr: facility.fcltyAddr,
-        itemNm: facility.itemNm,
-        fcltyCourseSdivNm: facility.fcltyCourseSdivNm,
-      };
+    selectedLocation.value = {
+      exerciseId: facility.id,
+      fcltyNm: facility.fcltyNm,
+      fcltyAddr: facility.fcltyAddr,
+      itemNm: facility.itemNm,
+      fcltyCourseSdivNm: facility.fcltyCourseSdivNm,
+      fcltyYCrdntValue: facility.fcltyYCrdntValue,
+      fcltyXCrdntValue: facility.fcltyXCrdntValue,
+    };
 
-      // 리뷰 데이터 가져오기 (주소 + 시설명으로 검색)
-      fetchBlogReviews(facility.fcltyAddr, facility.fcltyNm);
-    });
+    fetchBlogReviews(facility.fcltyAddr, facility.fcltyNm); // 리뷰 데이터 가져오기
+  });
+
   });
 };
 
@@ -201,7 +231,7 @@ const initializeMap = (facilityLocations, centerLat, centerLng) => {
 const fetchFacilities = async (lat, lng) => {
   try {
     const response = await apiClient.get("facilities/filter", {
-      params: { itemName, latitude: lat, longitude: lng },
+      params: { itemName: route.query.itemName || "", latitude: lat, longitude: lng },
     });
     facilities.value = response.data;
     initializeMap(facilities.value, lat, lng);
@@ -210,6 +240,7 @@ const fetchFacilities = async (lat, lng) => {
     alert("시설 데이터를 불러오는 데 문제가 발생했습니다.");
   }
 };
+
 
 onMounted(() => {
   const loadKakaoMap = () => {
