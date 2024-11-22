@@ -1,7 +1,7 @@
 <template>
   <div class="selection-container">
     <div class="header">
-      <h2 class="title">어느 정도 거리의 운동<br> 시설을 원하시나요?</h2>
+      <h2 class="title">어느 정도 거리의 운동<br /> 시설을 원하시나요?</h2>
       <p class="subtitle">스포츠강좌이용권 시설, 강좌를 추천해 드립니다.</p>
     </div>
 
@@ -17,18 +17,24 @@
     </div>
 
     <button class="next-button" @click="goToNext">다음</button>
+
+    <!-- 로딩 오버레이 -->
+    <div class="loading-overlay" v-if="isLoading">
+      <div class="loading-spinner"></div>
+      <p>GPT가 질문 목록을 고민하는 중...</p>
+    </div>
   </div>
 </template>
 
 <script>
 import { ref, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import apiClient from '@/axios/apiClient.js';
-
+import apiClient from "@/axios/apiClient.js";
 
 export default {
   setup() {
     const selectedOption = ref(null);
+    const isLoading = ref(false); // 로딩 상태 관리
     const distanceOptions = reactive([
       { label: "도보 30분 이내", radiusKm: 1.7 },
       { label: "도보 50분 이내", radiusKm: 2.2 },
@@ -79,12 +85,18 @@ export default {
           radiusKm: distanceOptions[selectedOption.value].radiusKm,
         };
 
+        isLoading.value = true; // 로딩 시작
         try {
-          const response = await apiClient.post("facilities/nearby", locationRequest);
+          const response = await apiClient.post(
+            "facilities/nearby",
+            locationRequest
+          );
           navigateToQuestion(response.data);
         } catch (error) {
           console.error("API 요청 오류:", error);
           alert("시설 정보를 가져오는 데 문제가 발생했습니다.");
+        } finally {
+          isLoading.value = false; // 로딩 종료
         }
       } else if (!currentPosition.value) {
         alert("현재 위치 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
@@ -103,14 +115,11 @@ export default {
       currentPosition,
       selectOption,
       goToNext,
+      isLoading, // 로딩 상태 반환
     };
   },
 };
 </script>
-
-<style lang="scss">
-@use "@/mixins/sharedStyles.scss";
-</style>
 
 <style scoped>
 .selection-container {
@@ -140,4 +149,37 @@ export default {
   color: #666666;
 }
 
+/* 로딩 오버레이 스타일 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 </style>
