@@ -349,7 +349,6 @@ const stopDrag = () => {
 
 .review-title {
   font-size: 16px;
-  font-weight: bold;
   margin: 0 0 5px;
 }
 

@@ -47,7 +47,6 @@ function navigateToHome() {
 
 .title {
   font-size: 36px;
-  font-weight: bold;
   color: #333333;
   margin-bottom: 16px;
 }
