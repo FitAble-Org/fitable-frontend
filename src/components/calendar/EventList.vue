@@ -154,7 +154,6 @@ color: #333;
 }
 
 .activity-name {
-  font-weight: bold;
   font-size: 14px;
   margin-bottom: 4px;
 }
