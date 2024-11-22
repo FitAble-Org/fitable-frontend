@@ -41,9 +41,9 @@ const navigate = (page) => {
 .bottom-nav {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
+  padding: 13px;
   background-color: #ffffff;
-  border-top: 1px solid #ddd;
+  box-shadow: 0 -2px 1px rgba(0, 0, 0, 0.05);
   position: fixed;
   bottom: 0;
   left: 50%;
