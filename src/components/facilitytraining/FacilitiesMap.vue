@@ -14,14 +14,20 @@
         @mousedown="startDrag"
         @touchstart="startDrag"
       ></div>
-      <h2 class="facility-name">{{ selectedLocation.fcltyNm }}</h2>
-      <div class="facility-details">
-        <p class="facility-address">
-          <i class="fas fa-map-marker-alt"></i> {{ selectedLocation.fcltyAddr }}
-        </p>
-        <p class="facility-detail">{{ selectedLocation.itemNm }}</p>
-      </div>
-      <button class="navigate-button">길찾기</button>
+      <div class="content-container">
+
+        <div class="facility-info">
+
+          <h2 class="facility-name">{{ selectedLocation.fcltyNm }}</h2>
+          <div class="facility-details">
+            <p class="facility-address">
+              <i class="fas fa-map-marker-alt"></i> {{ selectedLocation.fcltyAddr }}
+            </p>
+            <p class="facility-detail">{{ selectedLocation.itemNm }}</p>
+          </div>
+          <button class="navigate-button">길찾기</button>
+
+        </div>
       
       <div class="lecture-info">
         <p class="lecture-title">
@@ -58,6 +64,8 @@
             </div>
           </li>
         </ul>
+      </div>
+
       </div>
     </div>
     <Popup
@@ -330,6 +338,7 @@ const stopDrag = () => {
   overflow: hidden;
 }
 
+
 .map-header {
   position: absolute;
   z-index: 1000;
@@ -368,17 +377,29 @@ const stopDrag = () => {
 }
 
 .location-info {
+  display: flex; /* 유연한 레이아웃 */
+  flex-direction: column; /* 세로 방향 정렬 */
+  position: absolute;
   background-color: #ffffff;
   padding: 20px;
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  max-width: 100%;
+  /* max-width: 100%; */
   box-sizing: border-box;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 10px 10px 0 0;
   z-index: 1000;
+  height: auto; /* 동적 높이 */
+  overflow: hidden; 
+  max-height: 80vh; /* 최대 높이를 화면의 80%로 제한 */
+
+}
+
+.facility-info {
+  margin-top: 10px;
+  position: relative;
 }
 
 .facility-name {
@@ -410,8 +431,8 @@ const stopDrag = () => {
   cursor: pointer;
   font-size: 14px;
   position: absolute;
-  top: 50px;
-  right: 20px;
+  top: 0px;
+  right: 0px;
 }
 
 .lecture-info {
@@ -470,4 +491,17 @@ const stopDrag = () => {
   padding-bottom: 10px;
   padding-top: 5px;
 }
+
+/* 스크롤 가능하도록 콘텐츠 컨테이너 스타일 추가 */
+.content-container {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 10px;
+}
+
+/* 스크롤바 스타일 */
+.content-container::-webkit-scrollbar {
+  width: 0px;
+}
+
 </style>
