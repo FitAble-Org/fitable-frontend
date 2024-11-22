@@ -2,7 +2,7 @@
   <div class="selection-container">
     <div class="header">
       <h2 class="title">어느 정도 거리의 운동<br> 시설을 원하시나요?</h2>
-      <p class="subtitle">선호하는 이동 거리를 선택해주세요</p>
+      <p class="subtitle">스포츠강좌이용권 시설, 강좌를 추천해 드립니다.</p>
     </div>
 
     <div class="option-buttons">
@@ -30,9 +30,9 @@ export default {
   setup() {
     const selectedOption = ref(null);
     const distanceOptions = reactive([
-      { label: "도보 15분 이내", radiusKm: 1 },
-      { label: "도보 50분 이내", radiusKm: 2 },
-      { label: "대중교통 30분 이내", radiusKm: 3 },
+      { label: "도보 30분 이내", radiusKm: 1.7 },
+      { label: "도보 50분 이내", radiusKm: 2.2 },
+      { label: "대중교통 30분 이내", radiusKm: 3.2 },
     ]);
     const currentPosition = ref(null);
     const router = useRouter();
