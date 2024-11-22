@@ -66,6 +66,6 @@ const navigate = (page) => {
 
 .bottom-nav i {
   font-size: 18px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 </style>
