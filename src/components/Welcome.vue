@@ -3,7 +3,7 @@
     <img class="logo" src="@/assets/fitable.png" alt="Fitable Logo" />
     <h1 class="title">FitAble</h1>
     <p class="description">
-      경증 장애인분들을 위한 맞춤 운동 및 시설 추천 어플<br />
+      경증 장애인분들을 위한 운동 및 시설 추천 어플<br />
       맞춤형 운동을 통한 건강 관리를 시작해 보세요!
     </p>
     <button class="button" @click="navigateToRegister">회원가입</button>
