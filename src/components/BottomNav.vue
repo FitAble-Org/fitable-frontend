@@ -1,19 +1,19 @@
 <template>
   <div class="bottom-nav">
-    <button @click="navigate('home')">
-      <i class="fas fa-home"></i>
+    <button @click="navigate('home')"><i class="far fa-calendar"></i>
+
       <span>홈</span>
     </button>
-    <button @click="navigate('indoor')">
-      <i class="fas fa-dumbbell"></i>
+    <button @click="navigate('indoor')"><i class="far fa-heart"></i>
+
       <span>추천운동</span>
     </button>
     <button @click="navigate('outdoor')">
-      <i class="fas fa-tree"></i>
+      <i class="far fa-map"></i>
       <span>추천시설</span>
     </button>
     <button @click="navigate('my-page')">
-      <i class="fas fa-user"></i>
+      <i class="far fa-user"></i>
       <span>내 정보</span>
     </button>
   </div>
@@ -43,7 +43,8 @@ const navigate = (page) => {
   justify-content: space-around;
   padding: 14px;
   background-color: #ffffff;
-  box-shadow: 0 -2px 1px rgba(0, 0, 0, 0.03);
+  border-top: 1px solid #ececec;
+
   position: fixed;
   bottom: 0;
   left: 50%;
