@@ -67,9 +67,20 @@ const isToday = (day) => {
 
 const isSelected = (day) => selectedDate.value === formatDate(day);
 
+const formatDate = (day) => {
+  if (!day) return null; // 빈 날짜는 null 반환
+  const month = String(dayjs().month() + 1).padStart(2, '0');
+  const dayStr = String(day).padStart(2, '0');
+  return `${currentYear}-${month}-${dayStr}`; // YYYY-MM-DD 형식 반환
+};
+
 const hasEvent = (day) => {
-  const date = formatDate(day);
-  return props.events.some((event) => event.datePerformed=== date);
+  if (!day) return false; // 빈 날짜는 이벤트 없음
+  const date = formatDate(day); // 현재 날짜를 YYYY-MM-DD 형식으로 변환
+  return props.events.some((event) => {
+    const eventDate = dayjs(event.datePerformed).format('YYYY-MM-DD'); // 이벤트 날짜를 YYYY-MM-DD 형식으로 변환
+    return eventDate === date; // 날짜가 동일한지 비교
+  });
 };
 
 const isWeekend = (day) => {
