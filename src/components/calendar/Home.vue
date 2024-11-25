@@ -47,7 +47,10 @@ const outdoorActivities = ref([]);
   });
 
   const onDateSelected = (date) => {
-    selectedEvents.value = events.value.filter(event => event.datePerformed === date);
+    selectedEvents.value = events.value.filter(event => {
+    const eventDate = dayjs(event.datePerformed).format('YYYY-MM-DD'); // event.datePerformed 포맷 변경
+    return eventDate === date; // date는 이미 YYYY-MM-DD 형식이라고 가정
+  });
 
     // 운동 유형별로 데이터 필터링
   console.log(selectedEvents.value)
