@@ -47,7 +47,7 @@ const outdoorActivities = ref([]);
     selectedEvents.value = events.value.filter(event => event.datePerformed === date);
 
     // 운동 유형별로 데이터 필터링
-  console.log(selectedEvents.value[0])
+  console.log(selectedEvents.value)
   indoorActivities.value = selectedEvents.value.filter(event => event.exerciseType === '가정운동');
     outdoorActivities.value = selectedEvents.value.filter(event => event.exerciseType === '외부운동');
   };
