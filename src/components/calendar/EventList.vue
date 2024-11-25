@@ -8,7 +8,7 @@
     <div :class="['activity-type', { 'indoor': type === '가정운동', 'outdoor': type === '외부운동' }]">{{ type }}</div>
   </div>
   <div class="divider"></div>
-  <div v-for="(activity, index) in events" :key="index" class="activity-item">
+  <div v-for="(activity, index) in sortedEvents" :key="index" class="activity-item">
     <div>
       <div class="activity-name">{{ activity.exerciseName }}</div>
       <div class="activity-duration">{{ activity.duration }}분</div>
@@ -44,6 +44,11 @@ const props = defineProps({
   },
 });
 
+const sortedEvents = computed(() => {
+  return [...props.events].sort((a, b) => {
+    return dayjs(a.datePerformed).isAfter(dayjs(b.datePerformed)) ? 1 : -1; // 날짜 오름차순 정렬
+  });
+});
 
 // 총 운동 시간을 계산
 const totalDuration = computed(() => {
