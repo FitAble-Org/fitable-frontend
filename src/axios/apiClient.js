@@ -3,9 +3,9 @@ import axios from "axios";
 
 // Axios 인스턴스 생성
 const apiClient = axios.create({
-  baseURL: "https://api.fitable.kro.kr/api/",
-  // baseURL: 'http://lo/calhost:8081/api/',
-  // baseURL: 'http://43.201.248.185:8081/api/',
+  // baseURL: "https://api.fitable.kro.kr/api/",
+  // baseURL: 'http://localhost:8081/api/',
+  baseURL: 'http://54.180.162.237:8081/api/',
 
   withCredentials: true, // CORS 허용
 });
@@ -32,8 +32,8 @@ apiClient.interceptors.response.use(
       try {
         // Refresh Token 갱신 요청
         const refreshToken = localStorage.getItem("refreshToken");
-        const { data } = await axios.post(
-          "https://api.fitable.kro.kr/api/users/refresh",
+        const { data } = await apiClient.post(
+          "users/refresh",
           {
             refreshToken,
           }
@@ -43,7 +43,7 @@ apiClient.interceptors.response.use(
         // Access Token 갱신 및 재시도
         localStorage.setItem("accessToken", newAccessToken);
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axios(originalRequest);
+        return apiClient(originalRequest);
       } catch (refreshError) {
         console.error("토큰 갱신 실패:", refreshError);
         localStorage.removeItem("accessToken");
