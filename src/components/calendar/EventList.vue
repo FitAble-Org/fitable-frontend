@@ -32,6 +32,8 @@
 import { defineProps, computed, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import apiClient from '@/axios/apiClient.js';
+import dayjs from 'dayjs'; 
+
 
 const props = defineProps({
   events: {

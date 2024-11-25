@@ -72,7 +72,6 @@ const hasEvent = (day) => {
   const date = formatDate(day); // 현재 날짜를 YYYY-MM-DD 형식으로 변환
   return props.events.some((event) => {
     const eventDate = dayjs(event.datePerformed).format('YYYY-MM-DD'); // 이벤트 날짜를 YYYY-MM-DD 형식으로 변환
-    console.log(eventDate)
     return eventDate === date; // 날짜가 동일한지 비교
   });
 };
