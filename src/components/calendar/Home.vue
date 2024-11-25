@@ -28,7 +28,10 @@ const outdoorActivities = ref([]);
   async function fetchMonthlySchedule(year, month) {
     try {
     const response = await apiClient.get(`calendar/${year}/${month}`); // API 엔드포인트에 맞게 수정
-    events.value = response.data;
+      events.value = response.data;
+      console.log(response.data)
+      console.log(response)
+
   } catch (error) {
     console.error('이 달의 스케줄 요청 중 오류 발생:', error);
   }
