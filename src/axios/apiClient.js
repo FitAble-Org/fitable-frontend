@@ -3,12 +3,12 @@ import axios from "axios";
 
 // Axios 인스턴스 생성
 const apiClient = axios.create({
-  // baseURL: "https://api.fitable.kro.kr/api/",
+  baseURL: "https://api.fitable.kro.kr/api/",
   // baseURL: 'http://localhost:8081/api/',
-  baseURL: 'https://54.180.162.237:8081/api/',
+  // baseURL: 'https://54.180.162.237:8081/api/',
 
 
-  withCredentials: true, // CORS   허용
+  withCredentials: true, // CORS  허용
 });
 
 // 요청 인터셉터 추가: Access Token 추가
