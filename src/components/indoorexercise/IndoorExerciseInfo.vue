@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isReady" class="indoor-exercise-info-container">
+  <div v-show="isReady" class="indoor-exercise-info-container">
     <!-- 운동 탭 -->
     <div class="exercise-tabs">
       <button :class="{ active: selectedTab === '준비운동' }">준비운동</button>
@@ -35,7 +35,11 @@
       </button>
     </div>
   </div>
-  <div v-else class="loading-container">로딩 중...</div>
+  <!-- 로딩 오버레이 -->
+  <div class="loading-overlay" v-if="!isReady">
+      <div class="loading-spinner"></div>
+      <p>운동 정보를 가져오는 중...</p>
+    </div>
 
   <AddToCalendarPopup
     :isVisible="isPopupVisible"
@@ -47,16 +51,20 @@
 </template>
 
 <script setup>
-import { useRoute, onBeforeRouteUpdate } from "vue-router";
-import { ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import { ref, watch, nextTick, computed   } from "vue";
 import Timeline from 'primevue/timeline';
 import appClient from '@/axios/apiClient.js';
+import axios from 'axios';
 import AddToCalendarPopup from '@/components/popup/AddToCalendarPopup.vue';
 
 
 const route = useRoute();
 const isPopupVisible = ref(false);
-const isReady = ref(false); // 데이터 로드 여부
+const isReady = computed(() => isInstructionLoaded.value && isYoutubeLoaded.value);
+const isYoutubeLoaded = ref(false);
+const isInstructionLoaded = ref(false);
+
 const selectedTab = ref(null);
 const exerciseTypes = ref(['준비운동', '본운동', '마무리운동']);
 const exerciseName = ref('');
@@ -108,34 +116,48 @@ async function fetchExerciseInstructions() {
   } catch (error) {
     console.error("운동 방법 요청 중 오류 발생:", error);
   } finally {
-    isReady.value = true; // 데이터 로드 완료
+    isYoutubeLoaded.value = true; // 데이터 로드 완료
+    // isReady.value = isYoutubeLoaded.value&&
   }
 }
 
 async function loadYoutube() {
-  const query = exerciseName.value;
-  fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent("국민체력100" + query)}&type=video&maxResults=1&key=${apiKey}`)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.items && data.items.length > 0) {
-        const videoId = data.items[0].id.videoId;
-        const videoContainer = document.querySelector(".video-container");
-        videoContainer.innerHTML = `
-          <iframe
-            width="80%"
-            height="170"
-            src="https://www.youtube.com/embed/${videoId}"
-            frameborder="0"
-            allowfullscreen
-          ></iframe>
-        `;
-      } else {
-        alert("검색 결과가 없습니다.");
-      }
-    })
-    .catch((error) => {
-      console.error("YouTube API 요청 중 오류 발생:", error);
-    });
+  
+  await nextTick();
+  
+  const query = exerciseName.value; // 검색어 가져오기
+  const videoContainer = document.querySelector(".video-container"); // 비디오 컨테이너
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+    "국민체력100" + query
+  )}&type=video&maxResults=1&key=${apiKey}`;
+
+  try {
+    // Axios GET 요청
+    const response = await axios.get(url);
+
+    // 데이터 확인 및 처리
+    if (response.data.items && response.data.items.length > 0) {
+      const videoId = response.data.items[0].id.videoId;
+
+      // 비디오 삽입
+      videoContainer.innerHTML = `
+        <iframe
+          width="80%"
+          height="170"
+          src="https://www.youtube.com/embed/${videoId}"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      `;
+    } else {
+      alert("검색 결과가 없습니다.");
+    }
+  } catch (error) {
+    console.error("YouTube API 요청 중 오류 발생:", error);
+  } finally {
+    // 로딩 상태 업데이트
+    isInstructionLoaded.value = true;
+  }
 }
 </script>
 

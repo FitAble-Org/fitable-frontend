@@ -150,13 +150,13 @@ export default {
 }
 
 /* 로딩 오버레이 스타일 */
-.loading-overlay {
+/* .loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  background-color: rgba(0, 0, 0, 0.5); 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -172,7 +172,7 @@ export default {
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-}
+} */
 
 @keyframes spin {
   0% {
