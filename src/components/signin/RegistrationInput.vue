@@ -41,10 +41,11 @@
 
 <script setup>
 import { ref, watch } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import apiClient from "@/axios/apiClient.js";
 
 const router = useRouter();
+const route = useRoute();
 
 // 입력값 상태
 const username = ref("");
@@ -88,11 +89,14 @@ async function register() {
   }
 
   try {
-    // 회원가입 요청
-    await apiClient.post("/users/register", {
+    // 회원가입 요청: route.query와 입력값을 모두 포함
+    const payload = {
+      ...route.query, // URL 쿼리 매개변수 포함
       loginId: username.value,
       password: password.value,
-    });
+    };
+
+    await apiClient.post("/users/register", payload);
 
     alert("회원가입 성공!");
     router.push({ name: "Login" });
