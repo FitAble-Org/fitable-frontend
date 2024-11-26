@@ -37,15 +37,31 @@ const generalLevelTypes = [
   { label: '5등급', value: 'LEVEL_5' },
   { label: '6등급', value: 'LEVEL_6' },
 ];
+
+// 장애 유형별 범위
+const disabilityRanges = {
+  HEARING: [2, 6], // 2~6등급
+  INTELLECTUAL: [1, 3], // 1~3등급
+  VISION: [1, 6], // 1~6등급
+};
+
 const spineLevelTypes = [
   { label: '불완전 마비', value: 'PARTIAL_PARALYSIS' },
   { label: '완전 마비', value: 'COMPLETE_PARALYSIS' },
 ];
 
+
 // 등급 리스트 계산
 const grades = computed(() => {
-  console.log('Computed grades based on disabilityType:', disabilityType.value);
-  return disabilityType.value === 'SPINAL' ? spineLevelTypes : generalLevelTypes;
+  const type = disabilityType.value;
+  console.log(type)
+
+  if (!type || !disabilityRanges[type]) return spineLevelTypes;
+  // 범위 가져오기
+  const [start, end] = disabilityRanges[type];
+
+  // 배열 자르기 (start-1: 0-based index)
+  return generalLevelTypes.slice(start - 1, end);
 });
 
 // 쿼리에서 값 가져오기
