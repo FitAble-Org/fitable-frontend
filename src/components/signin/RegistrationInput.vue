@@ -7,19 +7,19 @@
     <div class="input-fields">
       <input 
         type="text" 
-        placeholder="아이디 (5글자 이상)" 
+        placeholder="아이디 (4글자 이상)" 
         class="input-field" 
         v-model="username" 
       />
-      <div v-show="!isUsernameValid" class="error-message">아이디는 5글자 이상이어야 합니다.</div>
+      <div v-show="!isUsernameValid" class="error-message">아이디는 4글자 이상이어야 합니다.</div>
 
       <input 
         type="password" 
-        placeholder="비밀번호 (5글자 이상)" 
+        placeholder="비밀번호 (4글자 이상)" 
         class="input-field" 
         v-model="password" 
       />
-      <div v-show="!isPasswordValid" class="error-message">비밀번호는 5글자 이상이어야 합니다.</div>
+      <div v-show="!isPasswordValid" class="error-message">비밀번호는 4글자 이상이어야 합니다.</div>
       
       <input 
         type="password" 
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import apiClient from "@/axios/apiClient.js";
 
@@ -58,17 +58,31 @@ const isPasswordMatch = ref(true);
 
 // 유효성 검사 함수
 function validateFields() {
-  isUsernameValid.value = username.value.length >= 5;
-  isPasswordValid.value = password.value.length >= 5;
+  isUsernameValid.value = username.value.length >= 4;
+  isPasswordValid.value = password.value.length >= 4;
   isPasswordMatch.value = password.value === passwordConfirm.value;
-
-  return isUsernameValid.value && isPasswordValid.value && isPasswordMatch.value;
 }
+
+// 실시간 유효성 검사
+watch(username, (newUsername) => {
+  isUsernameValid.value = newUsername.length >= 4;
+});
+
+watch(password, (newPassword) => {
+  isPasswordValid.value = newPassword.length >= 4;
+  isPasswordMatch.value = newPassword === passwordConfirm.value; // 비밀번호 확인도 함께 업데이트
+});
+
+watch(passwordConfirm, (newPasswordConfirm) => {
+  isPasswordMatch.value = password.value === newPasswordConfirm;
+});
 
 // 회원가입 함수
 async function register() {
-  // 입력값 유효성 확인
-  if (!validateFields()) {
+  // 최종 유효성 확인
+  validateFields();
+
+  if (!isUsernameValid.value || !isPasswordValid.value || !isPasswordMatch.value) {
     alert("입력 정보를 확인해 주세요.");
     return;
   }
@@ -84,7 +98,6 @@ async function register() {
     router.push({ name: "Login" });
   } catch (error) {
     if (error.response && error.response.status === 409) {
-      // 중복된 아이디
       alert("이미 존재하는 아이디입니다.");
     } else {
       console.error("회원가입 오류:", error);
