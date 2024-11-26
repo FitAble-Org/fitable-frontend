@@ -12,7 +12,6 @@
         v-model="username" 
       />
       <div v-show="!isUsernameValid" class="error-message">아이디는 5글자 이상이어야 합니다.</div>
-      <div v-show="usernameExists" class="error-message">존재하는 아이디입니다.</div>
 
       <input 
         type="password" 
@@ -33,7 +32,6 @@
 
     <button 
       class="submit-button" 
-      :disabled="!canSubmit" 
       @click="register"
     >
       회원가입
@@ -42,74 +40,59 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import apiClient from '@/axios/apiClient.js';
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import apiClient from "@/axios/apiClient.js";
 
 const router = useRouter();
-const route = useRoute();
 
-const username = ref('');
-const password = ref('');
-const passwordConfirm = ref('');
-const usernameExists = ref(false);
-const isPasswordMatch = ref(true);
+// 입력값 상태
+const username = ref("");
+const password = ref("");
+const passwordConfirm = ref("");
+
+// 유효성 검사 상태
 const isUsernameValid = ref(true);
 const isPasswordValid = ref(true);
+const isPasswordMatch = ref(true);
 
-const canSubmit = computed(() => 
-  isUsernameValid.value && 
-  isPasswordValid.value && 
-  isPasswordMatch.value &&
-  !usernameExists.value
-);
-
-// 유효성 검사
-watch(username, (newUsername) => {
-  isUsernameValid.value = newUsername.length >= 5;
-  // 추가적으로 서버로 중복 확인 요청 가능
-  // 예시:
-  // apiClient.post('/users/check-username', { username: newUsername })
-  //   .then(() => usernameExists.value = false)
-  //   .catch(() => usernameExists.value = true);
-});
-
-watch(password, (newPassword) => {
-  isPasswordValid.value = newPassword.length >= 5;
-  checkPasswordMatch();
-});
-
-watch(passwordConfirm, () => {
-  checkPasswordMatch();
-});
-
-function checkPasswordMatch() {
+// 유효성 검사 함수
+function validateFields() {
+  isUsernameValid.value = username.value.length >= 5;
+  isPasswordValid.value = password.value.length >= 5;
   isPasswordMatch.value = password.value === passwordConfirm.value;
+
+  return isUsernameValid.value && isPasswordValid.value && isPasswordMatch.value;
 }
 
+// 회원가입 함수
 async function register() {
-  if (canSubmit.value) {
-    try {
-      await apiClient.post('users/register', {
-        ...route.query,
-        loginId: username.value,
-        password: password.value,
-      });
-      alert('회원가입 성공!');
-      router.push({ name: 'Login' });
-    } catch (error) {
-      console.error('회원가입 오류:', error);
-      alert('회원가입 중 오류가 발생했습니다.');
+  // 입력값 유효성 확인
+  if (!validateFields()) {
+    alert("입력 정보를 확인해 주세요.");
+    return;
+  }
+
+  try {
+    // 회원가입 요청
+    await apiClient.post("/users/register", {
+      loginId: username.value,
+      password: password.value,
+    });
+
+    alert("회원가입 성공!");
+    router.push({ name: "Login" });
+  } catch (error) {
+    if (error.response && error.response.status === 409) {
+      // 중복된 아이디
+      alert("이미 존재하는 아이디입니다.");
+    } else {
+      console.error("회원가입 오류:", error);
+      alert("회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
     }
-  } else {
-    alert('입력 정보를 확인해 주세요.');
   }
 }
 </script>
-
-<style lang="scss">
-@use "@/mixins/sharedStyles.scss";
-</style>
 
 <style scoped>
 .registration-container {
@@ -140,6 +123,16 @@ async function register() {
   font-size: 14px;
   margin: -10px 0 10px 10px;
   text-align: left;
+}
+
+.submit-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 .submit-button:disabled {
