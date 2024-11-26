@@ -1,6 +1,10 @@
 <template>
     <div class="registration-container">
+      <div class="back-arrow" @click="goToWelcome">
+      <font-awesome-icon :icon="['fas', 'arrow-left']" style="color: #c2c2c2;" />
+    </div>
       <div class="header">
+
         <h2 class="title">로그인</h2>
       </div>
   
@@ -17,6 +21,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import apiClient from '@/axios/apiClient.js';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
+  
 // import { setAuthToken } from '@/auth'; 
 
 const router = useRouter();
@@ -25,6 +32,9 @@ const router = useRouter();
 const username = ref('');
 const password = ref('');
 
+const goToWelcome = () => {
+  router.push({ name: 'Welcome' });
+};
 
 // 로그인 함수
 async function login() {
@@ -89,5 +99,13 @@ async function login() {
     color: #333333;
     margin-bottom: 8px;
   }
+
+  .back-arrow {
+  position: absolute; /* 부모 컨테이너 기준 위치 설정 */
+  top: 30px; /* 위에서 20px */
+  left: 40px; /* 왼쪽에서 20px */
+  font-size: 24px; /* 아이콘 크기 */
+  cursor: pointer; /* 클릭 가능한 표시 */
+}
   </style>
   

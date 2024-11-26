@@ -2,39 +2,34 @@ import { createApp } from 'vue';
 import App from '../App.vue';
 import router from './router';
 import './assets/styles.css';
+
+// FontAwesome 설정
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-regular-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+
+// PrimeVue 설정
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import Button from "primevue/button";
 
-import Button from "primevue/button"
+// FontAwesome 라이브러리에 아이콘 추가
+library.add(faPenToSquare, faArrowLeft);
 
-// import { setAuthToken } from '@/axios/apiClient';
+const app = createApp(App);
 
-// Add the icon to the library
-library.add(faPenToSquare);
+// FontAwesomeIcon을 전역 컴포넌트로 등록
+app.component('font-awesome-icon', FontAwesomeIcon);
 
-// localStorage.clear();
-// const token = localStorage.getItem('jwtToken');
-// if (token) {
-    //   setAuthToken(token);
-    // }
-    
-    const app = createApp(App);
-    
-    // Register FontAwesomeIcon as a global component
-    app.component('font-awesome-icon', FontAwesomeIcon);
-    
-    // Use the router
-    app.use(router);
-    
-    app.use(PrimeVue, {
-        theme: {
-            preset: Aura
-        }
-    });
-    // Mount the app
-    app.component('Button', Button);
-    app.mount('#app');
-    
+// PrimeVue 및 기타 설정
+app.use(router);
+app.use(PrimeVue, {
+    theme: {
+        preset: Aura
+    }
+});
+app.component('Button', Button);
+
+// 앱 마운트
+app.mount('#app');
