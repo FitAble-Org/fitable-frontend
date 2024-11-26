@@ -62,7 +62,7 @@ import Timeline from 'primevue/timeline';
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import SelectExercisePopup from '@/components/popup/SelectExercisePopup.vue';
-import appClient from '@/axios/apiClient.js';
+import apiClient from '@/axios/apiClient.js';
 
 const exercises = ref([]);
 const route = useRoute(); // useRoute로 현재 라우트 정보 가져오기
@@ -77,9 +77,9 @@ onMounted(async () => {
 
 async function fetchRecommendedTraining() {
   try {
-    const response = await appClient.get(`home-training`);
+    const response = await apiClient.get(`home-training`);
     exercises.value = response.data;
-    console.log(exercises.value);
+    console.log("추천운동: "+exercises.value);
   } catch (error) {
     console.error('추천 가정운동 요청 중 오류 발생:', error);
   }
