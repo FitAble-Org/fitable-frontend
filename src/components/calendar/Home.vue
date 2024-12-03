@@ -98,6 +98,12 @@ const onDateSelected = (date) => {
   );
 };
 
+// 팝업 메뉴에서 선택 시 라우터 이동
+const navigateTo = (route) => {
+  showPopup.value = false; // 팝업 닫기
+  router.push({ name: route }); // 지정된 라우터로 이동
+};
+
 // 팝업 열기/닫기 토글 함수
 const togglePopup = () => {
   if (!showPopup.value) {
