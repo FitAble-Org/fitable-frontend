@@ -1,16 +1,18 @@
 <template>
   <div class="bottom-nav">
-    <button @click="navigate('home')"><i class="far fa-calendar"></i>
+    <button @click="navigate('home')">
+      <i class="far fa-calendar"></i>
 
       <span>홈</span>
     </button>
-    <button @click="navigate('indoor')"><i class="far fa-heart"></i>
+    <button @click="navigate('indoor')">
+      <i class="far fa-heart"></i>
 
       <span>추천운동</span>
     </button>
-    <button @click="navigate('outdoor')">
+    <button @click="navigate('community')">
       <i class="far fa-map"></i>
-      <span>추천시설</span>
+      <span>게시판</span>
     </button>
     <button @click="navigate('my-page')">
       <i class="far fa-user"></i>
@@ -20,19 +22,19 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
 const navigate = (page) => {
-  if (page === 'home') {
-    router.push({ name: 'Home' });
-  } else if (page === 'indoor') {
-    router.push({ name: 'IndoorExercise' });
-  } else if (page === 'outdoor') {
-    router.push({ name: 'DistanceSelection' });
-  } else if (page === 'my-page') {
-    router.push({ name: 'MyPage' });
+  if (page === "home") {
+    router.push({ name: "Home" });
+  } else if (page === "indoor") {
+    router.push({ name: "IndoorExercise" });
+  } else if (page === "community") {
+    router.push({ name: "Community" });
+  } else if (page === "my-page") {
+    router.push({ name: "MyPage" });
   }
 };
 </script>
