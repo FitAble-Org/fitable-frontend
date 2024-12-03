@@ -5,10 +5,10 @@
 
       <span>홈</span>
     </button>
-    <button @click="navigate('indoor')">
+    <button @click="navigate('club')">
       <i class="far fa-heart"></i>
 
-      <span>추천운동</span>
+      <span>동호회</span>
     </button>
     <button @click="navigate('community')">
       <i class="far fa-map"></i>
@@ -29,8 +29,8 @@ const router = useRouter();
 const navigate = (page) => {
   if (page === "home") {
     router.push({ name: "Home" });
-  } else if (page === "indoor") {
-    router.push({ name: "IndoorExercise" });
+  } else if (page === "club") {
+    router.push({ name: "Club" });
   } else if (page === "community") {
     router.push({ name: "Community" });
   } else if (page === "my-page") {

@@ -27,6 +27,8 @@ import ProfileDisabilityTypeSelection from "@/components/mypage/ProfileDisabilit
 import ProfileGenderSelection from "@/components/mypage/ProfileGenderSelection.vue";
 //게시판
 import Community from "@/components/community/Community.vue";
+//동호회
+import Club from "@/components/club/Club.vue";
 
 const routes = [
   { path: "/", name: "Welcome", component: Welcome },
@@ -113,6 +115,11 @@ const routes = [
     path: "/community",
     name: "Community",
     component: Community,
+  },
+  {
+    path: "/club",
+    name: "Club",
+    component: Club,
   },
 ];
 const router = createRouter({
