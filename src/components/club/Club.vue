@@ -19,19 +19,19 @@
           placeholder="종목을 입력하세요."
         />
       </div>
-      <button class="search-button" @click="searchPosts">검색</button>
+      <button class="search-button" @click="filterPosts">검색</button>
     </div>
     <div class="selected-filters">
       <span v-if="filters.region">지역: {{ filters.region }}</span>
       <span v-if="filters.category">종목: {{ filters.category }}</span>
     </div>
-    <PostList :posts="posts" />
+    <PostList :posts="displayedPosts" />
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import PostList from "@/components/community/PostList.vue";
+import { ref, onMounted } from "vue";
+import PostList from "@/components/community/PostList.vue"; // 경로 변경
 
 // 필터 상태
 const filters = ref({
@@ -40,7 +40,8 @@ const filters = ref({
 });
 
 // 게시글 데이터
-const posts = ref([]);
+const posts = ref([]); // 전체 데이터
+const displayedPosts = ref([]); // 화면에 표시할 데이터
 
 // 임시 데이터
 const mockData = [
@@ -74,10 +75,15 @@ const mockData = [
   },
 ];
 
-// 게시글 검색 함수
-const searchPosts = () => {
-  // 검색 조건에 따라 필터링
-  posts.value = mockData.filter((post) => {
+// 초기 데이터 로드
+onMounted(() => {
+  posts.value = mockData; // 전체 데이터를 posts에 로드
+  displayedPosts.value = [...posts.value]; // 처음엔 전체 데이터를 표시
+});
+
+// 게시글 필터링 함수
+const filterPosts = () => {
+  displayedPosts.value = posts.value.filter((post) => {
     const matchesRegion =
       !filters.value.region || post.region.includes(filters.value.region);
     const matchesCategory =
