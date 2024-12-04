@@ -15,7 +15,11 @@ const route = useRoute();
 const pageTitle = computed(() => {
   switch (route.name) {
     case 'Home':
-      return 'Schedules';
+      return 'Schedules_';
+    case 'Club':
+      return 'Clubs_';
+    case 'Community':
+      return 'Community_';
     default:
       return 'Schedules';
   }
@@ -26,12 +30,14 @@ const pageTitle = computed(() => {
 .header-container {
   background-color: #ffffff;
   padding: 20px;
-  padding-top: 30px;
-  padding-bottom: 25px;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e2e2;
   width: 100%;
   box-sizing: border-box;
   position: sticky;
   top: 0;
+  
   z-index: 1000;
 }
 
@@ -40,7 +46,7 @@ h1 {
   font-style: normal;
   font-size: 24px;
   font-weight: 500; /* 글씨 두께 조절 (normal과 동일) */
-  color: #333;
+  color: #707070;
   margin: 0;
 }
 </style>
