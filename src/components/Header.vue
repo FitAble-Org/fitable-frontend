@@ -20,7 +20,9 @@ const pageTitle = computed(() => {
       return 'Clubs_';
     case 'Community':
       return 'Community_';
-    default:
+    case 'MyPage':
+      return 'Profile_';
+  default:
       return 'Schedules';
   }
 });

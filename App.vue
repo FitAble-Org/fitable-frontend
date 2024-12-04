@@ -32,7 +32,6 @@ const showHeader = computed(
       "Question",
       "FacilitiesMap",
       "DistanceSelection",
-      "MyPage",
       "ProfileAgeSelection",
       "ProfileDisabilityGradeSelection",
       "ProfileDisabilityTypeSelection",
