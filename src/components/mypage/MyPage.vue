@@ -92,9 +92,9 @@ h2 {
 }
 
 .username {
-  font-size: 22px;
+  font-size: 17px;
   color: #222222;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .user-tags {
