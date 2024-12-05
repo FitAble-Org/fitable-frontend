@@ -68,10 +68,13 @@ const router = useRouter();
 const fetchBoards = async () => {
   try {
     const response = await apiClient.get("/boards");
-    boards.value = response.data.map((board) => ({
-      ...board,
-      commentCount: Math.floor(Math.random() * 20), // 임시 댓글 수
-    }));
+    // 시간순으로 정렬 (최신 게시글이 위로)
+    boards.value = response.data
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .map((board) => ({
+        ...board,
+        commentCount: Math.floor(Math.random() * 20), // 임시 댓글 수
+      }));
   } catch (error) {
     console.error("Error fetching boards:", error);
     alert("게시글 데이터를 가져오는 중 오류가 발생했습니다.");
@@ -107,10 +110,9 @@ onMounted(fetchBoards);
 <style scoped>
 .community-container {
   max-width: 600px;
-  margin: 0 auto;
-  padding: 20px 0;
+  margin: 7px auto; /* 위 여백 줄임 */
   font-family: "Arial", sans-serif;
-  background-color: white; /* 흰색 배경 */
+  background-color: white;
 }
 
 /* 게시글 아이템 */
@@ -129,7 +131,7 @@ onMounted(fetchBoards);
 .board-title {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 1px;
+  margin-bottom: 2px; /* 제목과 내용 사이 여백 */
   color: #333;
 }
 
@@ -188,7 +190,7 @@ onMounted(fetchBoards);
 /* 글쓰기 버튼 */
 .floating-button {
   position: fixed;
-  bottom: 70px; /* 네비게이션 바 위로 올라가도록 조정 */
+  bottom: 70px;
   right: 20px;
   display: flex;
   align-items: center;
