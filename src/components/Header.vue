@@ -15,15 +15,15 @@ const route = useRoute();
 const pageTitle = computed(() => {
   switch (route.name) {
     case 'Home':
-      return 'Schedules_';
+      return '운동 일정';
     case 'Club':
-      return 'Clubs_';
+      return '동호회';
     case 'Community':
-      return 'Community_';
+      return '게시판';
     case 'MyPage':
-      return 'Profile_';
+      return '내 정보';
   default:
-      return 'Schedules';
+      return 'Fitable';
   }
 });
 </script>
@@ -32,8 +32,8 @@ const pageTitle = computed(() => {
 .header-container {
   background-color: #ffffff;
   padding: 20px;
-  padding-top: 40px;
-  padding-bottom: 10px;
+  padding-top: 30px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #e2e2e2;
   width: 100%;
   box-sizing: border-box;
@@ -44,11 +44,9 @@ const pageTitle = computed(() => {
 }
 
 h1 {
-  font-family: "ABeeZee", sans-serif;
   font-style: normal;
   font-size: 24px;
-  font-weight: 500; /* 글씨 두께 조절 (normal과 동일) */
-  color: #707070;
+  font-weight: 500;
   margin: 0;
 }
 </style>
