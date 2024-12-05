@@ -29,6 +29,7 @@ import ProfileGenderSelection from "@/components/mypage/ProfileGenderSelection.v
 import Community from "@/components/community/Community.vue";
 //동호회
 import Club from "@/components/club/Club.vue";
+import ClubInfo from "@/components/club/ClubInfo.vue";
 
 const routes = [
   { path: "/", name: "Welcome", component: Welcome },
@@ -120,6 +121,11 @@ const routes = [
     path: "/club",
     name: "Club",
     component: Club,
+  },
+  {
+    path: "/club/:id",
+    name: "ClubInfo",
+    component: ClubInfo,
   },
 ];
 const router = createRouter({
