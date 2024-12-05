@@ -129,7 +129,7 @@ onMounted(fetchBoards);
 .board-title {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
   color: #333;
 }
 
