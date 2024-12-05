@@ -1,136 +1,105 @@
 <template>
   <div class="club-container">
+    <!-- 필터 -->
     <div class="filter-container">
-      <!-- 지역 필터 -->
       <div class="input-group">
         <label for="region" class="label">지역</label>
         <select id="region" v-model="filters.region" class="search-input">
-          <option value="">전체</option>
           <option v-for="region in regions" :key="region" :value="region">
             {{ region }}
           </option>
         </select>
       </div>
-      <!-- 장애분류 필터 -->
       <div class="input-group short-input">
         <label for="category" class="label">장애분류</label>
         <select id="category" v-model="filters.category" class="search-input">
-          <option value="">전체</option>
-          <option
-            v-for="category in categories"
-            :key="category"
-            :value="category"
-          >
+          <option v-for="category in categories" :key="category" :value="category">
             {{ category }}
           </option>
         </select>
       </div>
-      <!-- 검색 버튼 -->
-      <button class="search-button" @click="filterPosts">검색</button>
+      <button class="search-button" @click="fetchClubs">검색</button>
     </div>
-    <div class="selected-filters">
-      <span v-if="filters.region">지역: {{ filters.region }}</span>
-      <span v-if="filters.category">장애분류: {{ filters.category }}</span>
+
+    <!-- 클럽 리스트 -->
+    <div v-if="clubs.length > 0">
+      <div
+        v-for="club in clubs"
+        :key="club.clubId"
+        class="club-item"
+        @click="navigateToClubInfo(club.clubId)"
+      >
+        <h3 class="club-title">{{ club.clubNm }}</h3>
+        <p class="club-subtitle">{{ `${club.disabilityType}, ${club.operTimeCn}` }}</p>
+      </div>
     </div>
-    <PostList :posts="displayedPosts" />
+    <!-- 검색 결과가 없을 때 -->
+    <div v-else class="no-results">
+      검색 결과가 없습니다.
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import PostList from "@/components/community/PostList.vue"; // 경로 변경
+import { useRouter } from "vue-router";
+import apiClient from "@/axios/apiclient";
 
-// 필터 상태
+// 라우터
+const router = useRouter();
+
+// 필터 상태 초기화 (기본값 설정)
 const filters = ref({
-  region: "",
-  category: "",
+  region: "서울", // 기본 지역
+  category: "발달(지적/자폐)장애", // 기본 장애분류
 });
 
 // 지역 및 장애분류 목록
 const regions = [
-  "인천",
-  "대전",
-  "경기",
-  "경남",
-  "전북",
-  "충남",
-  "제주",
-  "서울",
-  "부산",
-  "광주",
-  "대구",
-  "강원",
-  "충북",
-  "전남",
-  "울산",
-  "경북",
-  "세종",
+  "서울", "인천", "대전", "경기", "경남", "전북", "충남", "제주", "부산", "광주",
+  "대구", "강원", "충북", "전남", "울산", "경북", "세종",
 ];
 const categories = [
-  "발달(지적/자폐)장애",
-  "지체(척수 및 절단 및 기타)장애",
-  "청각장애",
-  "기타장애",
-  "시각장애",
-  "비장애인",
-  "뇌병변장애",
+  "발달(지적/자폐)장애", "지체(척수 및 절단 및 기타)장애", "청각장애", "기타장애",
+  "시각장애", "비장애인", "뇌병변장애",
 ];
 
-// 게시글 데이터
-const posts = ref([]); // 전체 데이터
-const displayedPosts = ref([]); // 화면에 표시할 데이터
+// 클럽 데이터
+const clubs = ref([]);
 
-// 임시 데이터
-const mockData = [
-  {
-    id: 1,
-    title: "골 때리는 사람들",
-    content: "서울 서초구 ○○운동장에서 일요일 오전 7시...",
-    region: "서울",
-    category: "비장애인",
-  },
-  {
-    id: 2,
-    title: "조기축구",
-    content: "서울 강남구 ○○운동장에서 일요일 오전 7시...",
-    region: "서울",
-    category: "발달(지적/자폐)장애",
-  },
-  {
-    id: 3,
-    title: "배드민턴 모임",
-    content: "경기도 성남시 ○○체육관에서 토요일 오전 9시...",
-    region: "경기",
-    category: "지체(척수 및 절단 및 기타)장애",
-  },
-  {
-    id: 4,
-    title: "등산 클럽",
-    content: "서울 강북구 ○○산에서 매주 토요일 오전 6시...",
-    region: "서울",
-    category: "시각장애",
-  },
-];
+// 클럽 데이터 가져오기
+const fetchClubs = async () => {
+  try {
+    const response = await apiClient.get("/clubs/search", {
+      params: {
+        ctprvnNm: filters.value.region,
+        troblTyNm: filters.value.category,
+      },
+    });
+    clubs.value = response.data; // API로부터 받은 데이터
+  } catch (error) {
+    console.error("Error fetching clubs:", error);
+    alert("클럽 데이터를 가져오는 중 오류가 발생했습니다.");
+  }
+};
 
 // 초기 데이터 로드
 onMounted(() => {
-  posts.value = mockData; // 전체 데이터를 posts에 로드
-  displayedPosts.value = [...posts.value]; // 처음엔 전체 데이터를 표시
+  fetchClubs(); // 기본값으로 필터링된 데이터를 로드
 });
 
-// 게시글 필터링 함수
-const filterPosts = () => {
-  displayedPosts.value = posts.value.filter((post) => {
-    const matchesRegion =
-      !filters.value.region || post.region.includes(filters.value.region);
-    const matchesCategory =
-      !filters.value.category || post.category.includes(filters.value.category);
-    return matchesRegion && matchesCategory;
-  });
+// 상세 페이지 이동
+const navigateToClubInfo = (clubId) => {
+  if (!clubId) {
+    alert("클럽 ID가 유효하지 않습니다.");
+    return;
+  }
+  router.push({ name: "ClubInfo", params: { id: clubId } }); // 클럽 ID를 라우터로 전달
 };
 </script>
 
 <style scoped>
+/* 기존 스타일 유지 */
 .club-container {
   max-width: 480px;
   margin: 0 auto;
@@ -142,7 +111,7 @@ const filterPosts = () => {
   display: flex;
   align-items: flex-end;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .input-group {
@@ -152,43 +121,63 @@ const filterPosts = () => {
 }
 
 .short-input {
-  flex: none; /* 부모 컨테이너의 flex 속성 영향을 받지 않음 */
-  width: 200px; /* 원하는 고정 너비 설정 */
+  flex: none;
+  width: 200px;
 }
 
-/* 셀렉트박스 */
 .search-input {
   font-size: 16px;
-  padding: 7px; /* 상하좌우 패딩 */
+  padding: 7px;
   color: #333;
   border: 1px solid #ddd;
   border-radius: 5px;
+  margin-bottom: 10px;
   height: 40px;
 }
 
-/*검색 버튼 */
 .search-button {
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
+  margin-bottom: 11px;
   background-color: #4caf50;
   color: white;
   cursor: pointer;
   flex-shrink: 0;
-  font-size: 16px; /* 버튼 글자 크기 */
+  font-size: 16px;
 }
 
-.selected-filters {
-  display: flex;
-  gap: 10px;
-  font-size: 14px;
-  margin: 10px 0;
-  color: #333;
+.club-item {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.club-title {
+  font-size: 18px;
+  margin: 5px;
+}
+
+.club-subtitle {
+  font-size: 13px;
+  color: #808080;
+  margin: 15px 5px 5px 5px;
 }
 
 .label {
-  font-size: 13px; /* 레이블 글자 크기 */
-  color: #808080; /* 레이블 글자 색상 */
-  margin-bottom: 3px; /* 아래 패딩 효과 */
+  font-size: 13px;
+  color: #808080;
+  margin-bottom: 3px;
+}
+
+/* 검색 결과 없음 스타일 */
+.no-results {
+  text-align: center;
+  font-size: 16px;
+  color: #999; /* 회색 글씨 */
+  margin-top: 30px;
 }
 </style>
