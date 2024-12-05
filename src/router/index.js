@@ -27,6 +27,8 @@ import ProfileDisabilityTypeSelection from "@/components/mypage/ProfileDisabilit
 import ProfileGenderSelection from "@/components/mypage/ProfileGenderSelection.vue";
 //게시판
 import Community from "@/components/community/Community.vue";
+import BoardDetail from "@/components/community/BoardDetail.vue";
+import BoardWrite from "@/components/community/BoardWrite.vue";
 //동호회
 import Club from "@/components/club/Club.vue";
 import ClubInfo from "@/components/club/ClubInfo.vue";
@@ -113,11 +115,6 @@ const routes = [
     component: ProfileGenderSelection,
   },
   {
-    path: "/community",
-    name: "Community",
-    component: Community,
-  },
-  {
     path: "/club",
     name: "Club",
     component: Club,
@@ -126,6 +123,21 @@ const routes = [
     path: "/club/:id",
     name: "ClubInfo",
     component: ClubInfo,
+  },
+  {
+    path: "/boards",
+    name: "Community",
+    component: Community,
+  },
+  {
+    path: "/boards/write",
+    name: "BoardWrite",
+    component: BoardWrite,
+  },
+  {
+    path: "/boards/:boardId",
+    name: "BoardDetail",
+    component: BoardDetail,
   },
 ];
 const router = createRouter({
