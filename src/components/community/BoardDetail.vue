@@ -4,10 +4,10 @@
     <h1 class="board-title">{{ board.title }}</h1>
     <p class="board-content">{{ board.content }}</p>
     <div class="board-meta">
-      <span class="board-author">작성자: {{ board.author }}</span>
+      <span class="board-author">작성자: {{ board.loginId }}</span>
       <span class="board-date">{{ formatDate(board.createdAt) }}</span>
       <button
-        v-if="userId === board.author"
+        v-if="userId === board.loginId"
         class="delete-button"
         @click="deleteBoard"
       >
