@@ -59,7 +59,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import apiClient from "@/axios/apiclient";
+import apiClient from "@/axios/apiClient.js";
 
 const boards = ref([]);
 const router = useRouter();
