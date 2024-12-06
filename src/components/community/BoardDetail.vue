@@ -6,6 +6,13 @@
     <div class="board-meta">
       <span class="board-author">작성자: {{ board.author }}</span>
       <span class="board-date">{{ formatDate(board.createdAt) }}</span>
+      <button
+        v-if="userId === board.author"
+        class="delete-button"
+        @click="deleteBoard"
+      >
+        삭제
+      </button>
     </div>
     <button class="back-button" @click="goBack">뒤로가기</button>
   </div>
@@ -23,6 +30,13 @@
         <div class="comment-meta">
           <span class="comment-author">{{ comment.loginId }}</span>
           <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+          <button
+            v-if="userId === comment.loginId"
+            class="delete-button"
+            @click="deleteComment(comment.commentId)"
+          >
+            삭제
+          </button>
         </div>
       </li>
     </ul>
@@ -54,50 +68,44 @@ const router = useRouter();
 const board = ref(null);
 const comments = ref([]);
 const newComment = ref("");
+const userId = ref(null);
+
+const fetchUserId = async () => {
+  try {
+    const response = await apiClient.get("/id");
+    userId.value = response.data || null; // 로그인하지 않았다면 빈 문자열이므로 null로 처리
+  } catch (error) {
+    console.error("Error fetching user ID:", error);
+    userId.value = null;
+  }
+};
 
 // 게시글 데이터 가져오기
 const fetchBoard = async () => {
   try {
     const response = await apiClient.get(`/boards/${route.params.boardId}`);
     board.value = response.data;
-
-    // const dummyData = {
-    //   id: 1,
-    //   title: "Vue.js 게시글 테스트",
-    //   content:
-    //     "이 게시글은 Vue.js 테스트를 위해 작성된 더미 데이터입니다. 게시글 내용을 여기에 작성합니다.",
-    //   author: "홍길동",
-    //   createdAt: "2024-12-01T12:30:00Z",
-    // };
-    // alert(dummyData);
-
-    // board.value = dummyData;
   } catch (error) {
     console.error("Error fetching board:", error);
     alert("게시글 데이터를 가져오는 중 오류가 발생했습니다.");
   }
 };
 
+const deleteBoard = async () => {
+  if (!confirm("게시글을 삭제하시겠습니까?")) return;
+
+  try {
+    await apiClient.delete(`/boards/${route.params.boardId}`);
+    alert("게시글이 삭제되었습니다.");
+    router.push("Community"); // 커뮤니티 목록 페이지로 이동
+  } catch (error) {
+    console.error("Error deleting board:", error);
+    alert("게시글 삭제 중 오류가 발생했습니다.");
+  }
+};
+
 const fetchComments = async () => {
   try {
-    // const dummyComments = [
-    //   {
-    //     commentId: 1,
-    //     content: "정말 좋은 게시글입니다!",
-    //     loginId: "user123",
-    //     createdAt: "2024-12-02T10:00:00Z",
-    //     updatedAt: "2024-12-02T10:00:00Z",
-    //   },
-    //   {
-    //     commentId: 2,
-    //     content: "감사합니다. 많은 도움이 되었습니다.",
-    //     loginId: "user456",
-    //     createdAt: "2024-12-02T12:30:00Z",
-    //     updatedAt: "2024-12-02T12:30:00Z",
-    //   },
-    // ];
-    // comments.value = dummyComments;
-
     const response = await apiClient.get(
       `/boards/${route.params.boardId}/comments`
     );
@@ -119,9 +127,6 @@ const submitComment = async () => {
     const newCommentData = {
       content: newComment.value,
     };
-
-    // 서버로 전송 (여기서는 더미 데이터에 바로 추가)
-    // comments.value.push(newCommentData);
     await apiClient.post(
       `/boards/${route.params.boardId}/comments`,
       newCommentData
@@ -131,6 +136,21 @@ const submitComment = async () => {
   } catch (error) {
     console.error("Error submitting comment:", error);
     alert("댓글 작성 중 오류가 발생했습니다.");
+  }
+};
+
+const deleteComment = async (commentId) => {
+  if (!confirm("댓글을 삭제하시겠습니까?")) return;
+
+  try {
+    await apiClient.delete(
+      `/boards/${route.params.boardId}/comments/${commentId}`
+    );
+    alert("댓글이 삭제되었습니다.");
+    await fetchComments(); // 댓글 목록 새로고침
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    alert("댓글 삭제 중 오류가 발생했습니다.");
   }
 };
 
@@ -150,6 +170,7 @@ const goBack = () => {
 
 // 컴포넌트가 마운트될 때 게시글 데이터 가져오기
 onMounted(() => {
+  fetchUserId();
   fetchBoard();
   fetchComments();
 });
@@ -274,5 +295,19 @@ onMounted(() => {
 
 .submit-comment-button:hover {
   background-color: #388e3c;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f;
 }
 </style>
