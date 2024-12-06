@@ -4,9 +4,9 @@
     <div v-if="boards.length > 0">
       <div
         v-for="board in boards"
-        :key="board.id"
+        :key="board.boardId"
         class="board-item"
-        @click="navigateToBoardDetail(board.id)"
+        @click="navigateToBoardDetail(board.boardId)"
       >
         <p class="board-title">{{ board.title }}</p>
         <p class="board-content">{{ board.content }}</p>
