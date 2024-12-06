@@ -1,5 +1,6 @@
 <template>
   <div class="selection-container">
+    <BackArrow routeName="MyPage" />
     <div class="header">
       <h2 class="title">프로필 설정</h2>
       <p class="subtitle">등급을 알려주세요</p>
@@ -9,7 +10,10 @@
       <button
         v-for="grade in grades"
         :key="grade.label"
-        :class="['option-button', { selected: selectedGrade?.value === grade.value }]"
+        :class="[
+          'option-button',
+          { selected: selectedGrade?.value === grade.value },
+        ]"
         @click="selectGrade(grade)"
       >
         {{ grade.label }}
@@ -21,9 +25,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import apiClient from '@/axios/apiClient.js';
+import { ref, computed, onMounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import BackArrow from "@/components/common/BackArrow.vue";
+import apiClient from "@/axios/apiClient.js";
 
 const router = useRouter();
 const route = useRoute();
@@ -32,12 +37,12 @@ const route = useRoute();
 const selectedGrade = ref(null);
 const disabilityType = ref(null); // 쿼리 파라미터에서 설정
 const generalLevelTypes = [
-  { label: '1등급', value: 'LEVEL_1' },
-  { label: '2등급', value: 'LEVEL_2' },
-  { label: '3등급', value: 'LEVEL_3' },
-  { label: '4등급', value: 'LEVEL_4' },
-  { label: '5등급', value: 'LEVEL_5' },
-  { label: '6등급', value: 'LEVEL_6' },
+  { label: "1등급", value: "LEVEL_1" },
+  { label: "2등급", value: "LEVEL_2" },
+  { label: "3등급", value: "LEVEL_3" },
+  { label: "4등급", value: "LEVEL_4" },
+  { label: "5등급", value: "LEVEL_5" },
+  { label: "6등급", value: "LEVEL_6" },
 ];
 // 장애 유형별 범위
 const disabilityRanges = {
@@ -47,15 +52,14 @@ const disabilityRanges = {
 };
 
 const spineLevelTypes = [
-  { label: '불완전 마비', value: 'PARTIAL_PARALYSIS' },
-  { label: '완전 마비', value: 'COMPLETE_PARALYSIS' },
+  { label: "불완전 마비", value: "PARTIAL_PARALYSIS" },
+  { label: "완전 마비", value: "COMPLETE_PARALYSIS" },
 ];
-
 
 // 등급 리스트 계산
 const grades = computed(() => {
   const type = disabilityType.value;
-  console.log(type)
+  console.log(type);
 
   if (!type || !disabilityRanges[type]) return spineLevelTypes;
   // 범위 가져오기
@@ -68,7 +72,7 @@ const grades = computed(() => {
 // 쿼리에서 값 가져오기
 onMounted(() => {
   disabilityType.value = route.query.disabilityType;
-  console.log('Selected disability type in mounted:', disabilityType.value);
+  console.log("Selected disability type in mounted:", disabilityType.value);
 });
 
 // 등급 선택
@@ -82,18 +86,18 @@ async function goToNext() {
   if (selectedGrade.value) {
     try {
       console.log(route.query);
-      await apiClient.post('users/profile', {
+      await apiClient.post("users/profile", {
         ...route.query,
         disabilityLevel: selectedGrade.value.value,
       });
     } catch (error) {
-      console.error('변경 오류:', error);
-      alert('회원가입 프로필 변경 중 오류가 발생했습니다.');
+      console.error("변경 오류:", error);
+      alert("회원가입 프로필 변경 중 오류가 발생했습니다.");
       return;
     }
-    router.push({ name: 'MyPage' });
+    router.push({ name: "MyPage" });
   } else {
-    alert('등급을 선택해주세요.');
+    alert("등급을 선택해주세요.");
   }
 }
 </script>
@@ -130,5 +134,4 @@ async function goToNext() {
   font-size: 16px;
   color: #666666;
 }
-
 </style>

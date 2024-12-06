@@ -1,5 +1,6 @@
 <template>
   <div class="selection-container">
+    <BackArrow routeName="MyPage" />
     <div class="header">
       <h2 class="title">프로필 설정</h2>
       <p class="subtitle">유형을 알려주세요</p>
@@ -9,7 +10,10 @@
       <button
         v-for="type in disabilityTypes"
         :key="type.label"
-        :class="['option-button', { selected: selectedType?.value === type.value }]"
+        :class="[
+          'option-button',
+          { selected: selectedType?.value === type.value },
+        ]"
         @click="selectType(type)"
       >
         {{ type.label }}
@@ -21,8 +25,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import BackArrow from "@/components/common/BackArrow.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -30,10 +35,10 @@ const route = useRoute();
 // 상태 관리
 const selectedType = ref(null);
 const disabilityTypes = [
-  { label: '지적장애', value: 'INTELLECTUAL' },
-  { label: '청각장애', value: 'HEARING' },
-  { label: '시각장애', value: 'VISION' },
-  { label: '척수장애', value: 'SPINAL' },
+  { label: "지적장애", value: "INTELLECTUAL" },
+  { label: "청각장애", value: "HEARING" },
+  { label: "시각장애", value: "VISION" },
+  { label: "척수장애", value: "SPINAL" },
 ];
 
 // 유형 선택
@@ -46,14 +51,14 @@ function goToNext() {
   console.log(route.query);
   if (selectedType.value) {
     router.push({
-      name: 'ProfileDisabilityGradeSelection',
+      name: "ProfileDisabilityGradeSelection",
       query: {
         ...route.query,
         disabilityType: selectedType.value.value,
       },
     });
   } else {
-    alert('유형을 선택해주세요.');
+    alert("유형을 선택해주세요.");
   }
 }
 </script>
@@ -90,5 +95,4 @@ function goToNext() {
   font-size: 16px;
   color: #666666;
 }
-
 </style>

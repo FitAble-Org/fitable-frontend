@@ -1,5 +1,7 @@
 <template>
   <div class="selection-container">
+    <BackArrow routeName="MyPage" />
+
     <div class="header">
       <h2 class="title">프로필 설정</h2>
       <p class="subtitle">나이를 알려주세요</p>
@@ -9,7 +11,10 @@
       <button
         v-for="age in ageOptions"
         :key="age.label"
-        :class="['option-button', { selected: selectedAge?.value === age.value }]"
+        :class="[
+          'option-button',
+          { selected: selectedAge?.value === age.value },
+        ]"
         @click="selectAge(age)"
       >
         {{ age.label }}
@@ -21,17 +26,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import BackArrow from "@/components/common/BackArrow.vue";
 const router = useRouter();
 
 // 상태 관리
 const selectedAge = ref(null);
 const ageOptions = [
-  { label: '10대 20대', value: 'YOUNG_ADULT' },
-  { label: '30대 40대', value: 'MIDDLE_AGED' },
-  { label: '50대 이상', value: 'SENIOR' },
+  { label: "10대 20대", value: "YOUNG_ADULT" },
+  { label: "30대 40대", value: "MIDDLE_AGED" },
+  { label: "50대 이상", value: "SENIOR" },
 ];
 
 // 나이 선택
@@ -43,11 +48,11 @@ function selectAge(age) {
 function goToNext() {
   if (selectedAge.value) {
     router.push({
-      name: 'ProfileGenderSelection',
+      name: "ProfileGenderSelection",
       query: { ageGroup: selectedAge.value.value },
     });
   } else {
-    alert('나이대를 선택해주세요.');
+    alert("나이대를 선택해주세요.");
   }
 }
 </script>
@@ -84,5 +89,4 @@ function goToNext() {
   font-size: 16px;
   color: #666666;
 }
-
 </style>

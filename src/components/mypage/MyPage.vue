@@ -3,6 +3,7 @@
     <!-- 사용자 정보 표시 -->
     <div class="content-container">
       <div class="user-info">
+        <h2>내 정보</h2>
         <p class="username">{{ user.username }} 님</p>
       </div>
       <div class="user-tags">

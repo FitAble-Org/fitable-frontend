@@ -1,5 +1,6 @@
 <template>
   <div class="selection-container">
+    <BackArrow routeName="MyPage" />
     <div class="header">
       <h2 class="title">프로필 설정</h2>
       <p class="subtitle">성별을 알려주세요</p>
@@ -9,7 +10,10 @@
       <button
         v-for="gender in genderOptions"
         :key="gender.label"
-        :class="['option-button', { selected: selectedGender?.value === gender.value }]"
+        :class="[
+          'option-button',
+          { selected: selectedGender?.value === gender.value },
+        ]"
         @click="selectGender(gender)"
       >
         {{ gender.label }}
@@ -21,8 +25,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import BackArrow from "@/components/common/BackArrow.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -30,8 +35,8 @@ const route = useRoute();
 // 상태 관리
 const selectedGender = ref(null);
 const genderOptions = [
-  { label: '여성', value: 'FEMALE' },
-  { label: '남성', value: 'MALE' },
+  { label: "여성", value: "FEMALE" },
+  { label: "남성", value: "MALE" },
 ];
 
 // 성별 선택
@@ -44,14 +49,14 @@ function goToNext() {
   console.log(route.query);
   if (selectedGender.value) {
     router.push({
-      name: 'ProfileDisabilityTypeSelection',
+      name: "ProfileDisabilityTypeSelection",
       query: {
         ...route.query,
         gender: selectedGender.value.value,
       },
     });
   } else {
-    alert('성별을 선택해주세요.');
+    alert("성별을 선택해주세요.");
   }
 }
 </script>
@@ -88,5 +93,4 @@ function goToNext() {
   font-size: 16px;
   color: #666666;
 }
-
 </style>
