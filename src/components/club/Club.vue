@@ -186,6 +186,7 @@ const navigateToClubInfo = (clubId) => {
 .club-title {
   font-size: 18px;
   margin: 5px;
+  font-weight: 100;
 }
 
 .club-subtitle {
