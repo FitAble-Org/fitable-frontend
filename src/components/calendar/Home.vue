@@ -32,13 +32,15 @@
       >
         <!-- 팝업 버튼: 라우터 이동 -->
         <div class="popup-item" @click="navigateTo('IndoorExercise')">
-          <!-- 아이콘 자리 -->
-          <span class="popup-icon"></span>
+          <span class="popup-icon">
+            <i class="fa-solid fa-house" style="color: #4caf50"></i>
+          </span>
           <span>가정 운동 추천</span>
         </div>
         <div class="popup-item" @click="navigateTo('DistanceSelection')">
-          <!-- 아이콘 자리 -->
-          <span class="popup-icon"></span>
+          <span class="popup-icon">
+            <i class="fa-solid fa-dumbbell" style="color: #4caf50"></i>
+          </span>
           <span>운동 시설 및 강좌 추천</span>
         </div>
       </div>
@@ -153,9 +155,9 @@ const onAnimationEnd = () => {
 /* 고정된 + 버튼 스타일 */
 .floating-action-button {
   /* position을 fixed에서 absolute로 변경 */
-  position: absolute;
+  position: fixed;
   bottom: 70px;
-  right: 25px;
+  right: 20px;
   width: 56px;
   height: 56px;
   background-color: #4caf50;
@@ -186,11 +188,11 @@ const onAnimationEnd = () => {
 /* 팝업 메뉴 스타일 */
 .popup-menu {
   position: absolute;
-  bottom: 160px;
+  bottom: 140px;
   right: 25px;
   background: white;
   border-radius: 16px;
-  padding: 18px 0 18px 0;
+  padding: 18px 0 18px 5px;
   display: flex;
   flex-direction: column;
   width: 230px;
@@ -233,7 +235,7 @@ const onAnimationEnd = () => {
 .popup-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 3px;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
@@ -243,6 +245,7 @@ const onAnimationEnd = () => {
   width: 24px;
   height: 24px;
   display: inline-block;
+  padding-top: 2px;
   /* 아이콘 배치를 위한 자리만 확보 */
 }
 
