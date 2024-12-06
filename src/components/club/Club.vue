@@ -192,7 +192,7 @@ const navigateToClubInfo = (clubId) => {
 }
 
 .club-title {
-  font-size: 18px;
+  font-size: 17px;
   margin: 5px;
   font-weight: 100;
 }
@@ -200,7 +200,7 @@ const navigateToClubInfo = (clubId) => {
 .club-subtitle {
   font-size: 13px;
   color: #808080;
-  margin: 15px 5px 5px 5px;
+  margin: 10px 5px 5px 5px;
 }
 
 .label {
