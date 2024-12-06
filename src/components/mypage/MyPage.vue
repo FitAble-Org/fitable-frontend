@@ -3,7 +3,6 @@
     <!-- 사용자 정보 표시 -->
     <div class="content-container">
       <div class="user-info">
-        <h2>내 정보</h2>
         <p class="username">{{ user.username }} 님</p>
       </div>
       <div class="user-tags">
@@ -95,7 +94,7 @@ h2 {
 .username {
   font-size: 17px;
   color: #222222;
-  margin-bottom: 18px;
+  margin-bottom: 25px;
 }
 
 .user-tags {
@@ -108,16 +107,16 @@ h2 {
 
 .user-tag {
   background-color: #e6f4ea;
-  color: #4caf50;
+  color: #179d1b;
   padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 15px;
 }
 
 /* 회색 직사각형 */
 .section-divider {
-  background-color: #f0f0f0;
-  height: 10px; /* 고정된 높이 */
+  background-color: #e0e0e0;
+  height: 2px; /* 고정된 높이 */
   width: 100%;
   margin: 0;
 }
