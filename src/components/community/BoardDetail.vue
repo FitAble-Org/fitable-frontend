@@ -380,16 +380,18 @@ onMounted(() => {
   font-size: 14px;
   margin-right: 10px;
   resize: none;
+  height: 40px; /* 작성 버튼과 동일한 높이 설정 */
 }
 
 .submit-comment-button {
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 15px;
+  padding: 0 15px; /* 높이는 댓글 입력창과 동일하므로 패딩만 설정 */
   border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
+  height: 40px; /* 댓글 입력창과 동일한 높이 설정 */
 }
 
 .submit-comment-button:hover {
