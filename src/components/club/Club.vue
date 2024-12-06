@@ -26,7 +26,7 @@
     </div>
 
     <!-- 클럽 리스트 -->
-    <div v-if="clubs.length > 0">
+    <div v-if="clubs.length > 0" class="club-items">
       <div
         v-for="club in clubs"
         :key="club.clubId"
@@ -171,6 +171,9 @@ const navigateToClubInfo = (clubId) => {
   font-size: 16px;
 }
 
+.club-items {
+  padding-bottom: 50px;
+}
 .club-item {
   padding: 10px;
   margin-bottom: 10px;

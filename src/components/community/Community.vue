@@ -1,7 +1,7 @@
 <template>
   <div class="community-container">
     <!-- 게시글 리스트 -->
-    <div v-if="boards.length > 0">
+    <div v-if="boards.length > 0" class="board-items">
       <div
         v-for="board in boards"
         :key="board.boardId"
@@ -112,6 +112,10 @@ onMounted(fetchBoards);
   margin: 7px auto; /* 위 여백 줄임 */
   font-family: "Arial", sans-serif;
   background-color: white;
+}
+
+.board-items {
+  padding-bottom: 110px;
 }
 
 /* 게시글 아이템 */
