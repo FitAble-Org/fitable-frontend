@@ -123,17 +123,10 @@ const navigateToClubInfo = (clubId) => {
 </script>
 
 <style scoped>
-/* 기존 스타일 유지 */
-.club-container {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f5f5f5;
-}
-
 .filter-container {
   display: flex;
-  align-items: flex-end;
+  flex-wrap: wrap; /* 줄 바꿈 허용 */
+  align-items: center; /* 버튼과 셀렉트박스의 수직 정렬 */
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -141,12 +134,13 @@ const navigateToClubInfo = (clubId) => {
 .input-group {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex: 1; /* 균등한 비율로 넓이를 차지 */
+  min-width: 120px; /* 최소 넓이 설정 */
 }
 
 .short-input {
-  flex: none;
-  width: 200px;
+  flex: none; /* 고정 너비 */
+  width: 150px; /* 지역 셀렉트박스 길이 */
 }
 
 .search-input {
@@ -155,20 +149,28 @@ const navigateToClubInfo = (clubId) => {
   color: #333;
   border: 1px solid #ddd;
   border-radius: 5px;
-  margin-bottom: 10px;
-  height: 40px;
+  height: 40px; /* 버튼과 동일한 높이 */
+  box-sizing: border-box; /* padding 포함한 폭 계산 */
 }
 
 .search-button {
-  padding: 10px 15px;
+  height: 40px; /* 버튼 높이 */
+  padding: 0 15px; /* 좌우 패딩 */
   border: none;
   border-radius: 5px;
-  margin-bottom: 11px;
   background-color: #4caf50;
   color: white;
-  cursor: pointer;
-  flex-shrink: 0;
   font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0; /* 버튼 크기 고정 */
+}
+
+.club-container {
+  max-width: 100%; /* 전체 화면에 맞게 조정 */
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  box-sizing: border-box; /* padding 포함 폭 계산 */
 }
 
 .club-items {
