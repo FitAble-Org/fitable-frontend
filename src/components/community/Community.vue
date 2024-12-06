@@ -73,7 +73,6 @@ const fetchBoards = async () => {
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
       .map((board) => ({
         ...board,
-        commentCount: Math.floor(Math.random() * 20), // 임시 댓글 수
       }));
   } catch (error) {
     console.error("Error fetching boards:", error);
