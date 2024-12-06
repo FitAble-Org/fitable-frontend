@@ -38,6 +38,7 @@ const showHeader = computed(
       "ProfileGenderSelection",
       "IndoorExercise",
       "IndoorExerciseInfo",
+      "BoardDetail",
     ].includes(route.name)
 );
 
