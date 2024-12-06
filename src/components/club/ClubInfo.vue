@@ -13,7 +13,7 @@
             <strong>운영 시간:</strong> {{ club.operTimeCn || "정보 없음" }}
           </li>
           <li>
-            <strong>장애 분류:</strong> {{ club.troblTyNm || "정보 없음" }}
+            <strong>장애 분류:</strong> {{ club.disabilityType || "정보 없음" }}
           </li>
         </ul>
       </section>
