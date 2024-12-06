@@ -1,57 +1,57 @@
 <template>
-  <div class="board-detail-container" v-if="board">
-    <BackArrow routeName="Community" />
-    <h1 class="board-title">{{ board.title }}</h1>
-    <p class="board-content">{{ board.content }}</p>
-    <div class="board-meta">
-      <span class="board-author">작성자: {{ board.loginId }}</span>
-      <span class="board-date">{{ formatDate(board.createdAt) }}</span>
-      <button
-        v-if="userId === board.loginId"
-        class="delete-button"
-        @click="deleteBoard"
-      >
-        삭제
-      </button>
+  <div class="board-detail-container">
+    <!-- 상단 네비게이션 -->
+    <div class="navbar">
+      <button class="back-button" @click="goBack">←</button>
+      <h1 class="navbar-title">게시글</h1>
     </div>
-    <button class="back-button" @click="goBack">뒤로가기</button>
-  </div>
 
-  <!-- 댓글 섹션 -->
-  <div class="comments-section">
-    <h2>댓글</h2>
-    <ul v-if="comments.length > 0" class="comments-list">
-      <li
-        v-for="comment in comments"
-        :key="comment.commentId"
-        class="comment-item"
-      >
-        <p class="comment-content">{{ comment.content }}</p>
-        <div class="comment-meta">
-          <span class="comment-author">{{ comment.loginId }}</span>
-          <span class="comment-date">{{ formatDate(comment.createdAt) }}</span>
+    <!-- 게시글 상세 -->
+    <div class="post-container">
+      <div class="post-header">
+        <div class="post-avatar"></div>
+        <div class="post-meta">
+          <p class="post-author">{{ board.loginId }}</p>
+          <p class="post-date">{{ formatDate(board.createdAt) }}</p>
+        </div>
+      </div>
+      <h2 class="post-title">{{ board.title }}</h2>
+      <p class="post-content">{{ board.content }}</p>
+    </div>
+
+    <!-- 댓글 섹션 -->
+    <div class="comments-section">
+      <ul v-if="comments.length > 0" class="comments-list">
+        <li v-for="comment in comments" :key="comment.commentId" class="comment-item">
+          <div class="comment-header">
+            <div class="comment-avatar"></div>
+            <div class="comment-meta">
+              <p class="comment-author">{{ comment.loginId }}</p>
+              <p class="comment-date">{{ formatDate(comment.createdAt) }}</p>
+            </div>
+          </div>
+          <p class="comment-content">{{ comment.content }}</p>
           <button
-            v-if="userId === comment.loginId"
+            v-if="comment.loginId === userId"
             class="delete-button"
             @click="deleteComment(comment.commentId)"
           >
             삭제
           </button>
-        </div>
-      </li>
-    </ul>
-    <p v-else class="no-comments">댓글이 없습니다. 첫 댓글을 작성해 보세요!</p>
+        </li>
+      </ul>
+      <p v-else class="no-comments">댓글이 없습니다. 첫 댓글을 작성해 보세요!</p>
+    </div>
 
     <!-- 댓글 작성 -->
     <div class="comment-form">
       <textarea
         v-model="newComment"
-        placeholder="댓글을 입력하세요..."
-        rows="3"
         class="comment-textarea"
+        placeholder="댓글을 입력하세요..."
       ></textarea>
       <button class="submit-comment-button" @click="submitComment">
-        댓글 작성
+        작성
       </button>
     </div>
   </div>
@@ -59,52 +59,27 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import BackArrow from "../common/BackArrow.vue";
+import { useRouter, useRoute } from "vue-router";
 import apiClient from "@/axios/apiClient.js";
 
-const route = useRoute();
 const router = useRouter();
-const board = ref(null);
+const route = useRoute();
+const board = ref({});
 const comments = ref([]);
 const newComment = ref("");
-const userId = ref(null);
+const userId = ref("");
 
-const fetchUserId = async () => {
-  try {
-    const response = await apiClient.get("/users/id");
-    console.log("로그인 아이디: " + response.data);
-    userId.value = response.data || null; // 로그인하지 않았다면 빈 문자열이므로 null로 처리
-  } catch (error) {
-    console.error("Error fetching user ID:", error);
-    userId.value = null;
-  }
-};
-
-// 게시글 데이터 가져오기
+// 게시글 가져오기
 const fetchBoard = async () => {
   try {
     const response = await apiClient.get(`/boards/${route.params.boardId}`);
     board.value = response.data;
   } catch (error) {
-    console.error("Error fetching board:", error);
-    alert("게시글 데이터를 가져오는 중 오류가 발생했습니다.");
+    console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
   }
 };
 
-const deleteBoard = async () => {
-  if (!confirm("게시글을 삭제하시겠습니까?")) return;
-
-  try {
-    await apiClient.delete(`/boards/${route.params.boardId}`);
-    alert("게시글이 삭제되었습니다.");
-    router.push("Community"); // 커뮤니티 목록 페이지로 이동
-  } catch (error) {
-    console.error("Error deleting board:", error);
-    alert("게시글 삭제 중 오류가 발생했습니다.");
-  }
-};
-
+// 댓글 가져오기
 const fetchComments = async () => {
   try {
     const response = await apiClient.get(
@@ -112,46 +87,35 @@ const fetchComments = async () => {
     );
     comments.value = response.data;
   } catch (error) {
-    console.error("Error fetching comments:", error);
-    alert("댓글 데이터를 가져오는 중 오류가 발생했습니다.");
+    console.error("댓글 데이터를 가져오는 중 오류 발생:", error);
   }
 };
 
 // 댓글 작성
 const submitComment = async () => {
   if (!newComment.value.trim()) {
-    alert("댓글 내용을 입력하세요.");
+    alert("댓글 내용을 입력해주세요.");
     return;
   }
-
   try {
-    const newCommentData = {
+    await apiClient.post(`/boards/${route.params.boardId}/comments`, {
       content: newComment.value,
-    };
-    await apiClient.post(
-      `/boards/${route.params.boardId}/comments`,
-      newCommentData
-    );
-    await fetchComments();
-    newComment.value = ""; // 입력 창 초기화
+    });
+    newComment.value = ""; // 입력창 초기화
+    fetchComments(); // 댓글 목록 새로고침
   } catch (error) {
-    console.error("Error submitting comment:", error);
-    alert("댓글 작성 중 오류가 발생했습니다.");
+    console.error("댓글 작성 중 오류 발생:", error);
   }
 };
 
+// 댓글 삭제
 const deleteComment = async (commentId) => {
   if (!confirm("댓글을 삭제하시겠습니까?")) return;
-
   try {
-    await apiClient.delete(
-      `/boards/${route.params.boardId}/comments/${commentId}`
-    );
-    alert("댓글이 삭제되었습니다.");
-    await fetchComments(); // 댓글 목록 새로고침
+    await apiClient.delete(`/boards/${route.params.boardId}/comments/${commentId}`);
+    fetchComments(); // 댓글 목록 새로고침
   } catch (error) {
-    console.error("Error deleting comment:", error);
-    alert("댓글 삭제 중 오류가 발생했습니다.");
+    console.error("댓글 삭제 중 오류 발생:", error);
   }
 };
 
@@ -159,8 +123,10 @@ const deleteComment = async (commentId) => {
 const formatDate = (date) => {
   return new Date(date).toLocaleDateString("ko-KR", {
     year: "numeric",
-    month: "long",
-    day: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 };
 
@@ -169,7 +135,17 @@ const goBack = () => {
   router.back();
 };
 
-// 컴포넌트가 마운트될 때 게시글 데이터 가져오기
+// 로그인 사용자 ID 가져오기
+const fetchUserId = async () => {
+  try {
+    const response = await apiClient.get("/users/id");
+    userId.value = response.data || "";
+  } catch (error) {
+    console.error("로그인 사용자 ID를 가져오는 중 오류 발생:", error);
+  }
+};
+
+// 컴포넌트가 마운트될 때 게시글, 댓글, 로그인 ID 데이터를 가져옴
 onMounted(() => {
   fetchUserId();
   fetchBoard();
@@ -178,59 +154,91 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 전체 컨테이너 */
 .board-detail-container {
   max-width: 800px;
   margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
+  padding: 20px 16px 80px; /* 하단 네비게이션 바를 고려한 여백 */
+  font-family: Arial, sans-serif;
+  background-color: #ffffff;
 }
 
-.board-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #4caf50;
-  text-align: center;
-}
-
-.board-content {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.board-meta {
+/* 상단 네비게이션 */
+.navbar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+  position: relative;
 }
 
 .back-button {
-  display: block;
-  margin: auto;
-  padding: 10px 20px;
-  font-size: 16px;
-  color: white;
-  background-color: #4caf50;
+  background: none;
   border: none;
-  border-radius: 5px;
+  font-size: 18px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.back-button:hover {
-  background-color: #388e3c;
+.navbar-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
 }
 
+/* 게시글 */
+.post-container {
+  padding: 20px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  margin-right: 10px;
+}
+
+.post-meta {
+  font-size: 14px;
+  color: #888;
+}
+
+.post-author {
+  font-weight: bold;
+  margin: 0;
+}
+
+.post-date {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.post-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.post-content {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 댓글 섹션 */
 .comments-section {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #ffffff; /* 배경색 변경 */
-  border: 1px solid #ddd; /* 구분선 추가 */
-  border-radius: 8px; /* 모서리 라운딩 */
+  padding: 20px 10px;
 }
 
 .comments-list {
@@ -240,75 +248,108 @@ onMounted(() => {
 }
 
 .comment-item {
-  margin-bottom: 15px;
   padding: 10px;
-  background-color: white;
+  margin-bottom: 15px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  position: relative;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  margin-right: 10px;
+}
+
+.comment-meta {
+  font-size: 13px;
+  color: #888;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin: 0;
+}
+
+.comment-date {
+  margin: 4px 0 0;
+  font-size: 12px;
 }
 
 .comment-content {
   font-size: 14px;
-  margin-bottom: 5px;
   color: #333;
 }
 
-.comment-meta {
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
   font-size: 12px;
-  color: #666;
-  display: flex;
-  justify-content: space-between;
+  cursor: pointer;
 }
 
-.no-comments {
-  font-size: 14px;
-  color: #888;
-  text-align: center;
+.delete-button:hover {
+  background-color: #d32f2f;
 }
 
-/* 댓글 작성 폼 스타일 */
+/* 댓글 작성 */
 .comment-form {
-  margin-top: 20px;
+  position: fixed;
+  bottom: 60px; /* 하단 네비게이션 바 높이 고려 */
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border-top: 1px solid #ddd;
+  padding: 10px 16px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .comment-textarea {
-  width: 100%;
-  padding: 10px;
-  font-size: 14px;
+  flex: 1;
   border: 1px solid #ddd;
   border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  margin-right: 10px;
   resize: none;
-  margin-bottom: 10px;
 }
 
 .submit-comment-button {
-  display: block;
-  margin: 0 auto;
-  padding: 10px 20px;
-  font-size: 14px;
-  color: white;
   background-color: #4caf50;
+  color: white;
   border: none;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-size: 14px;
 }
 
 .submit-comment-button:hover {
   background-color: #388e3c;
 }
 
-.delete-button {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.delete-button:hover {
-  background-color: #d32f2f;
+/* 댓글 없을 때 */
+.no-comments {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin-top: 20px;
 }
 </style>
