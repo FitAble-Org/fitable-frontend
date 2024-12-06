@@ -72,7 +72,8 @@ const userId = ref(null);
 
 const fetchUserId = async () => {
   try {
-    const response = await apiClient.get("/id");
+    const response = await apiClient.get("/users/id");
+    console.log("로그인 아이디: " + response.data);
     userId.value = response.data || null; // 로그인하지 않았다면 빈 문자열이므로 null로 처리
   } catch (error) {
     console.error("Error fetching user ID:", error);
