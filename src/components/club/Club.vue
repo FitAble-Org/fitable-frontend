@@ -13,7 +13,11 @@
       <div class="input-group short-input">
         <label for="category" class="label">장애분류</label>
         <select id="category" v-model="filters.category" class="search-input">
-          <option v-for="category in categories" :key="category" :value="category">
+          <option
+            v-for="category in categories"
+            :key="category"
+            :value="category"
+          >
             {{ category }}
           </option>
         </select>
@@ -30,20 +34,20 @@
         @click="navigateToClubInfo(club.clubId)"
       >
         <h3 class="club-title">{{ club.clubNm }}</h3>
-        <p class="club-subtitle">{{ `${club.disabilityType}, ${club.operTimeCn}` }}</p>
+        <p class="club-subtitle">
+          {{ `${club.disabilityType}, ${club.operTimeCn}` }}
+        </p>
       </div>
     </div>
     <!-- 검색 결과가 없을 때 -->
-    <div v-else class="no-results">
-      검색 결과가 없습니다.
-    </div>
+    <div v-else class="no-results">검색 결과가 없습니다.</div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import apiClient from "@/axios/apiclient";
+import apiClient from "@/axios/apiClient.js";
 
 // 라우터
 const router = useRouter();
@@ -56,12 +60,32 @@ const filters = ref({
 
 // 지역 및 장애분류 목록
 const regions = [
-  "서울", "인천", "대전", "경기", "경남", "전북", "충남", "제주", "부산", "광주",
-  "대구", "강원", "충북", "전남", "울산", "경북", "세종",
+  "서울",
+  "인천",
+  "대전",
+  "경기",
+  "경남",
+  "전북",
+  "충남",
+  "제주",
+  "부산",
+  "광주",
+  "대구",
+  "강원",
+  "충북",
+  "전남",
+  "울산",
+  "경북",
+  "세종",
 ];
 const categories = [
-  "발달(지적/자폐)장애", "지체(척수 및 절단 및 기타)장애", "청각장애", "기타장애",
-  "시각장애", "비장애인", "뇌병변장애",
+  "발달(지적/자폐)장애",
+  "지체(척수 및 절단 및 기타)장애",
+  "청각장애",
+  "기타장애",
+  "시각장애",
+  "비장애인",
+  "뇌병변장애",
 ];
 
 // 클럽 데이터
