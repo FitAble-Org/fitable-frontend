@@ -15,6 +15,13 @@
           <p class="post-date">{{ formatDate(board.createdAt) }}</p>
         </div>
       </div>
+      <button
+        v-if="board.loginId === userId"
+        class="delete-board-text"
+        @click="deleteBoard"
+      >
+        삭제
+      </button>
       <h2 class="post-title">{{ board.title }}</h2>
       <p class="post-content">{{ board.content }}</p>
     </div>
@@ -57,6 +64,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
@@ -76,6 +84,19 @@ const fetchBoard = async () => {
     board.value = response.data;
   } catch (error) {
     console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
+  }
+};
+
+// 게시글 삭제
+const deleteBoard = async () => {
+  if (!confirm("게시글을 삭제하시겠습니까?")) return;
+  try {
+    await apiClient.delete(`/boards/${route.params.boardId}`);
+    alert("게시글이 삭제되었습니다.");
+    router.push("/boards"); // 게시판 목록 페이지로 이동
+  } catch (error) {
+    console.error("게시글 삭제 중 오류 발생:", error);
+    alert("게시글 삭제에 실패했습니다.");
   }
 };
 
@@ -154,6 +175,36 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* 게시글 삭제 버튼 */
+.delete-board-text {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #888; /* 회색 글자 */
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.delete-board-text:hover {
+  color: #555; /* 더 짙은 회색 */
+}
+
+/* 게시글 상단 설정 */
+.post-container {
+  position: relative; /* 삭제 버튼 위치 조정 */
+  padding: 20px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
 /* 전체 컨테이너 */
 .board-detail-container {
   max-width: 800px;
