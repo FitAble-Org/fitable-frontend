@@ -2,35 +2,44 @@
   <div class="calendar">
     <h2>{{ currentMonth }} {{ currentYear }}</h2>
     <div class="day-names">
-      <span v-for="(day, index) in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']" :key="index">{{ day }}</span>
+      <span
+        v-for="(day, index) in ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']"
+        :key="index"
+        >{{ day }}</span
+      >
     </div>
     <div class="calendar-grid">
       <div
         v-for="(day, index) in daysInMonthWithOffset"
         :key="index"
-        :class="[ 
-          'day', 
-          { highlighted: hasEvent(day), today: isToday(day), selected: isSelected(day), weekend: isWeekend(day) } 
+        :class="[
+          'day',
+          {
+            highlighted: hasEvent(day),
+            today: isToday(day),
+            selected: isSelected(day),
+            weekend: isWeekend(day),
+          },
         ]"
         @click="day ? selectDate(day) : null"
       >
-        {{ day || '' }}
+        {{ day || "" }}
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, defineProps, defineEmits, onMounted } from 'vue';
-import dayjs from 'dayjs';
+import { ref, computed, defineProps, defineEmits, onMounted } from "vue";
+import dayjs from "dayjs";
 
 const props = defineProps({
   events: Array,
 });
-const emit = defineEmits(['dateSelected']);
+const emit = defineEmits(["dateSelected"]);
 
 const currentYear = dayjs().year();
-const currentMonth = dayjs().format('MMMM');
+const currentMonth = dayjs().format("MMMM");
 
 const selectedDate = ref(null);
 
@@ -57,12 +66,16 @@ const daysInMonthWithOffset = computed(() => {
 // Set selected date to today on component load
 onMounted(() => {
   selectedDate.value = formatDate(dayjs().date());
-  emit('dateSelected', selectedDate.value); // Emit today's date initially
+  emit("dateSelected", selectedDate.value); // Emit today's date initially
 });
 
 const isToday = (day) => {
   const today = dayjs();
-  return today.date() === day && today.month() === dayjs().month() && today.year() === currentYear;
+  return (
+    today.date() === day &&
+    today.month() === dayjs().month() &&
+    today.year() === currentYear
+  );
 };
 
 const isSelected = (day) => selectedDate.value === formatDate(day);
@@ -71,7 +84,7 @@ const hasEvent = (day) => {
   if (!day) return false; // 빈 날짜는 이벤트 없음
   const date = formatDate(day); // 현재 날짜를 YYYY-MM-DD 형식으로 변환
   return props.events.some((event) => {
-    const eventDate = dayjs(event.datePerformed).format('YYYY-MM-DD'); // 이벤트 날짜를 YYYY-MM-DD 형식으로 변환
+    const eventDate = dayjs(event.datePerformed).format("YYYY-MM-DD"); // 이벤트 날짜를 YYYY-MM-DD 형식으로 변환
     return eventDate === date; // 날짜가 동일한지 비교
   });
 };
@@ -83,12 +96,12 @@ const isWeekend = (day) => {
 
 const selectDate = (day) => {
   selectedDate.value = formatDate(day);
-  emit('dateSelected', selectedDate.value); // Emit selected date to parent component
+  emit("dateSelected", selectedDate.value); // Emit selected date to parent component
 };
 
 const formatDate = (day) => {
-  const month = String(dayjs().month() + 1).padStart(2, '0');
-  const dayStr = String(day).padStart(2, '0');
+  const month = String(dayjs().month() + 1).padStart(2, "0");
+  const dayStr = String(day).padStart(2, "0");
   return `${currentYear}-${month}-${dayStr}`;
 };
 </script>
@@ -106,7 +119,7 @@ h2 {
   font-size: 18px;
   font-weight: normal;
   color: #444;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .day-names {
@@ -136,8 +149,6 @@ h2 {
   justify-content: center;
   box-sizing: border-box; /* border가 있어도 크기가 변하지 않도록 */
 }
-
-
 
 .selected {
   background-color: #f0f0f0;

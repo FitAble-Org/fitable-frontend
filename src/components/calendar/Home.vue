@@ -141,7 +141,7 @@ const onAnimationEnd = () => {
 .calendar-container {
   background-color: white;
   border-radius: 16px;
-  padding: 20px;
+  padding: 10px 20px 20px 20px;
   margin-bottom: 20px;
 }
 
