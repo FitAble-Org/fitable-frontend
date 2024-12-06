@@ -45,7 +45,7 @@ const pageTitle = computed(() => {
 
 h1 {
   font-style: normal;
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 500;
   margin: 0;
 }
