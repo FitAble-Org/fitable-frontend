@@ -47,7 +47,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import BackArrow from "../common/BackArrow.vue";
-import apiClient from "@/axios/apiclient";
+import apiClient from "@/axios/apiClient.js";
 
 const route = useRoute();
 const router = useRouter();
