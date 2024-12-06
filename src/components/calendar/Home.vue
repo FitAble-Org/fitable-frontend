@@ -4,7 +4,7 @@
     <div class="calendar-container">
       <Calendar :events="events" @dateSelected="onDateSelected" />
     </div>
-    <div v-if="selectedEvents.length">
+    <div v-if="selectedEvents.length" class="event-list-box">
       <EventList :events="indoorActivities" type="가정운동" />
       <EventList :events="outdoorActivities" type="외부운동" />
     </div>
@@ -154,7 +154,7 @@ const onAnimationEnd = () => {
 .floating-action-button {
   /* position을 fixed에서 absolute로 변경 */
   position: absolute;
-  bottom: 85px;
+  bottom: 70px;
   right: 25px;
   width: 56px;
   height: 56px;
@@ -244,5 +244,9 @@ const onAnimationEnd = () => {
   height: 24px;
   display: inline-block;
   /* 아이콘 배치를 위한 자리만 확보 */
+}
+
+.event-list-box {
+  padding-bottom: 90px;
 }
 </style>
