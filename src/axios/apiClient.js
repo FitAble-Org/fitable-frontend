@@ -3,7 +3,8 @@ import axios from "axios";
 
 // Axios 인스턴스 생성
 const apiClient = axios.create({
-  baseURL: "http://localhost:8081/api/",
+  baseURL: "https://api.fitable.kro.kr/api/",
+  // baseURL: "http://localhost:8081/api/",
   withCredentials: true, // CORS 허용
 });
 
@@ -71,9 +72,12 @@ apiClient.interceptors.response.use(
           }
 
           // Refresh Token으로 Access Token 갱신
-          const { data } = await axios.post("http://localhost:8081/api/users/refresh", {
-            refreshToken,
-          });
+          const { data } = await axios.post(
+            "http://localhost:8081/api/users/refresh",
+            {
+              refreshToken,
+            }
+          );
 
           const newAccessToken = data.accessToken;
 
