@@ -109,7 +109,7 @@ onMounted(fetchBoards);
 <style scoped>
 .community-container {
   max-width: 600px;
-  margin: 7px auto; /* 위 여백 줄임 */
+  margin: 5px auto; /* 위 여백 줄임 */
   font-family: "Arial", sans-serif;
   background-color: white;
 }
@@ -120,10 +120,10 @@ onMounted(fetchBoards);
 
 /* 게시글 아이템 */
 .board-item {
-  padding: 15px 20px;
+  padding: 10px 20px 17px 20px;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: #bdbdbd 0.2s ease-in-out;
 }
 
 .board-item:hover {

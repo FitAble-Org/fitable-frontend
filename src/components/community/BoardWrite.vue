@@ -110,7 +110,9 @@ const goBack = () => {
 
 /* 제목 입력 */
 .title-container {
-  padding: 16px;
+  padding-left: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #eaeaea;
 }
 
@@ -127,6 +129,7 @@ const goBack = () => {
 .content-input {
   flex: 1;
   padding: 16px;
+  padding-top: 20px;
   font-size: 16px;
   color: #333;
   border: none;

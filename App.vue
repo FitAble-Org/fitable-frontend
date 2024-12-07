@@ -39,6 +39,7 @@ const showHeader = computed(
       "IndoorExercise",
       "IndoorExerciseInfo",
       "BoardDetail",
+      "BoardWrite",
     ].includes(route.name)
 );
 

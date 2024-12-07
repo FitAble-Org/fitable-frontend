@@ -11,7 +11,10 @@
       <span>동호회</span>
     </button>
     <button @click="navigate('community')">
-      <i class="far fa-map"></i>
+      <i class="far fa-comments"></i>
+
+
+
       <span>게시판</span>
     </button>
     <button @click="navigate('my-page')">
